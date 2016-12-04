@@ -9,7 +9,6 @@ def lista_aleatorios(n):
 		lista[i]=random.random()
 	return lista
 
-<<<<<<< HEAD
 def reajuste_asignacion(num_operaciones, num_procesos):
 	a=num_operaciones//num_procesos
 	b=a*num_procesos
@@ -18,8 +17,6 @@ def reajuste_asignacion(num_operaciones, num_procesos):
 	else:
 		return num_operaciones-b
 
-=======
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 comm = MPI.COMM_WORLD
 
 #Conocemos el numero de nodos totales
@@ -34,22 +31,16 @@ promedio=0
 #La Esta variable "sumatoria", es el argumento de la sumatoria de la varianza de la muestra
 sumatoria=0
 varianza=0
-<<<<<<< HEAD
 sumas_reajuste=0.0
-=======
 
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 #Generamos numeros aleatorios entre 0 y 1, el tamanho de la muestra es 100
 l=lista_aleatorios(100)
 
 #Calculamos el tamanho total por subdivision de la lista, en el caso de tamanho 100 la subdivision es de 25 
 div_tamano = 100 / size
 
-<<<<<<< HEAD
 reajuste=reajuste_asignacion(100,size)
 
-=======
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 #Nos ubicamos en el nodo maestro rank=0
 if rank == root:
 	#sacamos el promedio total en el nodo maestro
@@ -74,13 +65,10 @@ sumatoria = comm.gather(sumatoria, root=root)
 if rank == root:
 
 	#Sumamos las sumatorias calculadas paralelamente en cada nodo y con esto podemos conocer la varianza
-<<<<<<< HEAD
 	if reajuste != 0:
 		for i in range(100-reajuste,100):
 			sumas_reajuste=((l[i]-promedio)*(l[i]-promedio))+sumas_reajuste
 	varianza=sumas_reajuste
-=======
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 	for i in range(size):
 		varianza=sumatoria[i]+varianza
 	varianza=varianza/100

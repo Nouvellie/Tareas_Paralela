@@ -9,7 +9,6 @@ void lista_aleatoria(int n, float l[]){
 	}
 }
 
-<<<<<<< HEAD
 //Esta funcion retornara la cantidad de datos y los tomara el ultimo nodo 
 int reajuste_asignacion(int numero_operaciones, int numero_procesos){
 	int a,b;
@@ -22,8 +21,6 @@ int reajuste_asignacion(int numero_operaciones, int numero_procesos){
 	}
 }
 
-=======
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 //Hacemos la raiz cuadrada a mano, ya que tuve problemas con la libreria math.h
 double raiz_cuadrada(double numero,double aproximacion, int n)
 {
@@ -64,11 +61,8 @@ int main(int argc, char** argv) {
         const int root=0;
 	float *sumas;
 	char a;
-<<<<<<< HEAD
 	int reajuste=reajuste_asignacion(100,size);
 	float sumas_reajustes=0.0;
-=======
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 
 	//Calculamos el tamanho total por subdivision de la lista, en el caso de tamanho 100 la subdivision es de 25
 	int div_tamanho=100/size;
@@ -99,19 +93,13 @@ int main(int argc, char** argv) {
 	//Hacemos la sumatoria, pero en forma paralela, definiendo los limites, en el caso de la lista 1, rank=0 recorrera de 0 a 24 tomando esos valores de la lista y restando el promedio total ya calculado. En el rank=1 parte de 25 y llegaria hasta 49 y asi sucesivamente
 	for(int i = div_tamanho*rank  ; i < div_tamanho*(rank+1) ; i++){
 		sumatoria=((l[i]-promedio)*(l[i]-promedio))+sumatoria;
-<<<<<<< HEAD
 	}  
-	MPI_Gather(&sumatoria, 1, MPI_FLOAT,sumas,1,MPI_FLOAT, root, MPI_COMM_WORLD);
-=======
-	}
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 
 	//Mostramos los nodos y los argumentos de la sumatoria que estamos calculando, para enviarla al nodo maestro 
 	printf("%d %f\n",rank,sumatoria);
 
 	//Lejos lo que mas me complico, fue entender esta estructura, ya que no sabia manejar la lista donde recepcionaba los datos que enviaba al nodo maestro con Gather, es simple la estructura, ya que define los datos que envias con referencia a la direccion de memoria, tamaño de la variable y tipo de dato de la variable que se envia. Despues hay que hubicar la lista donde vas a recepcionar los datos que se envian, el tamaño de dato que envia cada nodo el tipo de dato que recibe, el root y el coom. Los ultimos 5 datos los maneja la raiz unicamente
-<<<<<<< HEAD
-		MPI_Gather(&sumatoria, 1, MPI_FLOAT,sumas,1,MPI_FLOAT, root, MPI_COMM_WORLD);
+	MPI_Gather(&sumatoria, 1, MPI_FLOAT,sumas,1,MPI_FLOAT, root, MPI_COMM_WORLD);
 
 	if(rank==root){
 
@@ -125,12 +113,7 @@ int main(int argc, char** argv) {
 		//Sumamos las sumatorias calculadas paralelamente en cada nodo y con esto podemos conocer la varianza
 		//Hay que destacar que el reajuste aplicado sera en el nodo raiz y se agregara despues de la suma de los nodos en paralelo
 		varianza=sumas_reajustes;
-=======
-	MPI_Gather(&sumatoria, 1, MPI_FLOAT,sumas,1,MPI_FLOAT, root, MPI_COMM_WORLD);
-	
-	if(rank==root){
 		//Sumamos las sumatorias calculadas paralelamente en cada nodo y con esto podemos conocer la varianza
->>>>>>> 55854017b5a1bdb561d59c667ed04cb405c2c259
 		for(int i = 0 ; i < size ; i++){	
 			varianza=sumas[i]+varianza;		
 		}
@@ -153,7 +136,6 @@ int main(int argc, char** argv) {
 				}	
 			}
 		}
-			
 	}
         MPI_Finalize();
         return 0;
