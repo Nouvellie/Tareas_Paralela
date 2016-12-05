@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 	//Mostramos los nodos y los argumentos de la sumatoria que estamos calculando, para enviarla al nodo maestro 
 	printf("%d %f\n",rank,sumatoria);
 
-	//Lejos lo que mas me complico, fue entender esta estructura, ya que no sabia manejar la lista donde recepcionaba los datos que enviaba al nodo maestro con Gather, es simple la estructura, ya que define los datos que envias con referencia a la direccion de memoria, tamaño de la variable y tipo de dato de la variable que se envia. Despues hay que hubicar la lista donde vas a recepcionar los datos que se envian, el tamaño de dato que envia cada nodo el tipo de dato que recibe, el root y el coom. Los últimos 5 datos los maneja la raíz únicamente
+	//Lejos lo que más me complico, fue entender esta estructura, ya que no sabia manejar la lista donde recepcionaba los datos que enviaba al nodo maestro con Gather, es simple la estructura, ya que define los datos que envias con referencia a la dirección de memoria, tamaño de la variable y tipo de dato de la variable que se envia. Después hay que ubicar la lista donde vas a recepcionar los datos que se envían, el tamaño de dato que envía cada nodo el tipo de dato que recibe, el root y el coom. Los últimos 5 datos los maneja la raíz únicamente
 	MPI_Gather(&sumatoria, 1, MPI_FLOAT,sumas,1,MPI_FLOAT, root, MPI_COMM_WORLD);
 
 	if(rank==root){
@@ -111,7 +111,7 @@ int main(int argc, char** argv) {
 		}
 		
 		//Sumamos las sumatorias calculadas paralelamente en cada nodo y con esto podemos conocer la varianza
-		//Hay que destacar que el reajuste aplicado sera en el nodo raiz y se agregara despues de la suma de los nodos en paralelo
+		//Hay que destacar que el reajuste aplicado sera en el nodo raíz y se agregará después de la suma de los nodos en paralelo
 		varianza=sumas_reajustes;
 		//Sumamos las sumatorias calculadas paralelamente en cada nodo y con esto podemos conocer la varianza
 		for(int i = 0 ; i < size ; i++){	
@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
 		}
 		varianza=varianza/100;
 
-		//La desviacion estandar seria la raiz de la varianza
+		//La desviación estándar sería la raíz de la varianza
 		desviacion_estandar=raiz_cuadrada(varianza,1,0);
 		printf("La varianza es %f\n",varianza);
 		printf("La desviacion estandar es %f\n",desviacion_estandar);
