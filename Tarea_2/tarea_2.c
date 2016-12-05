@@ -2,14 +2,14 @@
 #include <time.h>
 #include <stdio.h>
 
-//Asignamos valores random a la lista entre 0 y 1 con un gran rango de 1000000 numeros 
+//Asignamos valores random a la lista entre 0 y 1 con un gran rango de 1000000 números 
 void lista_aleatoria(int n, float l[]){
 	for(int i = 0 ; i < n ; i++){	
 		l[i]=(float)(rand()%1000000)/1000000;
 	}
 }
 
-//Esta funcion retornara la cantidad de datos y los tomara el ultimo nodo 
+//Esta función retornará la cantidad de datos y los tomará el último nodo 
 int reajuste_asignacion(int numero_operaciones, int numero_procesos){
 	int a,b;
 	a=numero_operaciones/numero_procesos;
@@ -21,18 +21,18 @@ int reajuste_asignacion(int numero_operaciones, int numero_procesos){
 	}
 }
 
-//Hacemos la raiz cuadrada a mano, ya que tuve problemas con la libreria math.h
+//Hacemos la raíz cuadrada a mano, ya que tuve problemas con la libreria math.h
 double raiz_cuadrada(double numero,double aproximacion, int n)
 {
 	double aproximacionantes = aproximacion;
  
-	//Utilizando la formula de Newton-Raphson
+	//Utilizando la fórmula de Newton-Raphson
 	aproximacion = aproximacion - (((aproximacion * aproximacion) - numero ) / ( 2 * aproximacion));
  
-	//Verificas que la aproximación haya cambiado, y cuidamos nuestro contador, para que la recursión no se trabe
+	//Verificas que la aproximación haya cambiado, y cuidamos nuestro contador, para que la recursión no se haga loop o error
 	if(aproximacion == aproximacionantes || n > 50)
 
-	//Regresas la aproximación en caso de que el numero no cambie
+	//Regresas la aproximación en caso de que el nímero no cambie
 	return aproximacion; 
  
 	//Llamada recursiva para calcular una nueva aproximación
@@ -44,14 +44,14 @@ int main(int argc, char** argv) {
 	int size;
        	MPI_Init(&argc, &argv);
 
-	//De aca sacamos el tamaño de los nodos que asignamos con el mpirun
+	//De acá sacamos el tamaño de los nodos que asignamos con el mpirun
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	//Este es el promedio de la lista completa
 	float promedio=0.0;
 
-	//Generamos numeros aleatorios entre 0 y 1, el tamanho de la muestra es 100
+	//Generamos números aleatorios entre 0 y 1, el tamanño de la muestra es 100
 	float l[100];
 
 	//La Esta variable "sumatoria", es el argumento de la sumatoria de la varianza de la muestra
