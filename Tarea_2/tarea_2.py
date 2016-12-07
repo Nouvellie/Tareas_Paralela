@@ -10,6 +10,14 @@ def lista_aleatorios(n):
 		lista[i]=random.random()
 	return lista
 
+def reajuste_asignacion(num_operaciones, num_procesos):
+	a=num_operaciones//num_procesos
+	b=a*num_procesos
+	if b==num_operaciones:
+		return 0
+	else:
+		return num_operaciones-b
+
 comm = MPI.COMM_WORLD
 
 #Conocemos el numero de nodos totales
@@ -28,11 +36,14 @@ promedio=0
 sumatoria=0
 varianza=0
 sumas_reajuste=0.0
+<<<<<<< HEAD
 
 #Tiempos agregados
 tiempo_inicial=0
 tiempo_final=0
 tiempo_ejecucion=0
+=======
+>>>>>>> 6891f006e1b2001e22a51945014c108aca113bfb
 
 #Generamos numeros aleatorios entre 0 y 1, el tamanho de la muestra es 100
 l=lista_aleatorios(muestra)
@@ -41,6 +52,8 @@ l=lista_aleatorios(muestra)
 div_tamano = muestra / size
 
 reajuste=0
+
+reajuste=reajuste_asignacion(100,size)
 
 #Nos ubicamos en el nodo maestro rank=0
 if rank == root:
@@ -69,8 +82,13 @@ if rank == root:
 	
 	reajuste=muestra-div_tamano*size
 	#Sumamos las sumatorias calculadas paralelamente en cada nodo y con esto podemos conocer la varianza
+<<<<<<< HEAD
 	if reajuste > 0:
 		for i in range(muestra-reajuste,muestra):
+=======
+	if reajuste != 0:
+		for i in range(100-reajuste,100):
+>>>>>>> 6891f006e1b2001e22a51945014c108aca113bfb
 			sumas_reajuste=((l[i]-promedio)*(l[i]-promedio))+sumas_reajuste
 	varianza=sumas_reajuste
 	for i in range(size):
