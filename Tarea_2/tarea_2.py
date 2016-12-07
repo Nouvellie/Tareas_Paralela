@@ -1,6 +1,7 @@
 from mpi4py import MPI
 import random
 import math
+from time import time
 
 #Generamos una funcion para crear una lista con numeros aleatorios que toman valor de 0 a 1
 def lista_aleatorios(n):
@@ -8,14 +9,6 @@ def lista_aleatorios(n):
 	for i in range(n):
 		lista[i]=random.random()
 	return lista
-
-def reajuste_asignacion(num_operaciones, num_procesos):
-	a=num_operaciones//num_procesos
-	b=a*num_procesos
-	if b==num_operaciones:
-		return 0
-	else:
-		return num_operaciones-b
 
 comm = MPI.COMM_WORLD
 
@@ -25,6 +18,9 @@ rank = comm.Get_rank()
 
 root = 0
 
+#Tamano de la muestra
+muestra=100
+
 #Este es el promedio de la lista completa
 promedio=0
 
@@ -32,20 +28,28 @@ promedio=0
 sumatoria=0
 varianza=0
 sumas_reajuste=0.0
+
+#Tiempos agregados
+tiempo_inicial=0
+tiempo_final=0
+tiempo_ejecucion=0
+
 #Generamos numeros aleatorios entre 0 y 1, el tamanho de la muestra es 100
-l=lista_aleatorios(100)
+l=lista_aleatorios(muestra)
 
 #Calculamos el tamanho total por subdivision de la lista, en el caso de tamanho 100 la subdivision es de 25 
-div_tamano = 100 / size
+div_tamano = muestra / size
 
-reajuste=reajuste_asignacion(100,size)
+reajuste=0
 
 #Nos ubicamos en el nodo maestro rank=0
 if rank == root:
+	tiempo_inicial=time()
+
 	#sacamos el promedio total en el nodo maestro
-	for i in range(100):
+	for i in range(muestra):
 		promedio=promedio+l[i]
-	promedio=promedio / 100
+	promedio=promedio / muestra
 
 #Enviamos el promedio a todos los nodos con bcast
 promedio = comm.bcast(promedio, root=root)
@@ -62,21 +66,24 @@ for i in range(div_tamano*rank, div_tamano*(rank+1)):
 sumatoria = comm.gather(sumatoria, root=root)
 
 if rank == root:
-
+	
+	reajuste=muestra-div_tamano*size
 	#Sumamos las sumatorias calculadas paralelamente en cada nodo y con esto podemos conocer la varianza
-	if reajuste != 0:
-		for i in range(100-reajuste,100):
+	if reajuste > 0:
+		for i in range(muestra-reajuste,muestra):
 			sumas_reajuste=((l[i]-promedio)*(l[i]-promedio))+sumas_reajuste
 	varianza=sumas_reajuste
 	for i in range(size):
 		varianza=sumatoria[i]+varianza
-	varianza=varianza/100
+	varianza=varianza/muestra
 	
 	#La desviacion estandar seria la raiz de la varianza
 	desviacion_estandar=math.sqrt(varianza)
-	
+	tiempo_final=time()
+	tiempo_ejecucion=tiempo_final-tiempo_inicial
 	print "La varianza es", varianza
 	print "La desviacion estandar es", desviacion_estandar
+	print "El tiempo de ejecucion es ", tiempo_ejecucion
 	print "Desea ver la muestra? (S/N)"
 	respuesta=raw_input()
 	if respuesta == "S":
