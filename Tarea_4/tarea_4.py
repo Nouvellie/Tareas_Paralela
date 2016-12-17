@@ -17,6 +17,11 @@ class bola_numero:
 		self.numero_bola = numero
 		self.color_bola = color
 
+#Carton
+class carton:
+	def __init__(self, numero, esta_marcado):
+		self.numero_carton = numero
+		self.marcado_carton = esta_marcado
 #Rellenamos el vector con numero y color
 def rellenar_bolas():
 	lista=[0] *60
@@ -51,7 +56,7 @@ def crear_carton():
 	m=np.zeros((3, 5))
 	for i in range(3):
 		for j in range(5):
-			m[i][j]=np.random.random_integers(60)
+			m[i][j]=carton(np.random.random_integers(60),'no')
 	return m		
 comm = MPI.COMM_WORLD
 
@@ -74,11 +79,5 @@ if rank==root:
 	carton2=crear_carton()
 	carton3=crear_carton()
 	carton4=crear_carton()
-	print carton
-	print ""
-	print carton2
-	print ""
-	print carton3
-	print ""
-	print carton4
+
 
