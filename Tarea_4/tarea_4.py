@@ -47,6 +47,12 @@ def rellenar_distribucion_bolas():
 			lista[i]=bola_numero(numero+1,'verde')
 	return lista
 
+def crear_carton():
+	m=np.zeros((3, 5))
+	for i in range(3):
+		for j in range(5):
+			m[i][j]=np.random.random_integers(60)
+	return m		
 comm = MPI.COMM_WORLD
 
 #Conocemos el numero de nodos totales
@@ -56,6 +62,7 @@ rank = comm.Get_rank()
 root=0
 bolas=[]
 distribucion_bolas=[]
+carton=[]
 if rank==root:
 	#bolas=rellenar_bolas()
 	#for i in range(60):
@@ -63,3 +70,15 @@ if rank==root:
 	distribucion_bolas=rellenar_distribucion_bolas()
 	for i in range(30):
 		print distribucion_bolas[i].numero_bola,distribucion_bolas[i].color_bola, i+1
+	carton=crear_carton()
+	carton2=crear_carton()
+	carton3=crear_carton()
+	carton4=crear_carton()
+	print carton
+	print ""
+	print carton2
+	print ""
+	print carton3
+	print ""
+	print carton4
+
