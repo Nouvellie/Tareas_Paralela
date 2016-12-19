@@ -4,13 +4,19 @@ import math
 from time import time
 import numpy as np
 
-#Definimos la funcion, para verificar que el numero aleatorio no se repita
+#Definimos la funcion, para verificar que el numero aleatorio no se repita 0 al 59
 def no_repetir_numero(numero_aleatorio, tamano_vector,lista):
 	for i in range(tamano_vector):
 		if numero_aleatorio == lista[i].numero_bola-1:
 			return 0
 	return 1		
 
+#Definimos una funcion para verificar si el numer aleatorio se repite, para marcarlo en el carton 1 al 60
+def repite_numero(numero,lista):
+	for i in range(30):
+		if numero == lista[i].numero_bola:
+			return 1
+	return 0		
 #Creamos una clase, para definir el numero y color de la bola
 class bola_numero:
 	def __init__(self, numero, color):
@@ -53,11 +59,18 @@ def rellenar_distribucion_bolas():
 	return lista
 
 def crear_carton():
-	m=np.zeros((3, 5))
+	matriz=np.zeros((3, 5))
 	for i in range(3):
 		for j in range(5):
-			m[i][j]=carton(np.random.random_integers(60),'no')
-	return m		
+			matriz[i][j]=carton(np.random.random_integers(60),'no')
+	return matriz
+
+def marcar_carton(bolas,matrtz):
+	for i in range(3):
+		for j in range(5):
+			if repetir_numero(matriz[i][j].numero_carton,30,bolas)==1:
+				matriz[i][j].marcado_carton='si'	
+	return matriz
 comm = MPI.COMM_WORLD
 
 #Conocemos el numero de nodos totales
@@ -74,10 +87,13 @@ if rank==root:
 	#	print bolas[i].numero_bola,bolas[i].color_bola
 	distribucion_bolas=rellenar_distribucion_bolas()
 	for i in range(30):
-		print distribucion_bolas[i].numero_bola,distribucion_bolas[i].color_bola, i+1
-	carton=crear_carton()
+		print distribucion_bolas[i].numero_bola,distribucion_bolas[i].color_bola, i+1	
+	carton1=crear_carton()		
 	carton2=crear_carton()
 	carton3=crear_carton()
 	carton4=crear_carton()
-
+	carton=marcar_carton(distribucion_bolas,carton)
+	for i in range(3):
+		for j in range(5):
+			print carton1[i][j].numero_carton,carton1[i][j].marcado_carton
 
