@@ -17,13 +17,24 @@ int main(int argc, char** argv) {
 
     //Defnimos este tipo de dato, para crear las bolas
     typedef struct bola_numero bola;
+    typedef struct carton carton_bingo;
 
     bola vector_bolas[60];
+    bola distribucion_bolas[30];
+    carton_bingo carton_uno[3][5];
     llenar_vector_bolas(&vector_bolas);
+    llenar_distribucion_bolas(&distribucion_bolas);
+    crear_carton(&carton_uno);
     if(rank==root){
-    	for(int i=0;i<60;i++){
-    		printf(" %d %c",vector_bolas[i].numero,vector_bolas[i].color);
-    	}
+    	/*for(int i=0;i<30;i++){
+    		printf(" %d %c\n",distribucion_bolas[i].numero,distribucion_bolas[i].color);
+    	}*/
+        for(int i=0;i < 3;i++){
+            for(int j=0; j < 5;j++){
+                printf(" %d %c",carton_uno[i][j].numero,carton_uno[i][j].marcado);
+            }
+            printf("\n");
+        }
     }
      
      MPI_Finalize();

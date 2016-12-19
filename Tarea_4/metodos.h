@@ -3,7 +3,7 @@
 typedef struct bola_numero bola;
 typedef struct carton carton_bingo;
 
-int no_repetir_numero(int numero_aleatorio, int tamano_vector,bola lista[]){
+int no_repetir_numero_bolas(int numero_aleatorio, int tamano_vector,bola lista[]){
 	for(int i=0;i < tamano_vector;i++){
 		if(numero_aleatorio == lista[i].numero-1){
 			return 0;
@@ -11,6 +11,18 @@ int no_repetir_numero(int numero_aleatorio, int tamano_vector,bola lista[]){
 	}	
 	return 1;
 }
+
+int no_repetir_numero_carton(int numero_aleatorio, int p, int q,carton_bingo (*matriz)[5]){
+	for(int i=0;i < p;i++){
+		for(int j=0;j < q;j++){
+			if(numero_aleatorio == matriz[i][j].numero-1){
+				return 0;
+			}
+		}
+	}	
+	return 1;
+}
+
 void llenar_vector_bolas(bola vector_bolas[60]){
 	for(int i=0;i<60;i++){
 		//1 al 14 amarillas
@@ -39,12 +51,11 @@ void llenar_vector_bolas(bola vector_bolas[60]){
 	}
 }
 
-int *llenar_distribucion_bolas(){
+void llenar_distribucion_bolas(bola lista[]){
 	int numero_aleatorio;
-	bola *lista=malloc(30*sizeof(int));
-	for(int i;i < 30; i++){
+	for(int i=0;i < 30; i++){
 		numero_aleatorio=rand()%59;
-		while(no_repetir_numero(numero_aleatorio,i,lista)==0){
+		while(no_repetir_numero_bolas(numero_aleatorio,i,lista)==0){
 			numero_aleatorio=rand()%59;
 		}
 		if(numero_aleatorio < 14){
@@ -67,5 +78,18 @@ int *llenar_distribucion_bolas(){
 			}
 		}
 	}
-	return lista;
+}
+
+void crear_carton(carton_bingo (*m)[5]){
+	int numero_aleatorio;
+	for(int i=0;i < 3;i++){
+		for(int j=0; j < 5;j++){
+			numero_aleatorio=rand()%59;
+			while(no_repetir_numero_carton(numero_aleatorio,i,j,m)==0){
+				numero_aleatorio=rand()%59;
+			}
+			m[i][j].numero=numero_aleatorio+1;
+			m[i][j].marcado='n';
+		}
+	}
 }
