@@ -11,9 +11,9 @@ struct arista{
 
 struct arista_mayor{
 	float distancia_mayor;
-	struct punto puntos_arista_mayor[2];
+	struct punto vertices_arista_mayor[2];
 	struct punto punto_medio;
-	struct punto punto_opuesto;
+	struct punto vertice_opuesto;
 };
 
 struct elementos_adyacentes{
