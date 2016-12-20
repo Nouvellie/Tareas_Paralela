@@ -6,12 +6,12 @@ struct punto{
 
 struct arista{
 	int numero;
-	struct punto puntos[2];
+	struct punto vertices[2];
 };
 
 struct triangulo{
 	struct punto vertices[3];
 	float angulos[3];
 	int numero_triangulo;
-	int aristas[3];
+	struct arista aristas[3];
 };
