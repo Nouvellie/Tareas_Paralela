@@ -66,21 +66,7 @@ void realizar_biseccion_4T(t t1,t malla[]){
 	float puntos_distancia[4];
 	float punto_medio_dmayor[2];
 	int contador=0;
-	if(t1.vertices[0].coordenadas[0]==punto_opuesto[0] && t1.vertices[0].coordenadas[1]==punto_opuesto[1]){
-		puntos_distancia[contador]=punto_opuesto[0];
-		puntos_distancia[contador]=punto_opuesto[1];
-		contador=contador+2;
-	}
-	if(t1.vertices[1].coordenadas[0]==punto_opuesto[0] && t1.vertices[1].coordenadas[1]==punto_opuesto[1]){
-		puntos_distancia[contador]=punto_opuesto[0];
-		puntos_distancia[contador]=punto_opuesto[1];
-		contador=contador+2;
-	}
-	if(t1.vertices[2].coordenadas[0]==punto_opuesto[0] && t1.vertices[2].coordenadas[1]==punto_opuesto[1]){
-		puntos_distancia[contador]=punto_opuesto[0];
-		puntos_distancia[contador]=punto_opuesto[1];
-		contador=contador+2;
-	}
+	
 	punto_medio_dmayor[0]=punto_medio(puntos_distancia[0],puntos_distancia[1],puntos_distancia[2],puntos_distancia[3])[0];
 	punto_medio_dmayor[1]=punto_medio(puntos_distancia[0],puntos_distancia[1],puntos_distancia[2],puntos_distancia[3])[1];
 
