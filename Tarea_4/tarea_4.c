@@ -25,10 +25,8 @@ int main(int argc, char** argv) {
     llenar_vector_bolas(&vector_bolas);
     llenar_distribucion_bolas(&distribucion_bolas);
     crear_carton(&carton_uno);
+    
     if(rank==root){
-    	/*for(int i=0;i<30;i++){
-    		printf(" %d %c\n",distribucion_bolas[i].numero,distribucion_bolas[i].color);
-    	}*/
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
                 printf(" %d %c",carton_uno[i][j].numero,carton_uno[i][j].marcado);
@@ -36,7 +34,7 @@ int main(int argc, char** argv) {
             printf("\n");
         }
     }
-     
+    MPI_Scatter(datos,TAMA,MPI_INT,mis_datos,TAMA,MPI_INT,root,MPI_COMM_WORLD) 
      MPI_Finalize();
      return 0;
 
