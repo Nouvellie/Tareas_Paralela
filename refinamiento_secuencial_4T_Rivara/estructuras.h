@@ -26,6 +26,7 @@ struct triangulo{
 	float angulos[3];
 	int numero_triangulo;
 	struct arista aristas[3];
-	struct arista_mayor elemento;
+	struct arista_mayor elemento_mayor;
+	struct elementos_adyacentes elemento_adyacente;
 };
 

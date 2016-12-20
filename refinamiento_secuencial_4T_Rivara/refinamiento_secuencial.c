@@ -21,7 +21,7 @@ float distancia(float x0,float y0,float x1,float y1) {
 //Distancia mayor
 float *distancia_mayor(t t1){
 	//este vector retorna la distancia mayor y el punto opuesto a esta distancia
-	float *vector=malloc(3*sizeof(int));
+	float *vector=malloc(7*sizeof(int));
 	//A=0, B=1, C=2
 	float distancia_AB=distancia(t1.vertices[0].coordenadas[0], t1.vertices[0].coordenadas[1],t1.vertices[1].coordenadas[0], t1.vertices[1].coordenadas[1]);
 	float distancia_AC=distancia(t1.vertices[0].coordenadas[0], t1.vertices[0].coordenadas[1],t1.vertices[2].coordenadas[0], t1.vertices[2].coordenadas[1]);
@@ -31,11 +31,19 @@ float *distancia_mayor(t t1){
 			vector[0]=distancia_AB;
 			vector[1]=t1.vertices[2].coordenadas[0];
 			vector[2]=t1.vertices[2].coordenadas[1];
+			vector[3]=t1.vertices[0].coordenadas[0];
+			vector[4]=t1.vertices[0].coordenadas[1];
+			vector[5]=t1.vertices[1].coordenadas[0];
+			vector[6]=t1.vertices[1].coordenadas[1];
 			return vector;
 		}else{
 			vector[0]=distancia_BC;
 			vector[1]=t1.vertices[0].coordenadas[0];
 			vector[2]=t1.vertices[0].coordenadas[1];
+			vector[3]=t1.vertices[1].coordenadas[0];
+			vector[4]=t1.vertices[1].coordenadas[1];
+			vector[5]=t1.vertices[2].coordenadas[0];
+			vector[6]=t1.vertices[2].coordenadas[1];
 			return vector;
 		}
 	}else{
@@ -43,11 +51,19 @@ float *distancia_mayor(t t1){
 			vector[0]=distancia_AC;
 			vector[1]=t1.vertices[1].coordenadas[0];
 			vector[2]=t1.vertices[1].coordenadas[1];
+			vector[3]=t1.vertices[0].coordenadas[0];
+			vector[4]=t1.vertices[0].coordenadas[1];
+			vector[5]=t1.vertices[2].coordenadas[0];
+			vector[6]=t1.vertices[2].coordenadas[1];
 			return vector;
 		}else{
 			vector[0]=distancia_BC;
 			vector[1]=t1.vertices[0].coordenadas[0];
 			vector[2]=t1.vertices[0].coordenadas[1];
+			vector[3]=t1.vertices[1].coordenadas[0];
+			vector[4]=t1.vertices[1].coordenadas[1];
+			vector[5]=t1.vertices[2].coordenadas[0];
+			vector[6]=t1.vertices[2].coordenadas[1];
 			return vector;
 		}
 	}
@@ -61,14 +77,16 @@ float *punto_medio(float x0, float y0, float x1, float y1){
 }
 
 void realizar_biseccion_4T(t t1,t malla[]){
-	float distancia=distancia_mayor(t1)[0];
-	float punto_opuesto[2]={distancia_mayor(t1)[1],distancia_mayor(t1)[2]};
-	float puntos_distancia[4];
-	float punto_medio_dmayor[2];
-	int contador=0;
-	
-	punto_medio_dmayor[0]=punto_medio(puntos_distancia[0],puntos_distancia[1],puntos_distancia[2],puntos_distancia[3])[0];
-	punto_medio_dmayor[1]=punto_medio(puntos_distancia[0],puntos_distancia[1],puntos_distancia[2],puntos_distancia[3])[1];
+	//Se llenan los datos del triangulo a biseccionar
+	t1.elemento_mayor.distancia_mayor=distancia_mayor(t1)[0];
+	t1.elemento_mayor.vertice_opuesto.coordenadas[0]=distancia_mayor(t1)[1];
+	t1.elemento_mayor.vertice_opuesto.coordenadas[1]=distancia_mayor(t1)[2];
+	t1.elemento_mayor.vertices_arista_mayor[0].coordenadas[0]=distancia_mayor(t1)[3];
+	t1.elemento_mayor.vertices_arista_mayor[0].coordenadas[1]=distancia_mayor(t1)[4];
+	t1.elemento_mayor.vertices_arista_mayor[1].coordenadas[0]=distancia_mayor(t1)[5];
+	t1.elemento_mayor.vertices_arista_mayor[1].coordenadas[1]=distancia_mayor(t1)[6];
+	t1.elemento_mayor.punto_medio.coordenadas[0]=punto_medio(t1.elemento_mayor.vertices_arista_mayor[0].coordenadas[0],t1.elemento_mayor.vertices_arista_mayor[0].coordenadas[1],t1.elemento_mayor.vertices_arista_mayor[1].coordenadas[0],t1.elemento_mayor.vertices_arista_mayor[1].coordenadas[1])[0];
+	t1.elemento_mayor.punto_medio.coordenadas[1]=punto_medio(t1.elemento_mayor.vertices_arista_mayor[0].coordenadas[0],t1.elemento_mayor.vertices_arista_mayor[0].coordenadas[1],t1.elemento_mayor.vertices_arista_mayor[1].coordenadas[0],t1.elemento_mayor.vertices_arista_mayor[1].coordenadas[1])[1];
 
 }
 //p0, p1, p2 son vertices del triangulo
