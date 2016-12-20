@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
             printf("\n");
         }
     }
-    MPI_Scatter(datos,TAMA,MPI_INT,mis_datos,TAMA,MPI_INT,root,MPI_COMM_WORLD) 
+    MPI_Scatter(datos,TAMA,MPI_INT,mis_datos,TAMA,MPI_INT,root,MPI_COMM_WORLD);
      MPI_Finalize();
      return 0;
 
