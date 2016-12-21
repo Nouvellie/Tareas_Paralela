@@ -130,12 +130,3 @@ void crear_carton(carton_bingo (*m)[5], int num_carton, carton_bingo lista[]){
 		}
 	}
 }
-
-int cambiar_aleatorio(int num_aleatorio){
-	if(num_aleatorio==59){
-		return 0;
-	}else{
-		num_aleatorio=num_aleatorio+1;
-		return num_aleatorio;
-	}
-}
