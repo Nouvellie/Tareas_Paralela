@@ -7,5 +7,6 @@ struct bola_numero{
 
 struct carton{
 	int numero;
+	int numero_carton;
 	char marcado;
 };
