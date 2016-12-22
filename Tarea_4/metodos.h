@@ -130,3 +130,20 @@ void crear_carton(carton_bingo (*m)[5], int num_carton, carton_bingo lista[]){
 		}
 	}
 }
+
+//Retorna los limites superiores del vector
+int *array_split(int total_tamano_cartones,int cantidad_nodos){
+	int *tamano_distribuido=malloc(cantidad_nodos*sizeof(int));
+	int cociente_sin_truncar=total_tamano_cartones/cantidad_nodos;
+	int truncamiento=cociente_sin_truncar*cantidad_nodos;
+	int diferencial=total_tamano_cartones-truncamiento;
+	
+	for(int i=0;i<cantidad_nodos;i++){
+		if(i==(cantidad_nodos-1)){
+			tamano_distribuido[i]=cociente_sin_truncar*(i+1)+diferencial;
+		}else{
+			tamano_distribuido[i]=cociente_sin_truncar*(i+1);
+		}
+	}
+	return tamano_distribuido;
+}

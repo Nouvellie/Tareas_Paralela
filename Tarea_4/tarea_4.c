@@ -38,6 +38,12 @@ int main(int argc, char** argv) {
         crear_carton(&carton_dos,2,&datos_carton);
         crear_carton(&carton_tres,3,&datos_carton);
         crear_carton(&carton_cuatro,4,&datos_carton);
+
+        for(int i=0;i < 30 ;i++){
+            printf(" %d",distribucion_bolas[i].numero);
+        }
+        printf("\n");
+        printf("\n");
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
                 printf(" %d %c",carton_uno[i][j].numero,carton_uno[i][j].marcado);
@@ -71,12 +77,16 @@ int main(int argc, char** argv) {
             }
             printf("\n");
         }
-        /*for(int i=0;i < 60;i++){
-            printf(" %d %d\n", datos_carton[i].numero,i);
-        }*/
+
+        printf("\n");
+        printf("\n");
+
+        for(int i=0;i < 8;i++){
+            printf(" %d", array_split(100,8)[i]);
+        }
     }
-    //MPI_Scatter(datos,TAMA,MPI_INT,mis_datos,TAMA,MPI_INT,root,MPI_COMM_WORLD) 
-     MPI_Finalize();
+    //MPI_Scatter(datos,TAMA,MPI_INT,mis_datos,TAMA,MPI_INT,root,MPI_COMM_WORLD); 
+    MPI_Finalize();
      return 0;
 
  }
