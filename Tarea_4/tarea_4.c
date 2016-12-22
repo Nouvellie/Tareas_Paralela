@@ -4,6 +4,11 @@
 #include <estructuras.h>
 #include <metodos.h>
 
+#define length(x) (sizeof(x)/sizeof(x[0]))
+
+typedef struct bola_numero bola;
+typedef struct carton carton_bingo;
+
 int main(int argc, char** argv) {
 	int rank;
 	int size;
@@ -14,10 +19,19 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int root;
     root=0;
+    //Creamos el tipo de dato que enviaremos por mpi
+    int blocklengths[2] = {1,1};
+    MPI_Datatype types[2] = {MPI_INT, MPI_CHAR};
+    MPI_Datatype MPI_bola_numero;
+    MPI_Aint disps[2];
+    disps[0] = offsetof( bola, numero );
+    disps[1] = offsetof( bola, color );
+
+    MPI_Type_create_struct(2, blocklengths, disps, types, &MPI_bola_numero);
+    MPI_Type_commit(&MPI_bola_numero);
 
     //Defnimos este tipo de dato, para crear las bolas
-    typedef struct bola_numero bola;
-    typedef struct carton carton_bingo;
+    
     int cantidad_cartones=4*15;
     int lim_inferior=cantidad_cartones/size;
 
@@ -40,7 +54,7 @@ int main(int argc, char** argv) {
         crear_carton(&carton_tres,3,&datos_cartones);
         crear_carton(&carton_cuatro,4,&datos_cartones);
 
-        for(int i=0;i < 30 ;i++){
+        /*for(int i=0;i < 30 ;i++){
             printf(" %d",distribucion_bolas[i].numero);
         }
         printf("\n");
@@ -78,19 +92,24 @@ int main(int argc, char** argv) {
             }
             printf("\n");
         }
-
+        */
         printf("\n");
         printf("\n");
 
-        for(int i=0;i < 8;i++){
-            printf(" %d", array_split(100,8)[i]);
-        }
+
+
     }
-    MPI_Bcast(&distribucion_bolas,30,MPI_INT,root,MPI_COMM_WORLD);
+    MPI_Bcast(&distribucion_bolas,30,MPI_bola_numero,root,MPI_COMM_WORLD);
     MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,root,MPI_COMM_WORLD); 
-    for(int i=0;i<100;i++){
+    
+    /*for(int i=0;i< array_split(cantidad_cartones,size)[rank]-rank*lim_inferior;i++){
+        printf(" %d %c %d\n",datos_nodos[i].numero,datos_nodos[i].marcado,rank);
+    }*/
 
+    for(int i=0;i<30;i++){
+        printf("%d %c %d\n",distribucion_bolas[i].numero,distribucion_bolas[i].color,rank);
     }
+
     MPI_Finalize();
      return 0;
 
