@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     typedef struct bola_numero bola;
     typedef struct carton carton_bingo;
     int cantidad_cartones=4*15;
-
+    int lim_inferior=cantidad_cartones/size;
 
     bola vector_bolas[60];
     bola distribucion_bolas[30];
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
             printf(" %d", array_split(100,8)[i]);
         }
     }
-    //MPI_Scatter(datos,TAMA,MPI_INT,mis_datos,TAMA,MPI_INT,root,MPI_COMM_WORLD); 
+    //MPI_Scatter(&datos_carton,array_split[rank]-rank*lim_inferior,MPI_INT,mis_datos,array_split[rank]-rank*lim_inferior,MPI_INT,root,MPI_COMM_WORLD); 
     MPI_Finalize();
      return 0;
 
