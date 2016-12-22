@@ -24,7 +24,8 @@ int main(int argc, char** argv) {
     bola vector_bolas[60];
     bola distribucion_bolas[30];
     //carton_bingo *datos_carton=malloc(sizeof(int)*cantidad_cartones);
-    carton_bingo datos_carton[60];
+    carton_bingo datos_cartones[cantidad_cartones];
+    carton_bingo datos_nodos[array_split(cantidad_cartones,size)[rank]-rank*lim_inferior];
     //Creamos los 4 cartones
     carton_bingo carton_uno[3][5];
     carton_bingo carton_dos[3][5];
@@ -34,10 +35,10 @@ int main(int argc, char** argv) {
     if(rank==root){
         llenar_vector_bolas(&vector_bolas);
         llenar_distribucion_bolas(&distribucion_bolas);
-        crear_carton(&carton_uno,1,&datos_carton);
-        crear_carton(&carton_dos,2,&datos_carton);
-        crear_carton(&carton_tres,3,&datos_carton);
-        crear_carton(&carton_cuatro,4,&datos_carton);
+        crear_carton(&carton_uno,1,&datos_cartones);
+        crear_carton(&carton_dos,2,&datos_cartones);
+        crear_carton(&carton_tres,3,&datos_cartones);
+        crear_carton(&carton_cuatro,4,&datos_cartones);
 
         for(int i=0;i < 30 ;i++){
             printf(" %d",distribucion_bolas[i].numero);
@@ -85,7 +86,11 @@ int main(int argc, char** argv) {
             printf(" %d", array_split(100,8)[i]);
         }
     }
-    //MPI_Scatter(&datos_carton,array_split[rank]-rank*lim_inferior,MPI_INT,mis_datos,array_split[rank]-rank*lim_inferior,MPI_INT,root,MPI_COMM_WORLD); 
+    MPI_Bcast(&distribucion_bolas,30,MPI_INT,root,MPI_COMM_WORLD);
+    MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,root,MPI_COMM_WORLD); 
+    for(int i=0;i<100;i++){
+
+    }
     MPI_Finalize();
      return 0;
 
