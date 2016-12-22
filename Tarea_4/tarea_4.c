@@ -19,16 +19,29 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     int root;
     root=0;
-    //Creamos el tipo de dato que enviaremos por mpi
-    int blocklengths[2] = {1,1};
-    MPI_Datatype types[2] = {MPI_INT, MPI_CHAR};
-    MPI_Datatype MPI_bola_numero;
-    MPI_Aint disps[2];
-    disps[0] = offsetof( bola, numero );
-    disps[1] = offsetof( bola, color );
 
-    MPI_Type_create_struct(2, blocklengths, disps, types, &MPI_bola_numero);
-    MPI_Type_commit(&MPI_bola_numero);
+    //Creamos el tipo de dato que enviaremos por mpi SOLO DE LA ESTRUCTURA BOLA_NUMERO
+    int blocklengths_bola[2] = {1,1};
+    MPI_Datatype types_bola[2] = {MPI_INT, MPI_CHAR};
+    MPI_Datatype MPI_BOLA_NUMERO;
+    MPI_Aint disps_bola[2];
+    disps_bola[0] = offsetof( bola, numero );
+    disps_bola[1] = offsetof( bola, color );
+
+    MPI_Type_create_struct(2, blocklengths_bola, disps_bola, types_bola, &MPI_BOLA_NUMERO);
+    MPI_Type_commit(&MPI_BOLA_NUMERO);
+
+    //Creamos el tipo de dato que enviaremos por mpi SOLO DE LA ESTRUCTURA CARTON
+    int blocklengths_carton[3] = {1,1,1};
+    MPI_Datatype types_carton[3] = {MPI_INT,MPI_INT, MPI_CHAR};
+    MPI_Datatype MPI_CARTON;
+    MPI_Aint disps_carton[3];
+    disps_carton[0] = offsetof( carton_bingo, numero );
+    disps_carton[1] = offsetof( carton_bingo, numero_carton );
+    disps_carton[2] = offsetof( carton_bingo, marcado );
+
+    MPI_Type_create_struct(3, blocklengths_carton, disps_carton, types_carton, &MPI_CARTON);
+    MPI_Type_commit(&MPI_CARTON);
 
     //Defnimos este tipo de dato, para crear las bolas
     
@@ -99,7 +112,7 @@ int main(int argc, char** argv) {
 
 
     }
-    MPI_Bcast(&distribucion_bolas,30,MPI_bola_numero,root,MPI_COMM_WORLD);
+    MPI_Bcast(&distribucion_bolas,30,MPI_BOLA_NUMERO,root,MPI_COMM_WORLD);
     MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,root,MPI_COMM_WORLD); 
     
     /*for(int i=0;i< array_split(cantidad_cartones,size)[rank]-rank*lim_inferior;i++){
