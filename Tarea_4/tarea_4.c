@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
         crear_carton(&carton_tres,3,&datos_cartones);
         crear_carton(&carton_cuatro,4,&datos_cartones);
 
-        /*for(int i=0;i < 30 ;i++){
+        for(int i=0;i < 30 ;i++){
             printf(" %d",distribucion_bolas[i].numero);
         }
         printf("\n");
@@ -105,22 +105,20 @@ int main(int argc, char** argv) {
             }
             printf("\n");
         }
-        */
+        
         printf("\n");
         printf("\n");
 
 
 
     }
-    MPI_Bcast(&distribucion_bolas,30,MPI_BOLA_NUMERO,root,MPI_COMM_WORLD);
-    MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,root,MPI_COMM_WORLD); 
-    
-    /*for(int i=0;i< array_split(cantidad_cartones,size)[rank]-rank*lim_inferior;i++){
-        printf(" %d %c %d\n",datos_nodos[i].numero,datos_nodos[i].marcado,rank);
-    }*/
 
-    for(int i=0;i<30;i++){
-        printf("%d %c %d\n",distribucion_bolas[i].numero,distribucion_bolas[i].color,rank);
+    // Enviamos una copia a todos los nodos de las 30 bolas al azar que se lanzan en la mesa, para posteriormente marcar los cartones en cada nodo
+    MPI_Bcast(&distribucion_bolas,30,MPI_BOLA_NUMERO,root,MPI_COMM_WORLD);
+    MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_CARTON,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_CARTON,root,MPI_COMM_WORLD); 
+    
+    for(int i=0;i< array_split(cantidad_cartones,size)[rank]-rank*lim_inferior;i++){
+        printf(" %d %c %d\n",datos_nodos[i].numero,datos_nodos[i].marcado,rank);
     }
 
     MPI_Finalize();
