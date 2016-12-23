@@ -72,36 +72,37 @@ int main(int argc, char** argv) {
         }
         printf("\n");
         printf("\n");
+        printf("Carton 1\n");
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d %c",carton_uno[i][j].numero,carton_uno[i][j].marcado);
+                printf(" %d",carton_uno[i][j].numero);
             }
             printf("\n");
         }
         printf("\n");
-        printf("\n");
+        printf("Carton 2\n");
 
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d %c",carton_dos[i][j].numero,carton_dos[i][j].marcado);
+                printf(" %d",carton_dos[i][j].numero);
             }
             printf("\n");
         }
         printf("\n");
-        printf("\n");
+        printf("Carton 3\n");
         
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d %c",carton_tres[i][j].numero,carton_tres[i][j].marcado);
+                printf(" %d",carton_tres[i][j].numero);
             }
             printf("\n");
         }
         printf("\n");
-        printf("\n");
+        printf("Carton 4\n");
         
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d %c",carton_cuatro[i][j].numero,carton_cuatro[i][j].marcado);
+                printf(" %d",carton_cuatro[i][j].numero);
             }
             printf("\n");
         }
@@ -116,10 +117,6 @@ int main(int argc, char** argv) {
     // Enviamos una copia a todos los nodos de las 30 bolas al azar que se lanzan en la mesa, para posteriormente marcar los cartones en cada nodo
     MPI_Bcast(&distribucion_bolas,30,MPI_BOLA_NUMERO,root,MPI_COMM_WORLD);
     MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_CARTON,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_CARTON,root,MPI_COMM_WORLD); 
-    
-    for(int i=0;i< array_split(cantidad_cartones,size)[rank]-rank*lim_inferior;i++){
-        printf(" %d %c %d\n",datos_nodos[i].numero,datos_nodos[i].marcado,rank);
-    }
 
     MPI_Finalize();
      return 0;

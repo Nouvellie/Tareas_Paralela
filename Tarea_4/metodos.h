@@ -13,6 +13,16 @@ int no_repetir_numero_bolas(int numero_aleatorio, int tamano_vector,bola lista[]
 	return 1;
 }
 
+int no_repetir_numero_carton_vector(int numero_aleatorio, int tamano_vector,carton_bingo lista[]){
+	for(int i=0;i < tamano_vector;i++){
+		if(numero_aleatorio == (lista[i].numero-1)){
+			return 0;
+		}
+	}	
+	return 1;
+}
+
+//Esta funcion sirve para que no se repita un numero en un mismo carton
 int no_repetir_numero_carton(int numero_aleatorio, int p, int q,carton_bingo (*matriz)[5]){
 	for(int i=0;i < p;i++){
 		if(i==(p-1)){
@@ -113,8 +123,8 @@ void crear_carton(carton_bingo (*m)[5], int num_carton, carton_bingo lista[]){
 	for(int i=0;i < 3;i++){
 		for(int j=0; j < 5;j++){
 			numero_aleatorio=rand()%59;
-			while(no_repetir_numero_carton(numero_aleatorio,(i+1),(j+1),m)==0){
-				numero_aleatorio=rand()%59;
+			while(no_repetir_numero_carton_vector(numero_aleatorio,contador,lista)==0){
+				numero_aleatorio=completar_aleatorio(numero_aleatorio);
 			}
 
 			m[i][j].numero=numero_aleatorio+1;
@@ -125,7 +135,6 @@ void crear_carton(carton_bingo (*m)[5], int num_carton, carton_bingo lista[]){
 			lista[contador].numero=numero_aleatorio+1;
 			lista[contador].marcado='n';
 			lista[contador].numero_carton=num_carton;
-
 			contador=contador+1;
 		}
 	}
@@ -146,4 +155,12 @@ int *array_split(int total_tamano_cartones,int cantidad_nodos){
 		}
 	}
 	return tamano_distribuido;
+}
+
+int completar_aleatorio(int n){
+	if(n==59){
+		return 0;
+	}else{
+		return n+1;
+	}
 }
