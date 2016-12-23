@@ -2,7 +2,6 @@
 #include <time.h>
 
 typedef struct bola_numero bola;
-typedef struct carton carton_bingo;
 
 int no_repetir_numero_bolas(int numero_aleatorio, int tamano_vector,bola lista[]){
 	for(int i=0;i < tamano_vector;i++){
@@ -13,32 +12,11 @@ int no_repetir_numero_bolas(int numero_aleatorio, int tamano_vector,bola lista[]
 	return 1;
 }
 
-int no_repetir_numero_carton_vector(int numero_aleatorio, int tamano_vector,carton_bingo lista[]){
+int no_repetir_numero_carton_vector(int numero_aleatorio, int tamano_vector,int lista[]){
 	for(int i=0;i < tamano_vector;i++){
-		if(numero_aleatorio == (lista[i].numero-1)){
+		if(numero_aleatorio == (lista[i]-1)){
 			return 0;
 		}
-	}	
-	return 1;
-}
-
-//Esta funcion sirve para que no se repita un numero en un mismo carton
-int no_repetir_numero_carton(int numero_aleatorio, int p, int q,carton_bingo (*matriz)[5]){
-	for(int i=0;i < p;i++){
-		if(i==(p-1)){
-			for(int j=0;j < q;j++){
-				if(numero_aleatorio == (matriz[i][j].numero-1)){
-					return 0;
-				}
-			}
-		}else{
-			for(int j=0;j < 5;j++){
-				if(numero_aleatorio == (matriz[i][j].numero-1)){
-					return 0;
-				}
-			}
-		}
-		
 	}	
 	return 1;
 }
@@ -101,7 +79,7 @@ void llenar_distribucion_bolas(bola lista[]){
 	}
 }
 
-void crear_carton(carton_bingo (*m)[5], int num_carton, carton_bingo lista[]){
+void crear_carton(int (*m)[5], int num_carton, int lista[]){
 	srand(time(0)*num_carton+num_carton);
 	int numero_aleatorio;
 	int contador=0;
@@ -126,15 +104,10 @@ void crear_carton(carton_bingo (*m)[5], int num_carton, carton_bingo lista[]){
 			while(no_repetir_numero_carton_vector(numero_aleatorio,contador,lista)==0){
 				numero_aleatorio=completar_aleatorio(numero_aleatorio);
 			}
-
-			m[i][j].numero=numero_aleatorio+1;
-			m[i][j].marcado='n';
-			m[i][j].numero_carton=num_carton;
+			m[i][j]=numero_aleatorio+1;
 
 			//Llenamos el vector
-			lista[contador].numero=numero_aleatorio+1;
-			lista[contador].marcado='n';
-			lista[contador].numero_carton=num_carton;
+			lista[contador]=numero_aleatorio+1;
 			contador=contador+1;
 		}
 	}

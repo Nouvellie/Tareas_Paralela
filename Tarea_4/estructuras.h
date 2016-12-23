@@ -5,8 +5,3 @@ struct bola_numero{
 	char color;
 };
 
-struct carton{
-	int numero;
-	int numero_carton;
-	char marcado;
-};

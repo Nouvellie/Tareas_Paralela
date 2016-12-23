@@ -7,9 +7,9 @@
 #define length(x) (sizeof(x)/sizeof(x[0]))
 
 typedef struct bola_numero bola;
-typedef struct carton carton_bingo;
 
 int main(int argc, char** argv) {
+    system("clear");
 	int rank;
 	int size;
     MPI_Init(&argc, &argv);
@@ -31,17 +31,6 @@ int main(int argc, char** argv) {
     MPI_Type_create_struct(2, blocklengths_bola, disps_bola, types_bola, &MPI_BOLA_NUMERO);
     MPI_Type_commit(&MPI_BOLA_NUMERO);
 
-    //Creamos el tipo de dato que enviaremos por mpi SOLO DE LA ESTRUCTURA CARTON
-    int blocklengths_carton[3] = {1,1,1};
-    MPI_Datatype types_carton[3] = {MPI_INT,MPI_INT, MPI_CHAR};
-    MPI_Datatype MPI_CARTON;
-    MPI_Aint disps_carton[3];
-    disps_carton[0] = offsetof( carton_bingo, numero );
-    disps_carton[1] = offsetof( carton_bingo, numero_carton );
-    disps_carton[2] = offsetof( carton_bingo, marcado );
-
-    MPI_Type_create_struct(3, blocklengths_carton, disps_carton, types_carton, &MPI_CARTON);
-    MPI_Type_commit(&MPI_CARTON);
 
     //Defnimos este tipo de dato, para crear las bolas
     
@@ -50,14 +39,14 @@ int main(int argc, char** argv) {
 
     bola vector_bolas[60];
     bola distribucion_bolas[30];
-    //carton_bingo *datos_carton=malloc(sizeof(int)*cantidad_cartones);
-    carton_bingo datos_cartones[cantidad_cartones];
-    carton_bingo datos_nodos[array_split(cantidad_cartones,size)[rank]-rank*lim_inferior];
+
+    int datos_cartones[cantidad_cartones];
+    int datos_nodos[array_split(cantidad_cartones,size)[rank]-rank*lim_inferior];
     //Creamos los 4 cartones
-    carton_bingo carton_uno[3][5];
-    carton_bingo carton_dos[3][5];
-    carton_bingo carton_tres[3][5];
-    carton_bingo carton_cuatro[3][5];
+    int carton_uno[3][5];
+    int carton_dos[3][5];
+    int carton_tres[3][5];
+    int carton_cuatro[3][5];
     
     if(rank==root){
         llenar_vector_bolas(&vector_bolas);
@@ -75,7 +64,7 @@ int main(int argc, char** argv) {
         printf("Carton 1\n");
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d",carton_uno[i][j].numero);
+                printf(" %d",carton_uno[i][j]);
             }
             printf("\n");
         }
@@ -84,7 +73,7 @@ int main(int argc, char** argv) {
 
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d",carton_dos[i][j].numero);
+                printf(" %d",carton_dos[i][j]);
             }
             printf("\n");
         }
@@ -93,7 +82,7 @@ int main(int argc, char** argv) {
         
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d",carton_tres[i][j].numero);
+                printf(" %d",carton_tres[i][j]);
             }
             printf("\n");
         }
@@ -102,7 +91,7 @@ int main(int argc, char** argv) {
         
         for(int i=0;i < 3;i++){
             for(int j=0; j < 5;j++){
-                printf(" %d",carton_cuatro[i][j].numero);
+                printf(" %d",carton_cuatro[i][j]);
             }
             printf("\n");
         }
@@ -116,7 +105,7 @@ int main(int argc, char** argv) {
 
     // Enviamos una copia a todos los nodos de las 30 bolas al azar que se lanzan en la mesa, para posteriormente marcar los cartones en cada nodo
     MPI_Bcast(&distribucion_bolas,30,MPI_BOLA_NUMERO,root,MPI_COMM_WORLD);
-    MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_CARTON,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_CARTON,root,MPI_COMM_WORLD); 
+    MPI_Scatter(&datos_cartones,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,&datos_nodos,array_split(cantidad_cartones,size)[rank]-rank*lim_inferior,MPI_INT,root,MPI_COMM_WORLD); 
 
     MPI_Finalize();
      return 0;
