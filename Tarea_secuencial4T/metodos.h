@@ -222,12 +222,11 @@ void llenado_malla(t malla[], char fichero[]){
  	while (feof(archivo) == 0){
  		contador++;
  		fgets(string[contador],50,archivo);
- 		printf("%s",string[contador]);
  	}
 
         fclose(archivo);
     //Llenamos el vector caracteres, tiene contenido el fichero msh    
-    for(int i=1;i<filas_fichero("malla_triangulacion.msh");i++){
+    for(int i=0;i<filas_fichero("malla_triangulacion.msh");i++){
     	printf("%s",string[i]);
     }   
 }
