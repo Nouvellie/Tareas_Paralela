@@ -21,13 +21,19 @@ int filas_fichero(char fichero[]){
  	 return contador;
 }
 
-int equals(char s0[], char s1[]){
+int equals(char s0[], char s1[]){	
 	
 	for(int i=0;i<length(s1)-1;i++){
-		printf("%c %c\n",s0[i],s1[i]);
+
 		if(s0[i]!=s1[i]){
 			return 0;
 		}
 	}
 	return 1;
+}
+
+void asignar_string(char s0[], char s1[]){
+	for(int i=0;i<50;i++){
+		s0[i]=s1[i];
+	}
 }

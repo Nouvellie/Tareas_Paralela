@@ -209,28 +209,25 @@ void asignar_triangulo(t t1, t t2){
 }
 
 void llenado_malla(t malla[], char fichero[]){
-	typedef char Cadena[filas_fichero(fichero)];
  	FILE *archivo;
-
  	//char caracteres[100];
- 	Cadena caracteres[50];
- 	int contador=0;
+ 	char string[50][50];
+ 	int contador=-1;
  	archivo = fopen(fichero,"r");
  	
  	if (archivo == NULL)
  		exit(1);
  	
  	//Recorremos el archivo
- 	while (feof(archivo) == 0)
- 	{
+ 	while (feof(archivo) == 0){
  		contador++;
- 		fgets(caracteres[contador],50,archivo);
-	 	printf("%s",caracteres[contador]);
- 		
+ 		fgets(string[contador],50,archivo);
+ 		printf("%s",string[contador]);
  	}
- 		if(equals(caracteres[4],"$Nodes")){
- 			printf("%s",caracteres[4]);
- 		}
- 		printf("%s\n",fichero );
+
         fclose(archivo);
+    //Llenamos el vector caracteres, tiene contenido el fichero msh    
+    for(int i=1;i<filas_fichero("malla_triangulacion.msh");i++){
+    	printf("%s",string[i]);
+    }   
 }
