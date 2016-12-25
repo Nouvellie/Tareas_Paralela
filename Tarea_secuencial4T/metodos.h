@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define length(x) (sizeof(x)/sizeof(x[0]))
+#define length(x) (sizeof(x)-sizeof(x[0]))
 
 typedef struct triangulo t;
 typedef struct punto p;
