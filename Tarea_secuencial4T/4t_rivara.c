@@ -18,6 +18,7 @@ void refinamiento_triangulacion(t t1,t malla[]){
 }
 int main(){
 	//system("clear");
-
+	t malla[30];
+	llenado_malla(malla, "malla_triangulacion.msh");
 	return 0;
 }

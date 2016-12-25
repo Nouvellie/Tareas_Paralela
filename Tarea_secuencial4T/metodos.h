@@ -207,3 +207,30 @@ void asignar_triangulo(t t1, t t2){
 	t1.aristas[1].numero=t2.aristas[1].numero;
 	t1.aristas[2].numero=t2.aristas[2].numero;
 }
+
+void llenado_malla(t malla[], char fichero[]){
+	typedef char Cadena[filas_fichero(fichero)];
+ 	FILE *archivo;
+
+ 	//char caracteres[100];
+ 	Cadena caracteres[50];
+ 	int contador=0;
+ 	archivo = fopen(fichero,"r");
+ 	
+ 	if (archivo == NULL)
+ 		exit(1);
+ 	
+ 	//Recorremos el archivo
+ 	while (feof(archivo) == 0)
+ 	{
+ 		contador++;
+ 		fgets(caracteres[contador],50,archivo);
+	 	printf("%s",caracteres[contador]);
+ 		
+ 	}
+ 		if(equals(caracteres[4],"$Nodes")){
+ 			printf("%s",caracteres[4]);
+ 		}
+ 		printf("%s\n",fichero );
+        fclose(archivo);
+}
