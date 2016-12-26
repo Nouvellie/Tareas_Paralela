@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define length(x) (sizeof(x)-sizeof(x[0]))
 
 typedef struct triangulo t;
@@ -213,6 +214,7 @@ void llenado_malla(t malla[], char fichero[]){
  	FILE *archivo;;
  	char Elements[100][100];
  	char Nodes[100][100];
+ 	int Elements_enteros[150];
  	int j=0;
  	double num;
  	//char caracteres[100];
@@ -272,15 +274,10 @@ void llenado_malla(t malla[], char fichero[]){
    			printf("%s",Elements[i]);
    	}
 
-    /*    	
-    	if(equals(string[i],"$Nodes")){
-    		printf("Informacion de los vertices enumerados\n");
-    		while(equals(string[i],"$EndNodes")==0){
-    			printf("%s",string[i]);
-    			i++;
+   	string_entero(Elements_enteros,Elements);
 
-    		}
-    		printf("%s",string[i]);
-    	}
-	*/   
+   	for(int i=0;i<150;i++){
+   		printf("%d\n",Elements_enteros[i]);
+   	}
+   
 }
