@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #define length(x) (sizeof(x)-sizeof(x[0]))
 
 typedef struct triangulo t;
@@ -209,7 +210,11 @@ void asignar_triangulo(t t1, t t2){
 }
 
 void llenado_malla(t malla[], char fichero[]){
- 	FILE *archivo;
+ 	FILE *archivo;;
+ 	char Elements[100][100];
+ 	char Nodes[100][100];
+ 	int j=0;
+ 	double num;
  	//char caracteres[100];
  	char string[50][50];
  	int contador=-1;
@@ -218,6 +223,7 @@ void llenado_malla(t malla[], char fichero[]){
  	if (archivo == NULL)
  		exit(1);
  	
+
  	//Recorremos el archivo
  	while (feof(archivo) == 0){
  		contador++;
@@ -225,8 +231,56 @@ void llenado_malla(t malla[], char fichero[]){
  	}
 
         fclose(archivo);
+
     //Llenamos el vector caracteres, tiene contenido el fichero msh    
     for(int i=0;i<filas_fichero("malla_triangulacion.msh");i++){
-    	printf("%s",string[i]);
-    }   
+    	if(equals(string[i],"$Elements")){
+    		printf("Informacion de los ELEMENTOS vertices que le corresponden a cada triangulo\n");
+    		i++;
+    		while(equals(string[i],"$EndElements")==0){
+    			//La siguiente linea de $Elements
+    			while(j<50){
+    				Elements[i][j]=string[i][j];
+    				j++;
+    			}
+    			j=0;
+    			i++;	
+    		}
+    		//printf("%s",string[i]);
+    	}else{
+    		if(equals(string[i],"$Nodes")){
+    			printf("Informacion de los NODES, corresponde a los vertices enumerados\n");
+    			i++;
+    			while(equals(string[i],"$EndNodes")==0){
+    			//La siguiente linea de $Elements
+	    			while(j<50){
+	    				Nodes[i][j]=string[i][j];
+	    				j++;
+	    			}
+	    			j=0;
+	    			i++;	
+	    		}
+
+    		}
+    	}
+    }
+
+    for(int i=0;i<100;i++){
+   			printf("%s",Nodes[i]);
+   	}
+   	for(int i=0;i<100;i++){
+   			printf("%s",Elements[i]);
+   	}
+
+    /*    	
+    	if(equals(string[i],"$Nodes")){
+    		printf("Informacion de los vertices enumerados\n");
+    		while(equals(string[i],"$EndNodes")==0){
+    			printf("%s",string[i]);
+    			i++;
+
+    		}
+    		printf("%s",string[i]);
+    	}
+	*/   
 }

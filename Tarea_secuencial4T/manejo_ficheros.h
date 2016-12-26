@@ -37,3 +37,33 @@ void asignar_string(char s0[], char s1[]){
 		s0[i]=s1[i];
 	}
 }
+
+void split_convert(char s[],int vector[]){
+	for(int i=0;i<50;i++){
+		if(s[i]!=' '){
+			vector[i]=s[i];
+		}else{
+			vector[i]=0;
+		}
+	}
+
+}
+
+void string_entero(char (*string)[100], int (*enteros)[100]){
+	//Linea por linea , viendo los caracteres que tiene
+	char caracteres_sin_espacio[6];
+	int contador=0;
+	int matriz_enteros=0;
+	for(int i=0;i<100;i++){
+		for(int j=0;j<100;j++){
+			if(string[i][j]==' '){
+				enteros[i][matriz_enteros]=atoi(caracteres_sin_espacio);
+				matriz_enteros++;
+			}
+			caracteres_sin_espacio[contador]=string[i][j];
+			contador++;
+		}
+		contador=0;
+	}
+}
+
