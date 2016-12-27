@@ -9,6 +9,8 @@ typedef struct arista arist;
 typedef struct triangulos_afectados ta;
 ta lista_tafectados;
 
+//FALTA ASIGNAR EL NUMERO DEL VERTICE AL PUNTO MEDIO DE LA ARISTA MODIFICADA, SOBRE ESCRIBIR EL ARCHIVO Y AGREGAR ESA LINEA, PARA LEERLA POSTERIORMENTE
+
 int triangulo_afectado(t t1){
 	for(int i=0;i<lista_tafectados.size;i++){
 		if(t1.numero_triangulo==lista_tafectados.t_afectados[i]){
@@ -301,7 +303,8 @@ int comparacion_vertices(arist arista_afectada, t t2){
 }
 
 int adyacentes_afectados(int num_triangulo,arist arista_afectada, t malla[]){
-	for(int i=0; i < length(malla); i++){
+	int size_ele=tamano_ele();
+	for(int i=0; i < size_ele; i++){
 		if(malla[i].numero_triangulo != num_triangulo && comparacion_vertices(arista_afectada,malla[i])==1){
 			return malla[i].numero_triangulo;
 		}
@@ -338,6 +341,7 @@ void generar_triangulos_4T(t t1, t malla[]){
 	t t2,t3,t4,t5;
 	p punto_medio_uno, punto_medio_dos;
 	arist a1,a2,a3;
+	int size_ele=tamano_ele();
 	//Generar elementos mayores
 	punto_medio_uno.coordenadas[0]=punto_medio(t1.aristas[aristas_no_mayores(t1)[0]].vertices[0].nodos,t1.aristas[aristas_no_mayores(t1)[0]].vertices[1].nodos)[0];
 	punto_medio_uno.coordenadas[1]=punto_medio(t1.aristas[aristas_no_mayores(t1)[0]].vertices[0].nodos,t1.aristas[aristas_no_mayores(t1)[0]].vertices[1].nodos)[1];
@@ -411,8 +415,7 @@ void generar_triangulos_4T(t t1, t malla[]){
 	//Generamos los numeros de triangulo y aristas
 	//length es el tamaño de la malla, le agregamos los elementos nuevos y le restamos el triangulo que se bisecciono
 	//Reajustamos el tamaño del vector dinamico
-	malla=realloc(malla,sizeof(int)*(length(malla)+3));
-	for(int i=0; i< length(malla)+3;i++){
+	for(int i=0; i< size_ele+3;i++){
 		malla[i].numero_triangulo=i+1;
 		if(malla[i].numero_triangulo == i+1){
 			//En esta posicion estaba anteriormente el triangulo que se bisecciono
@@ -450,89 +453,79 @@ void conformidad(){
 
 void generar_triangulos_afectados(t malla[]){
 	//El length esta mal utilizado, ya que es un vector dinamico
-	for(int i=0;i<length(malla);i++){
+	int espacio=1;
+	int size_ele=tamano_ele();
+	for(int i=0;i<size_ele;i++){
 		if(triangulo_afectado(malla[i])){
-			
+			//t1.aristas[aristas_no_mayores(t1)[0]].vertices[0].nodos;
 		}
 	}	
 }
 
+void generar_triangulo_vertices(t t1,p v1, p v2, p v3){
+
+}
+
+int *ordenar_vertices(int v1, int v2, int v3){
+	int *v=malloc(sizeof(int)*3);
+	int list[3]={v1,v2,v3};
+	long c, d, t;
+ 
+  	for (c=0;c < 2;c++)
+  	{
+    	for (d = 0 ; d < 3 - c - 1; d++)
+    	{
+      		if (list[d] > list[d+1])
+      		{
+        		t         = list[d];
+        		list[d]   = list[d+1];
+        		list[d+1] = t;
+      		}
+    	}
+  	}
+  	for(int i=0;i<3;i++){
+  		v[i]=list[i];
+  	}
+	return v;
+}
 
 //Incompleto, solo he generado una matriz y asignar los elementos 
-void llenado_malla(t malla[], char fichero[]){
- 	FILE *archivo;;
- 	char Elements[100][100];
- 	char Nodes[100][100];
- 	int Elements_enteros[150][150];
- 	int j=0,ze=0,zn=0;
- 	double num;
- 	//char caracteres[100];
- 	char string[50][50];
- 	int contador=-1;
- 	archivo = fopen(fichero,"r");
- 	
- 	if (archivo == NULL)
- 		exit(1);
- 	
+void llenado_malla(t malla[]){
+	int size_node=tamano_node(), size_ele=tamano_ele();
+	int numero_vertice[size_node];
+	float x_vertice[size_node],y_vertice[size_node];
 
- 	//Recorremos el archivo
- 	while (feof(archivo) == 0){
- 		contador++;
- 		fgets(string[contador],50,archivo);
- 	}
+	int numero_triangulo[size_ele], vertice_uno[size_ele], vertice_dos[size_ele],vertice_tres[size_ele];
 
-        fclose(archivo);
 
-    //Llenamos el vector caracteres, tiene contenido el fichero msh    
-    for(int i=0;i<filas_fichero("malla_triangulacion.msh");i++){
-    	if(equals(string[i],"$Elements")){
-    		printf("Informacion de los ELEMENTOS vertices que le corresponden a cada triangulo\n");
-    		i++;
-    		while(equals(string[i],"$EndElements")==0){
-    			//La siguiente linea de $Elements
-    			while(j<50){
-    				Elements[ze][j]=string[i][j];
-    				j++;
-    			}
-    			j=0;
-    			i++;
-    			ze++;	
-    		}
-    		//printf("%s",string[i]);
-    	}else{
-    		if(equals(string[i],"$Nodes")){
-    			printf("Informacion de los NODES, corresponde a los vertices enumerados\n");
-    			i++;
-    			while(equals(string[i],"$EndNodes")==0){
-    			//La siguiente linea de $Elements
-	    			while(j<50){
-	    				Nodes[zn][j]=string[i][j];
-	    				j++;
-	    			}
-	    			j=0;
-	    			i++;	
-	    			zn++;
-	    		}
+	lectura_node(&numero_vertice,&x_vertice,&y_vertice);
+	lectura_ele(&numero_triangulo,&vertice_uno,&vertice_dos,&vertice_tres);
 
-    		}
-    	}
-    }
+	for(int i=0;i<size_ele;i++){
+		malla[i].vertices[0].numero=ordenar_vertices(vertice_uno[i],vertice_dos[i],vertice_tres[i])[0];
+		malla[i].vertices[1].numero=ordenar_vertices(vertice_uno[i],vertice_dos[i],vertice_tres[i])[1];
+		malla[i].vertices[2].numero=ordenar_vertices(vertice_uno[i],vertice_dos[i],vertice_tres[i])[2];
+		
+		malla[i].vertices[0].nodos.coordenadas[0]=x_vertice[malla[i].vertices[0].numero-1];
+		malla[i].vertices[0].nodos.coordenadas[1]=y_vertice[malla[i].vertices[0].numero-1];
 
-    /*for(int i=0;i<9;i++){
-   			printf("%s",Nodes[i]);
-   	}*/
-   	for(int i=0;i<18;i++){
-   		printf("%s",Elements[i]);
-   	}
+		malla[i].vertices[1].nodos.coordenadas[0]=x_vertice[malla[i].vertices[1].numero-1];
+		malla[i].vertices[1].nodos.coordenadas[1]=y_vertice[malla[i].vertices[1].numero-1];
 
-   	string_entero(&Elements_enteros,Elements);
+		malla[i].vertices[2].nodos.coordenadas[0]=x_vertice[malla[i].vertices[2].numero-1];
+		malla[i].vertices[2].nodos.coordenadas[1]=y_vertice[malla[i].vertices[2].numero-1];
 
-   	for(int i=0;i<17;i++){
-   		for(int z=0;z<8;z++){
-   			printf(" %d",Elements_enteros[i][z]);
-   		}
-   		printf("\n");
-   	}
-   
-   
+		generar_angulos(malla[i]);
+
+		malla[i].numero_triangulo=numero_triangulo[i];
+
+		generar_aristas(malla[i]);
+
+	}
+
+	for(int i=0;i<size_ele;i++){
+		printf("%d %d %d %d\n",malla[i].numero_triangulo,malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+	}
+
+
 }

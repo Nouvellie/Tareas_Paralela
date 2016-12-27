@@ -38,39 +38,99 @@ void asignar_string(char s0[], char s1[]){
 	}
 }
 
-void split_convert(char s[],int vector[]){
-	for(int i=0;i<50;i++){
-		if(s[i]!=' '){
-			vector[i]=s[i];
-		}else{
-			vector[i]=0;
-		}
-	}
+void lectura_node(int x1[],float x2[], float x3[]){
+	FILE *fichero;
+   char nombre[10] = "node";
+   unsigned int i, size;
+
+   fichero = fopen( nombre, "r" );
+   printf( "Fichero: %s (para lectura) -> ", nombre );
+   if( fichero )
+      printf( "existe (ABIERTO)\n" );
+   else
+   {
+      printf( "Error (NO ABIERTO)\n" );
+      return 1;
+   }
+
+   fscanf( fichero, "%d",&size );
+   printf( "%d\n", size);
+   float x4;
+   for( i=0; i< size; i++ )
+   {
+      fscanf( fichero, "%d\t%f\t%f\t%f\n", &x1[i], &x2[i], &x3[i], &x4 );
+      printf( "%d\t%f\t%f\t%f\n", x1[i], x2[i], x3[i], x4 );
+   }
+
+   if( !fclose(fichero) )
+      printf( "Fichero cerrado\n" );
+   else
+   {
+      printf( "Error: fichero NO CERRADO\n" );
+      return 1;
+   }
 
 }
 
-void string_entero(int (*enteros)[100],char (*string)[100]){
-	//Linea por linea , viendo los caracteres que tiene
-	char *token;
-	int j=0;
-	for(int i=0;i<18;i++){
+void lectura_ele(int x1[],int x2[], int x3[], int x4[]){
+	FILE *fichero;
+   char nombre[10] = "ele";
+   unsigned int i, size;
 
-	   token = strtok(string[i]," ");
-	   
-	   while( j < 8 ){
+   fichero = fopen( nombre, "r" );
+   printf( "Fichero: %s (para lectura) -> ", nombre );
+   if( fichero )
+      printf( "existe (ABIERTO)\n" );
+   else
+   {
+      printf( "Error (NO ABIERTO)\n" );
+      return 1;
+   }
 
-	   		if(token==NULL){
-	   			enteros[i][j]=0;
-	   		}else{
-	   			enteros[i][j]=atoi(token);	
-	   		}
-	   			
-	      	token = strtok(NULL," ");
-	      	//printf("%d %d %d\n",enteros[i][j],i,j);
-	      	j++;
-	    
-	   }
-	   j=0;
-	}
+   fscanf( fichero, "%d",&size );
+   printf( "%d\n", size);
+   for( i=0; i< size; i++ )
+   {
+      fscanf( fichero, "%d\t%d\t%d\t%d\n", &x1[i], &x2[i], &x3[i], &x4[i] );
+      printf( "%d\t%d\t%d\t%d\n", x1[i], x2[i], x3[i], x4[i] );
+   }
+
+   if( !fclose(fichero) )
+      printf( "Fichero cerrado\n" );
+   else
+   {
+      printf( "Error: fichero NO CERRADO\n" );
+      return 1;
+   }
+
 }
 
+void modificar_node(){
+	
+}
+
+int tamano_node(){
+
+    FILE *fp;
+	int res;
+	
+	fp = fopen("node", "r");
+	rewind(fp);	
+	fscanf(fp,"%d *\n", &res);    
+    fclose(fp);
+    
+    return res;
+    
+}
+
+int tamano_ele(){
+	FILE *fp;
+	int res;
+	
+	fp = fopen("ele", "r");
+	rewind(fp);	
+	fscanf(fp,"%d *\n", &res);    
+    fclose(fp);
+    
+    return res;
+}
