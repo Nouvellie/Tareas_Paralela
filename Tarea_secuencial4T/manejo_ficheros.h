@@ -105,8 +105,32 @@ void lectura_ele(int x1[],int x2[], int x3[], int x4[]){
 
 }
 
-void sobreescribir_node(){
+void sobreescribir_node(p puntos){
+   inicio_node();
+   termino_node(puntos);
+}
 
+void inicio_node(){
+   FILE *fp;
+   int size_node=tamano_node();
+
+   fp = fopen ( "node", "r+" );
+   rewind(fp);
+   fprintf(fp, "%d\n",size_node+1);
+   fclose ( fp );
+}
+void termino_node(p puntos){
+   FILE *fp;
+   int size_node=tamano_node();
+
+   fp = fopen ( "node", "a+" );
+   for(int i=0;i < size_node;i++){
+      if(i==size_node-1){
+         fprintf(fp, "%d %f %f %f\n",i+1,puntos.coordenadas[0],puntos.coordenadas[1],0);
+      }
+      
+   }
+   fclose ( fp );
 }
 
 void sobreescribir_ele(t malla[], int aumenta, int numero_triangulo){
@@ -118,7 +142,7 @@ void sobreescribir_ele(t malla[], int aumenta, int numero_triangulo){
 	for(int i=0;i < size_ele+aumenta;i++){
 		if(malla[i].numero_triangulo != numero_triangulo){
 			fprintf(fp, "%d %d %d %d\n",malla[i].numero_triangulo, malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
-		}
+		 }
    	}
    
    

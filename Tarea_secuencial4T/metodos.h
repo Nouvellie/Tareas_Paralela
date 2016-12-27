@@ -411,6 +411,9 @@ void generar_triangulos_4T(t t1, t malla[]){
 	generar_aristas(t4);
 	generar_aristas(t5);
 
+	//Debemos agregar los puntos medios a los vertices
+	
+
 	//Generamos los numeros de triangulo y aristas
 	//length es el tamaño de la malla, le agregamos los elementos nuevos y le restamos el triangulo que se bisecciono
 	//Reajustamos el tamaño del vector dinamico
@@ -430,7 +433,7 @@ void generar_triangulos_4T(t t1, t malla[]){
 			}
 		}
 	}
-
+	//Agregamos los 4 triangulos que estaban y ahora sobreescribiremos el archivo ele
 	sobreescribir_ele(malla,3,t1.numero_triangulo);
 
 	
