@@ -132,17 +132,17 @@ void termino_node(p puntos){
    }
    fclose ( fp );
 }
-
+//El numero de triangulo no se repite
 void sobreescribir_ele(t malla[], int aumenta, int numero_triangulo){
 	FILE *fp;
 	int size_ele=tamano_ele();
 
-   	fp = fopen ( "ele", "w" );
-  	 fprintf(fp, "%d\n",size_ele+aumenta);
-	for(int i=0;i < size_ele+aumenta;i++){
-		if(malla[i].numero_triangulo != numero_triangulo){
-			fprintf(fp, "%d %d %d %d\n",malla[i].numero_triangulo, malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
-		 }
+      fp = fopen ( "ele", "w" );
+  	   fprintf(fp, "%d\n",size_ele+aumenta);
+      for(int i=0;i < size_ele+aumenta;i++){
+		    if(malla[i].numero_triangulo != numero_triangulo){
+			   fprintf(fp, "%d %d %d %d\n",(i+1), malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+		    }
    	}
    
    

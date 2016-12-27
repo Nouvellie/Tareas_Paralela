@@ -342,6 +342,8 @@ void generar_triangulos_4T(t t1, t malla[]){
 	p punto_medio_uno, punto_medio_dos;
 	arist a1,a2,a3;
 	int size_ele=tamano_ele();
+	
+
 	//Generar elementos mayores
 	punto_medio_uno.coordenadas[0]=punto_medio(t1.aristas[aristas_no_mayores(t1)[0]].vertices[0].nodos,t1.aristas[aristas_no_mayores(t1)[0]].vertices[1].nodos)[0];
 	punto_medio_uno.coordenadas[1]=punto_medio(t1.aristas[aristas_no_mayores(t1)[0]].vertices[0].nodos,t1.aristas[aristas_no_mayores(t1)[0]].vertices[1].nodos)[1];
@@ -349,46 +351,32 @@ void generar_triangulos_4T(t t1, t malla[]){
 	punto_medio_dos.coordenadas[0]=punto_medio(t1.aristas[aristas_no_mayores(t1)[1]].vertices[0].nodos,t1.aristas[aristas_no_mayores(t1)[1]].vertices[1].nodos)[0];
 	punto_medio_dos.coordenadas[1]=punto_medio(t1.aristas[aristas_no_mayores(t1)[1]].vertices[0].nodos,t1.aristas[aristas_no_mayores(t1)[1]].vertices[1].nodos)[1];
 
-	//Generando vertices primeramente
-	t2.vertices[0].nodos.coordenadas[0]=vertices_no_mayores(t1)[0];
-	t2.vertices[0].nodos.coordenadas[1]=vertices_no_mayores(t1)[1];
-	t2.vertices[2].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[0];
-	t2.vertices[2].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[1];
+	//Se les asigna un numero a estos vertices
+	sobreescribir_ele(punto_medio_uno);
+	sobreescribir_ele(punto_medio_dos);
+	sobreescribir_ele(t1.elemento_mayor.punto_medio);
 
-	//Que pasa si el punto medio no pertenece a la arista generada por vertice 1 y vertice opuesto a la arista mayor?
-	if(ecuacion_recta(t2.vertices[0].nodos, t1.elemento_mayor.vertice_opuesto.nodos, punto_medio_uno)==1){
-		t2.vertices[1].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
-		t2.vertices[1].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
-	}else{
-		t2.vertices[1].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
-		t2.vertices[1].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
-	}
+	int  size_node=tamano_node();
+	int numero_vertice[size_node];
+	float x_vertice[size_node],y_vertice[size_node];
 
-	t5.vertices[0].nodos.coordenadas[0]=vertices_no_mayores(t1)[2];
-	t5.vertices[0].nodos.coordenadas[1]=vertices_no_mayores(t1)[3];
-	t5.vertices[2].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[0];
-	t5.vertices[2].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[1];
-	if(ecuacion_recta(t5.vertices[0].nodos, t1.elemento_mayor.vertice_opuesto.nodos, punto_medio_uno)==1){
-		t5.vertices[1].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
-		t5.vertices[1].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
-	}else{
-		t5.vertices[1].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
-		t5.vertices[1].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
-	}
+	lectura_node(&numero_vertice,&x_vertice,&y_vertice);
 
-	t3.vertices[0].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[0];
-	t3.vertices[0].nodos.coordenadas[1]=t1.elemento_mayor.punto_medio.coordenadas[1];
-	t3.vertices[1].nodos.coordenadas[0]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
-	t3.vertices[1].nodos.coordenadas[1]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
-	t3.vertices[2].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
-	t3.vertices[2].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
+	/*t2.vertices[0].numero=
+	t2.vertices[1].numero=
+	t2.vertices[2].numero=
 
-	t4.vertices[0].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[0];
-	t4.vertices[0].nodos.coordenadas[1]=t1.elemento_mayor.punto_medio.coordenadas[1];
-	t4.vertices[1].nodos.coordenadas[0]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
-	t4.vertices[1].nodos.coordenadas[1]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
-	t4.vertices[2].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
-	t4.vertices[2].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
+	t3.vertices[0].numero=
+	t3.vertices[1].numero=
+	t3.vertices[2].numero=
+
+	t4.vertices[0].numero=
+	t4.vertices[1].numero=
+	t4.vertices[2].numero=
+
+	t5.vertices[0].numero=
+	t5.vertices[1].numero=
+	t5.vertices[2].numero=*/
 
 	asignar_arista(a1,t1.elemento_mayor.arista_mayor);
 	asignar_arista(a2,t1.aristas[aristas_no_mayores(t1)[0]]);
@@ -399,17 +387,6 @@ void generar_triangulos_4T(t t1, t malla[]){
 	biseccion_afectados(t1.numero_triangulo,a2,malla);
 	biseccion_afectados(t1.numero_triangulo,a3,malla);
 
-	//Generamos las angulos
-	generar_angulos(t2);
-	generar_angulos(t3);
-	generar_angulos(t4);
-	generar_angulos(t5);
-
-	//Generamos las aristas
-	generar_aristas(t2);
-	generar_aristas(t3);
-	generar_aristas(t4);
-	generar_aristas(t5);
 
 	//Debemos agregar los puntos medios a los vertices
 	
