@@ -49,27 +49,28 @@ void split_convert(char s[],int vector[]){
 
 }
 
-void string_entero(int enteros[100],char (*string)[100]){
+void string_entero(int (*enteros)[100],char (*string)[100]){
 	//Linea por linea , viendo los caracteres que tiene
 	char *token;
-	int matriz_enteros=0;
 	int j=0;
-	for(int i=0;i<100;i++){
-   		const char s[2] = " ";
-   
-	   /* get the first token */
-	   token = strtok(string[i], s);
+	for(int i=0;i<18;i++){
+
+	   token = strtok(string[i]," ");
 	   
-	   /* walk through other tokens */
-	   while( token != NULL ) 
-	   {
-	   		//printf( "%d\n", atoi(token) );
-	   		enteros[j]=atoi(token);
-	   		//printf("%d %d\n",enteros[j],j);
-	      	token = strtok(NULL, s);
+	   while( j < 8 ){
+
+	   		if(token==NULL){
+	   			enteros[i][j]=0;
+	   		}else{
+	   			enteros[i][j]=atoi(token);	
+	   		}
+	   			
+	      	token = strtok(NULL," ");
+	      	//printf("%d %d %d\n",enteros[i][j],i,j);
 	      	j++;
 	    
 	   }
+	   j=0;
 	}
 }
 

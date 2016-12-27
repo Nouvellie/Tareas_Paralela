@@ -24,16 +24,11 @@ struct arista_mayor_triangulo{
 	struct nodo vertice_opuesto;
 };
 
-struct elementos_adyacentes{
-	struct arista arista_adyacente[3];
-	int triangulos_adyacentes[3];
-};
-
 struct triangulo{
 	struct nodo vertices[3];
 	struct angulo angulos[3];
 	int numero_triangulo;
 	struct arista aristas[3];
 	struct arista_mayor_triangulo elemento_mayor;
-	struct elementos_adyacentes elemento_adyacente;
+	int triangulos_adyacentes[3];
 };

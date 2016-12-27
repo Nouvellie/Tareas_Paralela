@@ -3,7 +3,6 @@
 #include <estructuras.h>
 #include <metodos.h>
 #include <manejo_ficheros.h>
-#include <errno.h>
 
 typedef struct triangulo t;
 //Calculamos los angulos, segun los lados del triangulo
