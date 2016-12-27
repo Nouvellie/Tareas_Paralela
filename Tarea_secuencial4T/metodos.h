@@ -6,6 +6,17 @@
 typedef struct triangulo t;
 typedef struct punto p;
 typedef struct arista arist;
+typedef struct triangulos_afectados ta;
+ta lista_tafectados;
+
+int triangulo_afectado(t t1){
+	for(int i=0;i<lista_tafectados.size;i++){
+		if(t1.numero_triangulo==lista_tafectados.t_afectados[i]){
+			return 1;
+		}
+	}
+	return 0;
+}
 
 int ecuacion_recta(p x, p y, p z){
 	//y-y0=m(x-x0)
@@ -302,6 +313,7 @@ int adyacentes_afectados(int num_triangulo,arist arista_afectada, t malla[]){
 void biseccion_afectados(int num_triangulo,arist arista_afectada ,t malla[]){
 	//Verificamos los triangulos que estan adyacentes, ya que la biseccion altero las 3 aristas serian maximo 3 triangulos
 	//adyacentes_afectados(t1, malla);	
+	int size=0;
 	int num_t=num_triangulo;
 	arist arist_afectada;
 	asignar_arista(arist_afectada,arista_afectada);
@@ -312,9 +324,13 @@ void biseccion_afectados(int num_triangulo,arist arista_afectada ,t malla[]){
 		num_t=adyacentes_afectados(num_triangulo,arista_afectada,malla);
 		//Aca genero el punto medio, para luego formar los triangulos
 		//¿Sera necesario guardar estos triangulos para luego aplicar a los triangulos necesarios?
+		size++;
+		//Se guardan los triangulos en la lista, para luego verificar que triangulo se forma con su punto medio
+		lista_tafectados.t_afectados[size]=num_triangulo;
 		elementos_mayores(malla[num_t-1]);
 		asignar_arista(arist_afectada,malla[num_t-1].elemento_mayor.arista_mayor);
 	}
+	lista_tafectados.size=size;
 }
 
 void generar_triangulos_4T(t t1, t malla[]){
@@ -433,7 +449,12 @@ void conformidad(){
 }
 
 void generar_triangulos_afectados(t malla[]){
-
+	//El length esta mal utilizado, ya que es un vector dinamico
+	for(int i=0;i<length(malla);i++){
+		if(triangulo_afectado(malla[i])){
+			
+		}
+	}	
 }
 
 

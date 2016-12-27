@@ -1,5 +1,10 @@
 #include <stdio.h>
 
+struct triangulos_afectados{
+	int *t_afectados;
+	int size;
+};
+
 struct punto{
 	float coordenadas[2];
 };
