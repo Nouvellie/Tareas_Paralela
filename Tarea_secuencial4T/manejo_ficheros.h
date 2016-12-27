@@ -105,8 +105,24 @@ void lectura_ele(int x1[],int x2[], int x3[], int x4[]){
 
 }
 
-void modificar_node(){
-	
+void sobreescribir_node(){
+
+}
+
+void sobreescribir_ele(t malla[], int aumenta, int numero_triangulo){
+	FILE *fp;
+	int size_ele=tamano_ele();
+
+   	fp = fopen ( "ele", "w" );
+  	 fprintf(fp, "%d\n",size_ele+aumenta);
+	for(int i=0;i < size_ele+aumenta;i++){
+		if(malla[i].numero_triangulo != numero_triangulo){
+			fprintf(fp, "%d %d %d %d\n",malla[i].numero_triangulo, malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+		}
+   	}
+   
+   
+   fclose ( fp );
 }
 
 int tamano_node(){

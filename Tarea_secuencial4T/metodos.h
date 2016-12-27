@@ -411,37 +411,27 @@ void generar_triangulos_4T(t t1, t malla[]){
 	generar_aristas(t4);
 	generar_aristas(t5);
 
-
 	//Generamos los numeros de triangulo y aristas
 	//length es el tamaño de la malla, le agregamos los elementos nuevos y le restamos el triangulo que se bisecciono
 	//Reajustamos el tamaño del vector dinamico
-	for(int i=0; i< size_ele+3;i++){
-		malla[i].numero_triangulo=i+1;
-		if(malla[i].numero_triangulo == i+1){
-			//En esta posicion estaba anteriormente el triangulo que se bisecciono
+	for(int i=0; i< size_ele+4;i++){
+		if(i == size_ele){
 			asignar_triangulo(malla[i],t2);
-			//t3, t4 y t5 se encuentran los triangulos que vienen al que se bisecciono
-			malla[i].numero_triangulo=i+1;
-			i=i+1;
 		}
-		if(i == length(malla)){
+		if(i == size_ele+1){
 			asignar_triangulo(malla[i],t3);
-			malla[i].numero_triangulo=i+1;
-			i=i+1;
 		}else{
-			if(i == length(malla)+1){
+			if(i == size_ele+2){
 				asignar_triangulo(malla[i],t4);
-				malla[i].numero_triangulo=i+1;
-				i=i+1;
 			}else{
-				if(i == length(malla)+2){
+				if(i == size_ele+3){
 					asignar_triangulo(malla[i],t5);
-					malla[i].numero_triangulo=i+1;
-					i=i+1;
 				}
 			}
 		}
 	}
+
+	sobreescribir_ele(malla,3,t1.numero_triangulo);
 
 	
 }
