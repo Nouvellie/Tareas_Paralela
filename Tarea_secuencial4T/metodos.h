@@ -419,6 +419,36 @@ void conformidad_interativo(t malla[]){
 	
 }
 
+void refinamiento(float angulo_limite, t malla[]){
+	int size_ele=tamano_ele();
+	int triangulos_refinar[size_ele];
+
+	criterio_refinamiento(triangulos_refinar,angulo_limite,malla);
+
+	for(int i=0;i<size_ele;i++){
+		//RECORRO LA LISTA DE TRIANGULOS QUE TENGAN EL NUMERO DE UN TRIANGULO A REFINAR, SI ES ASI LO REFINO Y MODIFICO LA MALLA
+		for(int j=0;j<size_ele;j++){
+			if(triangulos_refinar[j] == malla[i].numero_triangulo){
+				//MOMENTO EPICO
+				generar_triangulos_4T(malla[i], malla);
+				conformidad_interativo(malla);
+				i=-1;
+			}
+		}
+	}
+}
+
+void criterio_refinamiento(int triangulos_refinar[], float angulo_limite, t malla[]){
+	int size_ele=tamano_ele();
+
+	for(int i=0;i<size_ele;i++){
+		if(malla[i].angulos[0].grados < angulo_limite || malla[i].angulos[1].grados < angulo_limite || malla[i].angulos[2].grados < angulo_limite){
+			triangulos_refinar[i]=malla[i].numero_triangulo;
+		}else{
+			triangulos_refinar[i]=0;
+		}
+	}
+}
 
 //Incompleto, solo he generado una matriz y asignar los elementos 
 void llenado_malla(t malla[]){

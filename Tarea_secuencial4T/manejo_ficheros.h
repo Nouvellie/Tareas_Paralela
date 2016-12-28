@@ -40,7 +40,7 @@ void asignar_string(char s0[], char s1[]){
 
 void lectura_node(int x1[],float x2[], float x3[]){
 	FILE *fichero;
-   char nombre[10] = "node";
+   char nombre[10] = "mesh.node";
    unsigned int i, size;
 
    fichero = fopen( nombre, "r" );
@@ -74,7 +74,7 @@ void lectura_node(int x1[],float x2[], float x3[]){
 
 void lectura_ele(int x1[],int x2[], int x3[], int x4[]){
 	FILE *fichero;
-   char nombre[10] = "ele";
+   char nombre[10] = "mesh.ele";
    unsigned int i, size;
 
    fichero = fopen( nombre, "r" );
@@ -116,7 +116,7 @@ void inicio_agregar_vertice_node(){
    FILE *fp;
    int size_node=tamano_node();
    size_node++;
-   fp = fopen ( "node", "r+" );
+   fp = fopen ( "mesh.node", "r+" );
    rewind(fp);
    fprintf(fp, "%d\n",size_node);
    fclose ( fp );
@@ -125,7 +125,7 @@ void termino_agregar_vertice_node(p puntos){
    FILE *fp;
    int size_node=tamano_node();
    unsigned int z=0;
-   fp = fopen ( "node", "a" );
+   fp = fopen ( "mesh.node", "a" );
 
    fprintf(fp, "\n%d %f %f %f",size_node,puntos.coordenadas[0],puntos.coordenadas[1], z);
    fclose ( fp );
@@ -138,7 +138,7 @@ void eliminar_triangulo_ele(int numero_triangulo,t malla[]){
    FILE *fp;
    int size_ele=tamano_ele();
 
-      fp = fopen ( "ele", "w" );
+      fp = fopen ( "mesh.ele", "w" );
       fprintf(fp, "%d\n",size_ele);
       for(int i=0;i < size_ele;i++){
           if(malla[i].numero_triangulo != numero_triangulo){
@@ -161,17 +161,18 @@ void agregar_triangulo_ele(t t1){
 void inicio_agregar_ele(){
    FILE *fp;
    int size_ele=tamano_ele();
+   size_ele++;
 
-   fp = fopen ( "ele", "r+" );
+   fp = fopen ( "mesh.ele", "r+" );
    rewind(fp);
-   fprintf(fp, "%d\n",size_ele+1);
+   fprintf(fp, "%d\n",size_ele);
    fclose ( fp );
 }
 
 void termino_agregar_ele(t t1){
    FILE *fp;
    int size_ele=tamano_ele();
-   fp = fopen ( "ele", "a" );
+   fp = fopen ( "mesh.ele", "a" );
    fprintf(fp, "\n%d %d %d %d",size_ele,t1.vertices[0].numero,t1.vertices[1].numero,t1.vertices[2].numero,0);
    fclose ( fp );
 }
@@ -181,7 +182,7 @@ int tamano_node(){
     FILE *fp;
 	int res;
 	
-	fp = fopen("node", "r");
+	fp = fopen("mesh.node", "r");
 	rewind(fp);	
 	fscanf(fp,"%d *\n", &res);    
     fclose(fp);
@@ -194,7 +195,7 @@ int tamano_ele(){
 	FILE *fp;
 	int res;
 	
-	fp = fopen("ele", "r");
+	fp = fopen("mesh.ele", "r");
 	rewind(fp);	
 	fscanf(fp,"%d *\n", &res);    
     fclose(fp);
