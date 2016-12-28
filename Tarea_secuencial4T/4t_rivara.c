@@ -21,13 +21,9 @@ int main(){
 	system("clear");
 	int size_ele=tamano_ele();
 	t malla[size_ele];
-	//mostrar_vertices();
-	p puntos;
-	puntos.coordenadas[0]=1.2322223;
-	puntos.coordenadas[1]=2.3222222;
-	agregar_vertice_node(puntos);
+
 	llenado_malla(malla);
-	//refinamiento(18, malla);
+	refinamiento(18, malla);
 
 	return 0;
 }

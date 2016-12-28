@@ -5,8 +5,6 @@
 typedef struct triangulo t;
 typedef struct punto p;
 typedef struct arista arist;
-typedef struct triangulos_afectados ta;
-ta lista_tafectados;
 
 //FALTA ASIGNAR EL NUMERO DEL VERTICE AL PUNTO MEDIO DE LA ARISTA MODIFICADA, SOBRE ESCRIBIR EL ARCHIVO Y AGREGAR ESA LINEA, PARA LEERLA POSTERIORMENTE
 
