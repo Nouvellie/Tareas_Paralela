@@ -225,14 +225,14 @@ void generar_aristas(t t1){
 	t1.aristas[0].vertices[1].nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
 
 	t1.aristas[1].numero=2;
-	t1.aristas[1].vertices[0].nodos.coordenadas[0]=t1.vertices[0].nodos.coordenadas[0];
-	t1.aristas[1].vertices[0].nodos.coordenadas[1]=t1.vertices[0].nodos.coordenadas[1];
+	t1.aristas[1].vertices[0].nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
+	t1.aristas[1].vertices[0].nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
 	t1.aristas[1].vertices[1].nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
 	t1.aristas[1].vertices[1].nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
 	
 	t1.aristas[2].numero=3;
-	t1.aristas[2].vertices[0].nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
-	t1.aristas[2].vertices[0].nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
+	t1.aristas[2].vertices[0].nodos.coordenadas[0]=t1.vertices[0].nodos.coordenadas[0];
+	t1.aristas[2].vertices[0].nodos.coordenadas[1]=t1.vertices[0].nodos.coordenadas[1];
 	t1.aristas[2].vertices[1].nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
 	t1.aristas[2].vertices[1].nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
 }
@@ -242,6 +242,8 @@ void generar_triangulos_4T(t t1, t malla[]){
 	//Agregamos un nuevo triangulo
 	t t2,t3,t4,t5;
 	p punto_medio_uno, punto_medio_dos;
+
+	elementos_mayores(t1);
 
 	//Generar elementos mayores
 	punto_medio_uno.coordenadas[0]=punto_medio(t1.aristas[aristas_no_mayores(t1)[0]].vertices[0].nodos,t1.aristas[aristas_no_mayores(t1)[0]].vertices[1].nodos)[0];
@@ -313,9 +315,49 @@ void generar_triangulos_4T(t t1, t malla[]){
 	
 }
 
+void biseccion_triangulo(t t1, t malla[]){
+	t t2,t3;
+	p punto_medio;
 
-void conformidad_recursivo(t malla[]){
+
+}
+
+void conformidad_interativo(t malla[]){
+	int size_ele=tamano_ele();
+	for(int i=0;i<size_ele;i++){
+		//Verificamos si el triangulo no es conforme
+		if(triangulo_conforme(malla[i])==0){
+
+		}
+	}
 	
+}
+
+int triangulo_conforme(t t1){
+	p pm_arista_uno,pm_arista_dos,pm_arista_tres;
+	int size_node=tamano_node();
+	int numero_vertice[size_node];
+	float x_vertice[size_node],y_vertice[size_node];
+
+	lectura_node(&numero_vertice,&x_vertice,&y_vertice);
+
+	pm_arista_uno.coordenadas[0]=punto_medio(t1.aristas[0].vertices[0].nodos,t1.aristas[0].vertices[1].nodos)[0];
+	pm_arista_uno.coordenadas[1]=punto_medio(t1.aristas[0].vertices[0].nodos,t1.aristas[0].vertices[1].nodos)[1];
+
+	pm_arista_dos.coordenadas[0]=punto_medio(t1.aristas[1].vertices[0].nodos,t1.aristas[1].vertices[1].nodos)[0];
+	pm_arista_dos.coordenadas[1]=punto_medio(t1.aristas[1].vertices[0].nodos,t1.aristas[1].vertices[1].nodos)[1];
+
+	pm_arista_tres.coordenadas[0]=punto_medio(t1.aristas[2].vertices[0].nodos,t1.aristas[2].vertices[1].nodos)[0];
+	pm_arista_tres.coordenadas[1]=punto_medio(t1.aristas[2].vertices[0].nodos,t1.aristas[2].vertices[1].nodos)[1];
+
+	for(int i=0;i<size_node;i++){
+		if((pm_arista_uno.coordenadas[0]==x_vertice[i] && pm_arista_uno.coordenadas[1]==y_vertice[i]) || (pm_arista_dos.coordenadas[0]==x_vertice[i] && pm_arista_dos.coordenadas[1]==y_vertice[i]) || (pm_arista_tres.coordenadas[0]==x_vertice[i] && pm_arista_tres.coordenadas[1]==y_vertice[i])){
+			return 0;
+		}
+	}
+
+	return 1;
+
 }
 
 int *ordenar_vertices(int v1, int v2, int v3){
