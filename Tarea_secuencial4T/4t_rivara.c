@@ -25,7 +25,7 @@ int main(){
 	puntos.coordenadas[1]=2.6666;
 	//mostrar_vertices();
 
-	sobreescribir_node(puntos);
+	agregar_vertice_node(puntos);
 	llenado_malla(malla);
 
 	return 0;

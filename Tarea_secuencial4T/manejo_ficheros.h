@@ -44,7 +44,7 @@ void lectura_node(int x1[],float x2[], float x3[]){
    unsigned int i, size;
 
    fichero = fopen( nombre, "r" );
-   printf( "Fichero: %s (para lectura) -> ", nombre );
+   printf( "Fichero: Node " );
    if( fichero )
       printf( "existe (ABIERTO)\n" );
    else
@@ -78,7 +78,7 @@ void lectura_ele(int x1[],int x2[], int x3[], int x4[]){
    unsigned int i, size;
 
    fichero = fopen( nombre, "r" );
-   printf( "Fichero: %s (para lectura) -> ", nombre );
+   printf( "Fichero: Elements ");
    if( fichero )
       printf( "existe (ABIERTO)\n" );
    else
@@ -105,47 +105,74 @@ void lectura_ele(int x1[],int x2[], int x3[], int x4[]){
 
 }
 
-void sobreescribir_node(p puntos){
-   inicio_node();
-   termino_node(puntos);
+//PARAMETROS PARA AGREGAR UN NODO SON: 
+//ERROR AL GRABAR MUCHOS NODOS, YA QUE ME BORRA EL PRIMERO NUMERO DEL NODO Y SE QUEDA CON LOS ULTIMOS 3 DATOS
+void agregar_vertice_node(p puntos){
+   inicio_agregar_vertice_node();
+   termino_agregar_vertice_node(puntos);
 }
 
-void inicio_node(){
+void inicio_agregar_vertice_node(){
    FILE *fp;
    int size_node=tamano_node();
-
+   size_node++;
    fp = fopen ( "node", "r+" );
    rewind(fp);
-   fprintf(fp, "%d\n",size_node+1);
+   fprintf(fp, "%d\n",size_node);
    fclose ( fp );
 }
-void termino_node(p puntos){
+void termino_agregar_vertice_node(p puntos){
    FILE *fp;
    int size_node=tamano_node();
+   unsigned int z=0;
+   fp = fopen ( "node", "a" );
 
-   fp = fopen ( "node", "a+" );
-   for(int i=0;i < size_node;i++){
-      if(i==size_node-1){
-         fprintf(fp, "%d %f %f %f\n",i+1,puntos.coordenadas[0],puntos.coordenadas[1],0);
-      }
-      
-   }
+   fprintf(fp, "\n%d %f %f %f",size_node,puntos.coordenadas[0],puntos.coordenadas[1], z);
    fclose ( fp );
 }
-//El numero de triangulo no se repite
-void sobreescribir_ele(t malla[], int aumenta, int numero_triangulo){
-	FILE *fp;
-	int size_ele=tamano_ele();
+
+
+
+//Sacamos al triangulo biseccionado del archivo
+void eliminar_triangulo_ele(int numero_triangulo,t malla[]){
+   FILE *fp;
+   int size_ele=tamano_ele();
 
       fp = fopen ( "ele", "w" );
-  	   fprintf(fp, "%d\n",size_ele+aumenta);
-      for(int i=0;i < size_ele+aumenta;i++){
-		    if(malla[i].numero_triangulo != numero_triangulo){
-			   fprintf(fp, "%d %d %d %d\n",(i+1), malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
-		    }
-   	}
+      fprintf(fp, "%d\n",size_ele);
+      for(int i=0;i < size_ele;i++){
+          if(malla[i].numero_triangulo != numero_triangulo){
+            fprintf(fp, "%d %d %d %d\n",malla[i].numero_triangulo, malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+          }
+      }
    
    
+   fclose ( fp );
+}
+
+//PARAMETROS PARA AGREGAR UN TRIANGULO SON: NUMERO DE CADA VERTICE Y ESTE DEFINIDO EN NODE PREVIAMENTE
+
+//Agregamos triangulo al archivo ele
+void agregar_triangulo_ele(t t1){
+   inicio_agregar_ele();
+   termino_agregar_ele(t1);
+}
+
+void inicio_agregar_ele(){
+   FILE *fp;
+   int size_ele=tamano_ele();
+
+   fp = fopen ( "ele", "r+" );
+   rewind(fp);
+   fprintf(fp, "%d\n",size_ele+1);
+   fclose ( fp );
+}
+
+void termino_agregar_ele(t t1){
+   FILE *fp;
+   int size_ele=tamano_ele();
+   fp = fopen ( "ele", "a" );
+   fprintf(fp, "\n%d %d %d %d",size_ele,t1.vertices[0].numero,t1.vertices[1].numero,t1.vertices[2].numero,0);
    fclose ( fp );
 }
 
