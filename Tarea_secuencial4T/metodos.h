@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 typedef struct triangulo t;
 typedef struct punto p;
@@ -10,15 +11,6 @@ typedef struct arista arist;
 
 /*************************	METODOS CALCULAR *************************/
  
-int triangulo_afectado(t t1){
-	for(int i=0;i<lista_tafectados.size;i++){
-		if(t1.numero_triangulo==lista_tafectados.t_afectados[i]){
-			return 1;
-		}
-	}
-	return 0;
-}
-
 int *ordenar_vertices(int v1, int v2, int v3){
 	int *v=malloc(sizeof(int)*3);
 	int list[3]={v1,v2,v3};
@@ -53,10 +45,13 @@ int ecuacion_recta(p x, p y, p z){
 	}
 }
 
-void angulo(float a, float b, float c,float *A, float *B, float *C)  {
-    *C=acos((c*c-a*a-b*b)/(-2*a*b))*180;
-    *A=acos((a*a-b*b-c*c)/(-2*b*c))*180;
-    *B=acos((b*b-a*a-c*c)/(-2*a*c))*180;
+float *angulo(float a, float b, float c)  {
+	float *ang=malloc(sizeof(int)*3);
+    ang[0]=acos((c*c-a*a-b*b)/(-2*a*b))*180/3.14;
+    ang[1]=acos((a*a-b*b-c*c)/(-2*b*c))*180/3.14;
+    ang[2]=acos((b*b-a*a-c*c)/(-2*a*c))*180/3.14;
+
+    return ang;
 }
 
 //Saco la distancia entre dos puntos
@@ -90,6 +85,8 @@ int *aristas_no_mayores(t t1){
 			if(t1.aristas[2].numero==t1.elemento_mayor.arista_mayor.numero){
 				aristas[0]=0;
 				aristas[1]=1;
+				return aristas;
+			}else{
 				return aristas;
 			}
 		}
@@ -126,40 +123,9 @@ float *vertices_no_mayores(t t1){
 /*************************	GENERADORES *************************/
 
 void generar_angulos(t t1){
-	float m1=(t1.vertices[0].nodos.coordenadas[1]-t1.vertices[1].nodos.coordenadas[1])/(t1.vertices[0].nodos.coordenadas[0]-t1.vertices[1].nodos.coordenadas[0]);
-	float m2=(t1.vertices[0].nodos.coordenadas[1]-t1.vertices[2].nodos.coordenadas[1])/(t1.vertices[0].nodos.coordenadas[0]-t1.vertices[2].nodos.coordenadas[0]);
-	float m3=(t1.vertices[1].nodos.coordenadas[1]-t1.vertices[2].nodos.coordenadas[1])/(t1.vertices[1].nodos.coordenadas[0]-t1.vertices[2].nodos.coordenadas[0]);
-	
-	//Verificamos que los angulos sean positivos debe haber un peque;o error de angulos
-	if(atan((m2-m1)/(1+m2*m1))<0){
-		t1.angulos[0].grados=-1*atan((m2-m1)/(1+m2*m1));
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
-		t1.angulos[0].vertice_angulo.numero=t1.vertices[2].numero;
-	}else{
-		t1.angulos[0].grados=atan((m2-m1)/(1+m2*m1));
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
-		t1.angulos[0].vertice_angulo.numero=t1.vertices[2].numero;
-	}
-	
-	if(atan((m3-m1)/(1+m3*m1))<0){
-		t1.angulos[1].grados=-1*atan((m3-m1)/(1+m3*m1));
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
-		t1.angulos[1].vertice_angulo.numero=t1.vertices[1].numero;
-	}else{
-		t1.angulos[1].grados=atan((m3-m1)/(1+m3*m1));
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
-		t1.angulos[1].vertice_angulo.numero=t1.vertices[1].numero;
-	}	
-	//El pequeño error de aproximacion lo resolvemos dandole esos pequeños diferenciales de angulo al ultimo angulo
-	t1.angulos[2].grados=180-(t1.angulos[1].grados+t1.angulos[0].grados);
-	
-	t1.angulos[2].vertice_angulo.nodos.coordenadas[0]=t1.vertices[0].nodos.coordenadas[0];
-	t1.angulos[2].vertice_angulo.nodos.coordenadas[1]=t1.vertices[0].nodos.coordenadas[1];
-	t1.angulos[2].vertice_angulo.numero=t1.vertices[0].numero;
+	t1.angulos[0].grados=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[0];
+	t1.angulos[1].grados=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[1];
+	t1.angulos[2].grados=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[2];
 }
 
 
@@ -404,7 +370,7 @@ int triangulo_conforme(t t1){
 
 }
 
-void conformidad_interativo(t malla[]){
+void conformidad_iterativo(t malla[]){
 	int size_ele=tamano_ele();
 	for(int i=0;i<size_ele;i++){
 		//Verificamos si el triangulo no es conforme
@@ -429,7 +395,7 @@ void refinamiento(float angulo_limite, t malla[]){
 			if(triangulos_refinar[j] == malla[i].numero_triangulo){
 				//MOMENTO EPICO
 				generar_triangulos_4T(malla[i], malla);
-				conformidad_interativo(malla);
+				conformidad_iterativo(malla);
 				i=-1;
 			}
 		}
@@ -440,7 +406,7 @@ void criterio_refinamiento(int triangulos_refinar[], float angulo_limite, t mall
 	int size_ele=tamano_ele();
 
 	for(int i=0;i<size_ele;i++){
-		if(malla[i].angulos[0].grados < angulo_limite || malla[i].angulos[1].grados < angulo_limite || malla[i].angulos[2].grados < angulo_limite){
+		if((malla[i].angulos[0].grados < angulo_limite) || (malla[i].angulos[1].grados < angulo_limite) || (malla[i].angulos[2].grados < angulo_limite)){
 			triangulos_refinar[i]=malla[i].numero_triangulo;
 		}else{
 			triangulos_refinar[i]=0;
@@ -475,16 +441,23 @@ void llenado_malla(t malla[]){
 		malla[i].vertices[2].nodos.coordenadas[1]=y_vertice[malla[i].vertices[2].numero-1];
 
 		generar_angulos(malla[i]);
+		
 
 		malla[i].numero_triangulo=numero_triangulo[i];
 
 		generar_aristas(malla[i]);
 
+		printf("Angulos: %d %f %f %f\n",malla[i].numero_triangulo,malla[i].angulos[0].grados,malla[i].angulos[1].grados,malla[i].angulos[2].grados);
+
+		printf("%d %d %d %d\n",malla[i].numero_triangulo,malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+
+		//printf("%d %f %f %f\n\n", malla[i].numero_triangulo, malla[i].angulos[0].grados, malla[i].angulos[1].grados, malla[i].angulos[2].grados);
+		//printf("%f %f %f\n\n\n\n", distancia(malla[i].vertices[0].nodos,malla[i].vertices[1].nodos),distancia(malla[i].vertices[0].nodos,malla[i].vertices[2].nodos),distancia(malla[i].vertices[1].nodos,malla[i].vertices[2].nodos));
 	}
 
-	for(int i=0;i<size_ele;i++){
+	/*for(int i=0;i<size_ele;i++){
 		printf("%d %d %d %d\n",malla[i].numero_triangulo,malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
-	}
+	}*/
 
 
 }
