@@ -35,5 +35,4 @@ struct triangulo{
 	int numero_triangulo;
 	struct arista aristas[3];
 	struct arista_mayor_triangulo elemento_mayor;
-	int triangulos_adyacentes[3];
 };

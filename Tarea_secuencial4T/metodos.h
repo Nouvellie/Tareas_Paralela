@@ -10,6 +10,8 @@ ta lista_tafectados;
 
 //FALTA ASIGNAR EL NUMERO DEL VERTICE AL PUNTO MEDIO DE LA ARISTA MODIFICADA, SOBRE ESCRIBIR EL ARCHIVO Y AGREGAR ESA LINEA, PARA LEERLA POSTERIORMENTE
 
+/*************************	METODOS CALCULAR *************************/
+ 
 int triangulo_afectado(t t1){
 	for(int i=0;i<lista_tafectados.size;i++){
 		if(t1.numero_triangulo==lista_tafectados.t_afectados[i]){
@@ -17,6 +19,29 @@ int triangulo_afectado(t t1){
 		}
 	}
 	return 0;
+}
+
+int *ordenar_vertices(int v1, int v2, int v3){
+	int *v=malloc(sizeof(int)*3);
+	int list[3]={v1,v2,v3};
+	long c, d, t;
+ 
+  	for (c=0;c < 2;c++)
+  	{
+    	for (d = 0 ; d < 3 - c - 1; d++)
+    	{
+      		if (list[d] > list[d+1])
+      		{
+        		t         = list[d];
+        		list[d]   = list[d+1];
+        		list[d+1] = t;
+      		}
+    	}
+  	}
+  	for(int i=0;i<3;i++){
+  		v[i]=list[i];
+  	}
+	return v;
 }
 
 int ecuacion_recta(p x, p y, p z){
@@ -50,42 +75,6 @@ float *punto_medio( p x, p y){
 	return coordenadas;
 }
 
-void generar_angulos(t t1){
-	float m1=(t1.vertices[0].nodos.coordenadas[1]-t1.vertices[1].nodos.coordenadas[1])/(t1.vertices[0].nodos.coordenadas[0]-t1.vertices[1].nodos.coordenadas[0]);
-	float m2=(t1.vertices[0].nodos.coordenadas[1]-t1.vertices[2].nodos.coordenadas[1])/(t1.vertices[0].nodos.coordenadas[0]-t1.vertices[2].nodos.coordenadas[0]);
-	float m3=(t1.vertices[1].nodos.coordenadas[1]-t1.vertices[2].nodos.coordenadas[1])/(t1.vertices[1].nodos.coordenadas[0]-t1.vertices[2].nodos.coordenadas[0]);
-	
-	//Verificamos que los angulos sean positivos debe haber un peque;o error de angulos
-	if(atan((m2-m1)/(1+m2*m1))<0){
-		t1.angulos[0].grados=-1*atan((m2-m1)/(1+m2*m1));
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
-		t1.angulos[0].vertice_angulo.numero=t1.vertices[2].numero;
-	}else{
-		t1.angulos[0].grados=atan((m2-m1)/(1+m2*m1));
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
-		t1.angulos[0].vertice_angulo.nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
-		t1.angulos[0].vertice_angulo.numero=t1.vertices[2].numero;
-	}
-	
-	if(atan((m3-m1)/(1+m3*m1))<0){
-		t1.angulos[1].grados=-1*atan((m3-m1)/(1+m3*m1));
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
-		t1.angulos[1].vertice_angulo.numero=t1.vertices[1].numero;
-	}else{
-		t1.angulos[1].grados=atan((m3-m1)/(1+m3*m1));
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
-		t1.angulos[1].vertice_angulo.nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
-		t1.angulos[1].vertice_angulo.numero=t1.vertices[1].numero;
-	}	
-	//El pequeño error de aproximacion lo resolvemos dandole esos pequeños diferenciales de angulo al ultimo angulo
-	t1.angulos[2].grados=180-(t1.angulos[1].grados+t1.angulos[0].grados);
-	
-	t1.angulos[2].vertice_angulo.nodos.coordenadas[0]=t1.vertices[0].nodos.coordenadas[0];
-	t1.angulos[2].vertice_angulo.nodos.coordenadas[1]=t1.vertices[0].nodos.coordenadas[1];
-	t1.angulos[2].vertice_angulo.numero=t1.vertices[0].numero;
-}
 
 int *aristas_no_mayores(t t1){
 	int *aristas=malloc(2*sizeof(int));
@@ -135,6 +124,46 @@ float *vertices_no_mayores(t t1){
 		}
 	}
 }
+
+/*************************	GENERADORES *************************/
+
+void generar_angulos(t t1){
+	float m1=(t1.vertices[0].nodos.coordenadas[1]-t1.vertices[1].nodos.coordenadas[1])/(t1.vertices[0].nodos.coordenadas[0]-t1.vertices[1].nodos.coordenadas[0]);
+	float m2=(t1.vertices[0].nodos.coordenadas[1]-t1.vertices[2].nodos.coordenadas[1])/(t1.vertices[0].nodos.coordenadas[0]-t1.vertices[2].nodos.coordenadas[0]);
+	float m3=(t1.vertices[1].nodos.coordenadas[1]-t1.vertices[2].nodos.coordenadas[1])/(t1.vertices[1].nodos.coordenadas[0]-t1.vertices[2].nodos.coordenadas[0]);
+	
+	//Verificamos que los angulos sean positivos debe haber un peque;o error de angulos
+	if(atan((m2-m1)/(1+m2*m1))<0){
+		t1.angulos[0].grados=-1*atan((m2-m1)/(1+m2*m1));
+		t1.angulos[0].vertice_angulo.nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
+		t1.angulos[0].vertice_angulo.nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
+		t1.angulos[0].vertice_angulo.numero=t1.vertices[2].numero;
+	}else{
+		t1.angulos[0].grados=atan((m2-m1)/(1+m2*m1));
+		t1.angulos[0].vertice_angulo.nodos.coordenadas[0]=t1.vertices[2].nodos.coordenadas[0];
+		t1.angulos[0].vertice_angulo.nodos.coordenadas[1]=t1.vertices[2].nodos.coordenadas[1];
+		t1.angulos[0].vertice_angulo.numero=t1.vertices[2].numero;
+	}
+	
+	if(atan((m3-m1)/(1+m3*m1))<0){
+		t1.angulos[1].grados=-1*atan((m3-m1)/(1+m3*m1));
+		t1.angulos[1].vertice_angulo.nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
+		t1.angulos[1].vertice_angulo.nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
+		t1.angulos[1].vertice_angulo.numero=t1.vertices[1].numero;
+	}else{
+		t1.angulos[1].grados=atan((m3-m1)/(1+m3*m1));
+		t1.angulos[1].vertice_angulo.nodos.coordenadas[0]=t1.vertices[1].nodos.coordenadas[0];
+		t1.angulos[1].vertice_angulo.nodos.coordenadas[1]=t1.vertices[1].nodos.coordenadas[1];
+		t1.angulos[1].vertice_angulo.numero=t1.vertices[1].numero;
+	}	
+	//El pequeño error de aproximacion lo resolvemos dandole esos pequeños diferenciales de angulo al ultimo angulo
+	t1.angulos[2].grados=180-(t1.angulos[1].grados+t1.angulos[0].grados);
+	
+	t1.angulos[2].vertice_angulo.nodos.coordenadas[0]=t1.vertices[0].nodos.coordenadas[0];
+	t1.angulos[2].vertice_angulo.nodos.coordenadas[1]=t1.vertices[0].nodos.coordenadas[1];
+	t1.angulos[2].vertice_angulo.numero=t1.vertices[0].numero;
+}
+
 
 //ELEMENTOS: DISTANCIA MAYOR, VERTICE OPUESTO ARISTA MAYOR, VERTICES QUE PASAN POR LA ARISTA MAYOR, PUNTO MEDIO
 void elementos_mayores(t t1){
@@ -315,22 +344,39 @@ void generar_triangulos_4T(t t1, t malla[]){
 	
 }
 
-void biseccion_triangulo(t t1, t malla[]){
+void generar_triangulo_biseccion(t t1, t malla[]){
 	t t2,t3;
 	p punto_medio;
 
+	elementos_mayores(t1);
 
-}
+	agregar_vertice_node(t1.elemento_mayor.punto_medio);
 
-void conformidad_interativo(t malla[]){
-	int size_ele=tamano_ele();
-	for(int i=0;i<size_ele;i++){
-		//Verificamos si el triangulo no es conforme
-		if(triangulo_conforme(malla[i])==0){
+	t2.vertices[0].nodos.coordenadas[0]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
+	t2.vertices[0].nodos.coordenadas[1]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
 
-		}
-	}
-	
+	t2.vertices[1].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[0];
+	t2.vertices[1].nodos.coordenadas[1]=t1.elemento_mayor.punto_medio.coordenadas[1];
+
+	t2.vertices[2].nodos.coordenadas[0]=vertices_no_mayores(t1)[0];
+	t2.vertices[2].nodos.coordenadas[1]=vertices_no_mayores(t1)[1];
+
+	t3.vertices[0].nodos.coordenadas[0]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
+	t3.vertices[0].nodos.coordenadas[1]=t1.elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
+
+	t3.vertices[1].nodos.coordenadas[0]=t1.elemento_mayor.punto_medio.coordenadas[0];
+	t3.vertices[1].nodos.coordenadas[1]=t1.elemento_mayor.punto_medio.coordenadas[1];
+
+	t3.vertices[2].nodos.coordenadas[0]=vertices_no_mayores(t1)[2];
+	t3.vertices[2].nodos.coordenadas[1]=vertices_no_mayores(t1)[3];
+
+	eliminar_triangulo_ele(t1.numero_triangulo, malla);
+	agregar_triangulo_ele(t2);
+	agregar_triangulo_ele(t3);
+
+	llenado_malla(malla);
+
+
 }
 
 int triangulo_conforme(t t1){
@@ -360,28 +406,19 @@ int triangulo_conforme(t t1){
 
 }
 
-int *ordenar_vertices(int v1, int v2, int v3){
-	int *v=malloc(sizeof(int)*3);
-	int list[3]={v1,v2,v3};
-	long c, d, t;
- 
-  	for (c=0;c < 2;c++)
-  	{
-    	for (d = 0 ; d < 3 - c - 1; d++)
-    	{
-      		if (list[d] > list[d+1])
-      		{
-        		t         = list[d];
-        		list[d]   = list[d+1];
-        		list[d+1] = t;
-      		}
-    	}
-  	}
-  	for(int i=0;i<3;i++){
-  		v[i]=list[i];
-  	}
-	return v;
+void conformidad_interativo(t malla[]){
+	int size_ele=tamano_ele();
+	for(int i=0;i<size_ele;i++){
+		//Verificamos si el triangulo no es conforme
+		if(triangulo_conforme(malla[i])==0){
+			generar_triangulo_biseccion(malla[i], malla);
+			//arranca de 0 la iteracion, ya que hay que verificar los triangulos por fichero
+			i=-1;
+		}
+	}
+	
 }
+
 
 //Incompleto, solo he generado una matriz y asignar los elementos 
 void llenado_malla(t malla[]){
