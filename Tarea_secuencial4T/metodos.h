@@ -410,6 +410,7 @@ void refinamiento( t malla[]){
 	
 	for(int i=0;i<size_ele;i++){
 		printf(" %d", triangulos_refinar[i]);
+		//printf("Hola");
 	}
 
 	for(int i=0;i<size_ele;i++){
@@ -427,16 +428,20 @@ void refinamiento( t malla[]){
 
 void criterio_refinamiento(int triangulos_refinar[], t malla[]){
 	int size_ele=tamano_ele();
-	float angulo_limite=18.0;
+	float angulo_limite=10.0;
 	for(int i=0;i<size_ele;i++){
 		//printf("%f %f %f\n", malla[i].angulos[0].grados,malla[i].angulos[1].grados,malla[i].angulos[2].grados);
-		if((malla[i].angulos[0].grados < angulo_limite) || (malla[i].angulos[1].grados < angulo_limite) || (malla[i].angulos[2].grados < angulo_limite)){
-			
+		if((malla[i].angulos[0].grados < angulo_limite) || (malla[i].angulos[1].grados < angulo_limite) || (malla[i].angulos[2].grados < angulo_limite)){		
 			triangulos_refinar[i]=malla[i].numero_triangulo;
-			printf(" %d", triangulos_refinar[i]);
+			printf("TRIANGULOS A REFINAR\n");
+			printf(" %d ", malla[i].numero_triangulo);	
+			printf("%d\n", triangulos_refinar[i]);
 		}else{
+			printf("TRIANGULOS NO REFINABLES\n");
 			triangulos_refinar[i]=0;
-			printf(" %d", triangulos_refinar[i]);//
+			//printf("ERROR CON EL VECTOR DE NUMEROS\n");
+			printf(" %d ", malla[i].numero_triangulo);
+			printf("%d\n", triangulos_refinar[i]);
 		}
 	}
 }
