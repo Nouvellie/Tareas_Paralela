@@ -251,15 +251,19 @@ void generar_aristas(struct triangulo *t1){
 
 void generar_triangulos_4T(struct triangulo *t1, t malla[]){
 	//Agregamos un nuevo triangulo
-	t t2,t3,t4,t5;
-	p punto_medio_uno, punto_medio_dos;
+	struct triangulo *t2,*t3,*t4,*t5;
+	struct punto punto_medio_uno, punto_medio_dos;
+
 
 	elementos_mayores(&t1);
 
+	//printf("\n%d\n",aristas_no_mayores((*t1))[0] );
 	//Generar elementos mayores
 	punto_medio_uno.coordenadas[0]=punto_medio((*t1).aristas[aristas_no_mayores((*t1))[0]].vertices[0].nodos,(*t1).aristas[aristas_no_mayores((*t1))[0]].vertices[1].nodos)[0];
 	punto_medio_uno.coordenadas[1]=punto_medio((*t1).aristas[aristas_no_mayores((*t1))[0]].vertices[0].nodos,(*t1).aristas[aristas_no_mayores((*t1))[0]].vertices[1].nodos)[1];
 	
+	printf("Hola 12456\n");
+
 	punto_medio_dos.coordenadas[0]=punto_medio((*t1).aristas[aristas_no_mayores((*t1))[1]].vertices[0].nodos,(*t1).aristas[aristas_no_mayores((*t1))[1]].vertices[1].nodos)[0];
 	punto_medio_dos.coordenadas[1]=punto_medio((*t1).aristas[aristas_no_mayores((*t1))[1]].vertices[0].nodos,(*t1).aristas[aristas_no_mayores((*t1))[1]].vertices[1].nodos)[1];
 
@@ -270,54 +274,55 @@ void generar_triangulos_4T(struct triangulo *t1, t malla[]){
 	agregar_vertice_node(punto_medio_dos);
 	agregar_vertice_node((*t1).elemento_mayor.punto_medio);
 
-	t2.vertices[0].nodos.coordenadas[0]=vertices_no_mayores((*t1))[0];
-	t2.vertices[0].nodos.coordenadas[1]=vertices_no_mayores((*t1))[1];
-	t2.vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
-	t2.vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
+	((*t2)).vertices[0].nodos.coordenadas[0]=vertices_no_mayores((*t1))[0];
+	((*t2)).vertices[0].nodos.coordenadas[1]=vertices_no_mayores((*t1))[1];
+	((*t2)).vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
+	((*t2)).vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
 
 	/*
 		PREGUNTO SI EL VERTICE PUNTO_MEDIO_UNO -SERIA EL PUNTO MEDIO DE UNA DE LAS ARISTAS NO MAYORES- PASA POR LA
-		RECTA GENERADA POR EL VERTICE 1 DEL TRIANGULO T2 Y EL VERTICE DEL PUNTO MEDIO DE LA ARISTA MAYOR
+		RECTA GENERADA POR EL VERTICE 1 DEL TRIANGULO ((*T2)) Y EL VERTICE DEL PUNTO MEDIO DE LA ARISTA MAYOR
 	*/
-	if(ecuacion_recta(t2.vertices[0].nodos, (*t1).elemento_mayor.vertice_opuesto.nodos, punto_medio_uno)==1){
-		t2.vertices[1].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
-		t2.vertices[1].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
+	if(ecuacion_recta(((*t2)).vertices[0].nodos, (*t1).elemento_mayor.vertice_opuesto.nodos, punto_medio_uno)==1){
+		((*t2)).vertices[1].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
+		((*t2)).vertices[1].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
 	}else{
-		t2.vertices[1].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
-		t2.vertices[1].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
+		((*t2)).vertices[1].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
+		((*t2)).vertices[1].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
 	}
 
-	t5.vertices[0].nodos.coordenadas[0]=vertices_no_mayores((*t1))[2];
-	t5.vertices[0].nodos.coordenadas[1]=vertices_no_mayores((*t1))[3];
-	t5.vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
-	t5.vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
-	if(ecuacion_recta(t5.vertices[0].nodos, (*t1).elemento_mayor.vertice_opuesto.nodos, punto_medio_uno)==1){
-		t5.vertices[1].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
-		t5.vertices[1].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
+	(*t5).vertices[0].nodos.coordenadas[0]=vertices_no_mayores((*t1))[2];
+	(*t5).vertices[0].nodos.coordenadas[1]=vertices_no_mayores((*t1))[3];
+	(*t5).vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
+	(*t5).vertices[2].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
+	if(ecuacion_recta((*t5).vertices[0].nodos, (*t1).elemento_mayor.vertice_opuesto.nodos, punto_medio_uno)==1){
+		(*t5).vertices[1].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
+		(*t5).vertices[1].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
 	}else{
-		t5.vertices[1].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
-		t5.vertices[1].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
+		(*t5).vertices[1].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
+		(*t5).vertices[1].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
 	}
 
-	t3.vertices[0].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
-	t3.vertices[0].nodos.coordenadas[1]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
-	t3.vertices[1].nodos.coordenadas[0]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
-	t3.vertices[1].nodos.coordenadas[1]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
-	t3.vertices[2].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
-	t3.vertices[2].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
+	(*t3).vertices[0].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
+	(*t3).vertices[0].nodos.coordenadas[1]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
+	(*t3).vertices[1].nodos.coordenadas[0]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
+	(*t3).vertices[1].nodos.coordenadas[1]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
+	(*t3).vertices[2].nodos.coordenadas[0]=punto_medio_uno.coordenadas[0];
+	(*t3).vertices[2].nodos.coordenadas[1]=punto_medio_uno.coordenadas[1];
 
-	t4.vertices[0].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
-	t4.vertices[0].nodos.coordenadas[1]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
-	t4.vertices[1].nodos.coordenadas[0]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
-	t4.vertices[1].nodos.coordenadas[1]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
-	t4.vertices[2].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
-	t4.vertices[2].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
+	(*t4).vertices[0].nodos.coordenadas[0]=(*t1).elemento_mayor.punto_medio.coordenadas[0];
+	(*t4).vertices[0].nodos.coordenadas[1]=(*t1).elemento_mayor.punto_medio.coordenadas[1];
+	(*t4).vertices[1].nodos.coordenadas[0]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[0];
+	(*t4).vertices[1].nodos.coordenadas[1]=(*t1).elemento_mayor.vertice_opuesto.nodos.coordenadas[1];
+	(*t4).vertices[2].nodos.coordenadas[0]=punto_medio_dos.coordenadas[0];
+	(*t4).vertices[2].nodos.coordenadas[1]=punto_medio_dos.coordenadas[1];
+	
 
 	eliminar_triangulo_ele((*t1).numero_triangulo, malla);
-	agregar_triangulo_ele(t2);
-	agregar_triangulo_ele(t3);
-	agregar_triangulo_ele(t4);
-	agregar_triangulo_ele(t5);
+	agregar_triangulo_ele(&t2);
+	agregar_triangulo_ele(&t3);
+	agregar_triangulo_ele(&t4);
+	agregar_triangulo_ele(&t5);
 
 	//Se vuelve a generar la malla
 	//DBERIA HABER UNA FUNCION, QUE SOLO ME CALCULE LOS DATOS DE LOS TRIANGULOS NUEVOS
@@ -409,7 +414,7 @@ void refinamiento( t malla[]){
 	criterio_refinamiento(triangulos_refinar,malla);
 	
 	for(int i=0;i<size_ele;i++){
-		printf(" %d", triangulos_refinar[i]);
+		printf(" %d\n", triangulos_refinar[i]);
 		//printf("Hola");
 	}
 
@@ -418,8 +423,8 @@ void refinamiento( t malla[]){
 		for(int j=0;j<size_ele;j++){
 			if(triangulos_refinar[j] == malla[i].numero_triangulo){
 				//MOMENTO EPICO
-				generar_triangulos_4T(&malla[i], malla);
-				conformidad_iterativo(malla);
+				//generar_triangulos_4T(&malla[i], malla);
+				//conformidad_iterativo(malla);
 				i=-1;
 			}
 		}
@@ -428,7 +433,7 @@ void refinamiento( t malla[]){
 
 void criterio_refinamiento(int triangulos_refinar[], t malla[]){
 	int size_ele=tamano_ele();
-	float angulo_limite=10.0;
+	float angulo_limite=18.0;
 	for(int i=0;i<size_ele;i++){
 		//printf("%f %f %f\n", malla[i].angulos[0].grados,malla[i].angulos[1].grados,malla[i].angulos[2].grados);
 		if((malla[i].angulos[0].grados < angulo_limite) || (malla[i].angulos[1].grados < angulo_limite) || (malla[i].angulos[2].grados < angulo_limite)){		
