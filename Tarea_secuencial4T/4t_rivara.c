@@ -16,6 +16,21 @@ int main(){
 	int triangulos_refinar[size_ele];
 
 	llenado_malla(&malla);
+	printf("\n");
+	printf("DATOS DEL TRIANGULOS\n");
+	for(int i=0;i<size_ele;i++){
+		printf("%d %d %d %d\n",malla[i].numero_triangulo,malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+	}
+	printf("\n");
+	printf("ANGULOS DE LOS TRIANGULOS\n");
+	for(int i=0;i<size_ele;i++){
+		printf("%d %f %f %f\n",malla[i].numero_triangulo,malla[i].angulos[0].grados,malla[i].angulos[1].grados, malla[i].angulos[2].grados);
+	}
+	printf("\n");
+	printf("ARISTAS DEL TRIANGULO\n");
+	for(int i=0;i<size_ele;i++){
+		printf("%d %d %d %d\n",malla[i].numero_triangulo,malla[i].aristas[0].numero, malla[i].aristas[1].numero, malla[i].aristas[2].numero);
+	}
 	//eliminar_triangulo_ele(3,malla);
 	//llenado_malla(malla);
 	//refinamiento(18, &malla);

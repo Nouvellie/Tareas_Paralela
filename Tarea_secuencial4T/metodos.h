@@ -122,10 +122,12 @@ float *vertices_no_mayores(t t1){
 
 /*************************	GENERADORES *************************/
 
-void generar_angulos(t t1){
-	t1.angulos[0].grados=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[0];
-	t1.angulos[1].grados=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[1];
-	t1.angulos[2].grados=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[2];
+float *generar_angulos(t t1){
+	float *v=malloc(sizeof(float)*3);
+	v[0]=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[0];
+	v[1]=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[1];
+	v[2]=angulo(distancia(t1.vertices[0].nodos,t1.vertices[1].nodos),distancia(t1.vertices[0].nodos,t1.vertices[2].nodos),distancia(t1.vertices[1].nodos,t1.vertices[2].nodos))[2];
+	return v;
 }
 
 
@@ -440,16 +442,18 @@ void llenado_malla(t malla[]){
 		malla[i].vertices[2].nodos.coordenadas[0]=x_vertice[malla[i].vertices[2].numero-1];
 		malla[i].vertices[2].nodos.coordenadas[1]=y_vertice[malla[i].vertices[2].numero-1];
 
-		generar_angulos(malla[i]);
-		
+		malla[i].angulos[0].grados=generar_angulos(malla[i])[0];
+		malla[i].angulos[1].grados=generar_angulos(malla[i])[1];
+		malla[i].angulos[2].grados=generar_angulos(malla[i])[2];
+
 
 		malla[i].numero_triangulo=numero_triangulo[i];
 
 		generar_aristas(malla[i]);
 
-		printf("Angulos: %d %f %f %f\n",malla[i].numero_triangulo,malla[i].angulos[0].grados,malla[i].angulos[1].grados,malla[i].angulos[2].grados);
+		//printf("Angulos: %d %f %f %f\n",malla[i].numero_triangulo,malla[i].angulos[0].grados,malla[i].angulos[1].grados,malla[i].angulos[2].grados);
 
-		printf("%d %d %d %d\n",malla[i].numero_triangulo,malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+		//printf("%d %d %d %d\n",malla[i].numero_triangulo,malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
 
 		//printf("%d %f %f %f\n\n", malla[i].numero_triangulo, malla[i].angulos[0].grados, malla[i].angulos[1].grados, malla[i].angulos[2].grados);
 		//printf("%f %f %f\n\n\n\n", distancia(malla[i].vertices[0].nodos,malla[i].vertices[1].nodos),distancia(malla[i].vertices[0].nodos,malla[i].vertices[2].nodos),distancia(malla[i].vertices[1].nodos,malla[i].vertices[2].nodos));

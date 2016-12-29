@@ -98,7 +98,7 @@ void inicio_agregar_vertice_node(){
    size_node++;
    fp = fopen ( "mesh.node", "r+" );
    rewind(fp);
-   fprintf(fp, "%d\n",size_node);
+   fprintf(fp, "%d\n",&size_node);
    fclose ( fp );
    free(fp);
 }
@@ -108,7 +108,7 @@ void termino_agregar_vertice_node(p puntos){
    float z=0;
    fp = fopen ( "mesh.node", "a" );
 
-   fprintf(fp, "\n%d %f %f %ff",size_node,puntos.coordenadas[0],puntos.coordenadas[1], z);
+   fprintf(fp, "\n%d %f %f %f",&size_node,&puntos.coordenadas[0],&puntos.coordenadas[1], &z);
    fclose ( fp );
 
 }
@@ -122,14 +122,14 @@ void eliminar_triangulo_ele(int numero_triangulo,t malla[]){
    int size_ele=tamano_ele();
 
       fp = fopen ( "mesh.ele", "w" );
-         fprintf(fp, "%d\n",size_ele-1);
+         fprintf(fp, "%d\n",&size_ele-1);
 
       for(int i=0;i < size_ele;i++){
           if(malla[i].numero_triangulo != numero_triangulo){
                if(i != size_ele-1){
-               fprintf(fp, "%d %d %d %d\n",malla[i].numero_triangulo, malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+               fprintf(fp, "%d %d %d %d\n",&malla[i].numero_triangulo, &malla[i].vertices[0].numero,malla[i].vertices[1].numero, &malla[i].vertices[2].numero);
             }else{
-               fprintf(fp, "%d %d %d %d",malla[i].numero_triangulo, malla[i].vertices[0].numero,malla[i].vertices[1].numero, malla[i].vertices[2].numero);
+               fprintf(fp, "%d %d %d %d",&malla[i].numero_triangulo, &malla[i].vertices[0].numero,&malla[i].vertices[1].numero, &malla[i].vertices[2].numero);
             }
           }
       }
@@ -155,7 +155,7 @@ void inicio_agregar_ele(){
 
    fp = fopen ( "mesh.ele", "r+" );
    rewind(fp);
-   fprintf(fp, "%d\n",size_ele);
+   fprintf(fp, "%d\n",&size_ele);
    fclose ( fp );
 }
 
@@ -163,7 +163,7 @@ void termino_agregar_ele(t t1){
    FILE *fp;
    int size_ele=tamano_ele();
    fp = fopen ( "mesh.ele", "a" );
-   fprintf(fp, "\n%d %d %d %d",size_ele,t1.vertices[0].numero,t1.vertices[1].numero,t1.vertices[2].numero,0);
+   fprintf(fp, "\n%d %d %d %d",&size_ele,&t1.vertices[0].numero,&t1.vertices[1].numero,&t1.vertices[2].numero,0);
    fclose ( fp );
 }
 
