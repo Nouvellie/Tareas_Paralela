@@ -83,6 +83,12 @@ def pto_mdo(v1, v2, lnodos):
 	lista=[None] * 2
 	lista[0]=(float(lnodos[v1][1])+float(lnodos[v2][1]))/2
 	lista[1]=(float(lnodos[v1][2])+float(lnodos[v2][2]))/2
+
+	a=int(lnodos[0][0])+1
+	lnodos[0][0]=a
+	lnodos.append([a])
+	lnodos[a].append(lista[0])
+	lnodos[a].append(lista[1])
 	return lista
 
 #Se le sacara punto medio a todos los triangulos, pero se analizara despues si es necesario sacar punto medio a la arista mayor de todos los T
@@ -91,6 +97,11 @@ def asig_pto_mdo(lelementos):
 	for i in range(1,int(lelementos[0][0])+1):
 		lista=pto_mdo(int(lelementos[i][8][1]),int(lelementos[i][8][2]),lnodos)
 		lelementos[i].append(lista)
+
+def pto_mdoa_ele(lelements,indice,lnodes):
+	i=0
+	while (lelementos[indice][9][0] == lnodos[i][1] and lelementos[indice][9][1] == lnodos[i][2]) or (i==lnode[0][0]):
+		return int(lnodos[i][0])
 
 def crear_indice(lelementos):
 	
@@ -130,15 +141,15 @@ def crear_triangulo(v1, v2, v3,lelementos):
 	pto_opuesto_solo(lelementos, lelementos[0][0])
 
 
-
+#REVISAR PUNTO MEDIO
 def cuatro_t(lelementos):
 	i=0
 	while lelementos[i][7] != 1:
-		i=i+1
-	crear_triangulo(3,5,6,lelementos)
-	crear_triangulo(3,5,6,lelementos)
-	crear_triangulo(3,5,6,lelementos)
-	crear_triangulo(3,5,6,lelementos)
+		i=i+1	
+	crear_triangulo(lelementos[i][9],lelementos[i][8][1],pto_mdo(lelementos[i][8][1],lelementos[i][10]),lelementos)
+	crear_triangulo(lelementos[i][9],lelementos[i][8][2],pto_mdo(lelementos[i][8][2],lelementos[i][10]),lelementos)
+	crear_triangulo(pto_mdo(lelementos[i][8][1],lelementos[i][10]),lelementos[i][8][2],pto_mdo(lelementos[i][8][2],lelementos[i][10]),lelementos)
+	crear_triangulo(pto_mdo(lelementos[i][8][1],lelementos[i][10]),lelementos[i][8][2],pto_mdo(lelementos[i][8][2],lelementos[i][9]),lelementos)
 
 
 def pto_opuesto_solo(lelementos, indice):
@@ -189,20 +200,25 @@ lista=angulos(0.999668445,1.4186599311,1.0469407815)
 
 print lista
 """
+"""
 cal_ang(lnodos,lelementos)
 #print lelementos
 
 cant_r=crit_ref(lelementos,30)
 print cant_r
+"""
 
-arista_larga(lelementos)
+#arista_larga(lelementos)
 
-asig_pto_mdo(lelementos)
-
-pto_opuesto(lelementos)
+#asig_pto_mdo(lelementos)
 
 
-crear_indice(lelementos)
+#pto_opuesto(lelementos)
+
+a=pto_mdo(1,2,lnodos)
+
+
+print lnodos
 
 ##print lelementos
 for elem in lelementos:
