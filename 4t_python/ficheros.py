@@ -17,10 +17,17 @@ def angulos(a,b, c):
 def cal_ang(lnodos,lelementos):
 	lista=[]
 	for i in range(1,len(lelementos)):
-		lista=angulos(cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos),cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos),cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos))
-		lelementos[i].append(lista[0])
-		lelementos[i].append(lista[1])
-		lelementos[i].append(lista[2])
+			lista=angulos(cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos),cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos),cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos))
+			lelementos[i].append(lista[0])
+			lelementos[i].append(lista[1])
+			lelementos[i].append(lista[2])
+
+def cal_ang_solo(lnodos, lelementos,indice):
+	lista=[]
+	lista=angulos(cal_dist(int(lelementos[lelementos[indice]][1]),int(lelementos[lelementos[indice]][2]),lnodos),cal_dist(int(lelementos[lelementos[indice]][1]),int(lelementos[lelementos[indice]][3]),lnodos),cal_dist(int(lelementos[lelementos[indice]][2]),int(lelementos[lelementos[indice]][3]),lnodos))
+	lelementos[lelementos[indice]].append(lista[0])
+	lelementos[lelementos[indice]].append(lista[1])
+	lelementos[lelementos[indice]].append(lista[2])
 
 #Criterio de refinamiento, si algun angulo del un triangulo es menor al angulo critico se le asigna un 1 de refinar en contraparte 0 de no refinar
 def crit_ref(lelementos, crit_ang):
@@ -53,6 +60,24 @@ def arista_larga(lelementos):
 			lista[2]=lelementos[i][3]
 			lelementos[i].append(lista)
 
+
+def arista_larga_solo(lelementos, indice):
+		lista=[None] * 3
+		if (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos)) and (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos) > cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos)):
+			lista[0]=cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos)
+			lista[1]=lelementos[indice][1]
+			lista[2]=lelementos[indice][2]
+			lelementos[indice].append(lista)
+		elif (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos)) and (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos)):
+			lista[0]=cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos)
+			lista[1]=lelementos[indice][1]
+			lista[2]=lelementos[indice][3]
+			lelementos[indice].append(lista)
+		elif (cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos)) and (cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos)):
+			lista[0]=cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos)
+			lista[1]=lelementos[indice][2]
+			lista[2]=lelementos[indice][3]
+			lelementos[i].append(lista)
 #Calcula el punto medio			
 def pto_mdo(v1, v2, lnodos):
 	lista=[None] * 2
@@ -67,6 +92,69 @@ def asig_pto_mdo(lelementos):
 		lista=pto_mdo(int(lelementos[i][8][1]),int(lelementos[i][8][2]),lnodos)
 		lelementos[i].append(lista)
 
+def crear_indice(lelementos):
+	lelementos.append(len(lelementos))
+def crear_triangulo(v1, v2, v3,lelementos):
+	#Esta lista genera los tres vertices y el numero del triangulo si es refinable 1 y 0
+	lista=[None] * 3
+	#Genera 3 angulos
+	lista2=[None] * 3
+	#genera la distancia mas larga y los vertices asociados
+	lista3=[None] * 3
+	#Genera el punto medio de la arista mayor
+	lista4=[None] * 2
+
+	lista[0]=v1
+	lista[1]=v2
+	lista[2]=v3
+	
+	
+	#se agregaran los 3 vertices en las casillas de la fila nueva -lista[0]-
+	lelementos[len(lelementos)].append(v1)
+	lelementos[lelementos[len(lelementos)]].append(lista[1])
+	lelementos[lelementos[len(lelementos)]].append(lista[2])
+	lista2=cal_ang(lnodos,lelementos,len(lelementos)-1)
+	#Se agregaran los 3 angulos
+	lelementos[len(lelementos)].append(lista2[0])
+	lelementos[len(lelementos)].append(lista2[1])
+	lelementos[len(lelementos)].append(lista2[2])
+	#No entra al criterio de refinamiento, pero si al de conformidad
+	lelementos[len(lelementos)].append(0)
+	lista3=arista_larga(lelementos,len(lelementos)-1)
+	#se llena la casilla 8 con la distancia mayor y los dos vertices que contienen la arista mayor
+	lelementos[len(lelementos)].append(lista3)
+	#Se genera 
+	lista4=pto_mdo(lelementos[lista[0]][8][1],lelementos[lista[0]][8][2], lnodos)
+	lelementos[lista[0]].append(lista4)
+
+	pto_opuesto_solo(lelementos, len(lelementos))
+
+
+
+"""def cuatro_t(lelementos):
+	i=0
+	while lelementos[i][7] != 1:
+		i=i+1
+	pto_mdo(lelementos[i][8][1],lelementos[i][10],lnodos)
+"""
+
+def pto_opuesto_solo(lelementos, indice):
+	if (lelementos[indice][1] != lelementos[indice][8][1]) and (lelementos[indice][1] != lelementos[indice][8][2]):
+		lelementos[indice].append(lelementos[indice][1])
+	elif (lelementos[indice][2] != lelementos[indice][8][1]) and (lelementos[indice][2] != lelementos[indice][8][2]):
+		lelementos[indice].append(lelementos[indice][2])
+	elif (lelementos[indice][3] != lelementos[indice][8][1]) and (lelementos[indice][3] != lelementos[indice][8][2]):
+		lelementos[indice].append(lelementos[indice][3])
+#Calculamos punto opuesto a la arista mayor
+
+def pto_opuesto(lelementos):
+	for i in range(1,len(lelementos)):
+		if (lelementos[i][1] != lelementos[i][8][1]) and (lelementos[i][1] != lelementos[i][8][2]):
+			lelementos[i].append(lelementos[i][1])
+		elif (lelementos[i][2] != lelementos[i][8][1]) and (lelementos[i][2] != lelementos[i][8][2]):
+			lelementos[i].append(lelementos[i][2])
+		elif (lelementos[i][3] != lelementos[i][8][1]) and (lelementos[i][3] != lelementos[i][8][2]):
+			lelementos[i].append(lelementos[i][3])
 #Lee el fichero .node y lo asigna a la lista lnodos
 lineas = open("mesh.node").readlines()
 lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
@@ -95,6 +183,13 @@ print cant_r
 arista_larga(lelementos)
 
 asig_pto_mdo(lelementos)
+
+pto_opuesto(lelementos)
+
+crear_indice(lelementos)
+crear_triangulo(3,5,6,lelementos)
+
+
 #print lelementos[1][8][2], lelementos[1][8][1]
 for elem in lelementos: # ciclo que imprime la lista de todos los triangulos
 	#print elem[0:4] #imprimer solo el indice de triangulo y sus 3 vertices
