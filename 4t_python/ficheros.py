@@ -15,24 +15,24 @@ def angulos(a,b, c):
 
 #Genera los 3 angulos a todos los triangulos de toda la malla y se los agrega a la lista lelementos
 def cal_ang(lnodos,lelementos):
-	lista=[]
-	for i in range(1,len(lelementos)):
+	lista=[None] *3
+	for i in range(1,int(lelementos[0][0])+1):
 			lista=angulos(cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos),cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos),cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos))
 			lelementos[i].append(lista[0])
 			lelementos[i].append(lista[1])
 			lelementos[i].append(lista[2])
 
-def cal_ang_solo(lnodos, lelementos,indice):
+def cal_ang_solo(lnodos, lelementos,i):
 	lista=[]
-	lista=angulos(cal_dist(int(lelementos[lelementos[indice]][1]),int(lelementos[lelementos[indice]][2]),lnodos),cal_dist(int(lelementos[lelementos[indice]][1]),int(lelementos[lelementos[indice]][3]),lnodos),cal_dist(int(lelementos[lelementos[indice]][2]),int(lelementos[lelementos[indice]][3]),lnodos))
-	lelementos[lelementos[indice]].append(lista[0])
-	lelementos[lelementos[indice]].append(lista[1])
-	lelementos[lelementos[indice]].append(lista[2])
+	lista=angulos(cal_dist(int(lelementos[lelementos[i][0]][1]),int(lelementos[lelementos[i][0]][2]),lnodos),cal_dist(int(lelementos[lelementos[i][0]][1]),int(lelementos[lelementos[i][0]][3]),lnodos),cal_dist(int(lelementos[lelementos[i][0]][2]),int(lelementos[lelementos[i][0]][3]),lnodos))
+	lelementos[lelementos[i][0]].append(lista[0])
+	lelementos[lelementos[i][0]].append(lista[1])
+	lelementos[lelementos[i][0]].append(lista[2])
 
 #Criterio de refinamiento, si algun angulo del un triangulo es menor al angulo critico se le asigna un 1 de refinar en contraparte 0 de no refinar
 def crit_ref(lelementos, crit_ang):
 	cant_ref=0
-	for i in range(1,len(lelementos)):
+	for i in range(1,int(lelementos[0][0])+1):
 		if lelementos[i][4] < crit_ang or lelementos[i][5] < crit_ang or lelementos[i][6] < crit_ang:
 			cant_ref=cant_ref+1
 			lelementos[i].append(1)
@@ -42,7 +42,7 @@ def crit_ref(lelementos, crit_ang):
 
 #En esta funcion determinamos las distancias mayores y asignaermos los vertices a esa distancia mayor
 def arista_larga(lelementos):
-	for i in range(1,len(lelementos)):
+	for i in range(1,int(lelementos[0][0])+1):
 		lista=[None] * 3
 		if (cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos) > cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos)) and (cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos) > cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos)):
 			lista[0]=cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos)
@@ -61,22 +61,22 @@ def arista_larga(lelementos):
 			lelementos[i].append(lista)
 
 
-def arista_larga_solo(lelementos, indice):
+def arista_larga_solo(lelementos, i):
 		lista=[None] * 3
-		if (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos)) and (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos) > cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos)):
-			lista[0]=cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos)
-			lista[1]=lelementos[indice][1]
-			lista[2]=lelementos[indice][2]
-			lelementos[indice].append(lista)
-		elif (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos)) and (cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos)):
-			lista[0]=cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos)
-			lista[1]=lelementos[indice][1]
-			lista[2]=lelementos[indice][3]
-			lelementos[indice].append(lista)
-		elif (cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][2]),lnodos)) and (cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos) > cal_dist(int(lelementos[indice][1]),int(lelementos[indice][3]),lnodos)):
-			lista[0]=cal_dist(int(lelementos[indice][2]),int(lelementos[indice][3]),lnodos)
-			lista[1]=lelementos[indice][2]
-			lista[2]=lelementos[indice][3]
+		if (cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos) > cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos)) and (cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos) > cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos)):
+			lista[0]=cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos)
+			lista[1]=lelementos[i][1]
+			lista[2]=lelementos[i][2]
+			lelementos[i].append(lista)
+		elif (cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos) > cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos)) and (cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos) > cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos)):
+			lista[0]=cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos)
+			lista[1]=lelementos[i][1]
+			lista[2]=lelementos[i][3]
+			lelementos[i].append(lista)
+		elif (cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos) > cal_dist(int(lelementos[i][1]),int(lelementos[i][2]),lnodos)) and (cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos) > cal_dist(int(lelementos[i][1]),int(lelementos[i][3]),lnodos)):
+			lista[0]=cal_dist(int(lelementos[i][2]),int(lelementos[i][3]),lnodos)
+			lista[1]=lelementos[i][2]
+			lista[2]=lelementos[i][3]
 			lelementos[i].append(lista)
 #Calcula el punto medio			
 def pto_mdo(v1, v2, lnodos):
@@ -88,17 +88,20 @@ def pto_mdo(v1, v2, lnodos):
 #Se le sacara punto medio a todos los triangulos, pero se analizara despues si es necesario sacar punto medio a la arista mayor de todos los T
 def asig_pto_mdo(lelementos):
 	lista=[None] * 2
-	for i in range(1,len(lelementos)):
+	for i in range(1,int(lelementos[0][0])+1):
 		lista=pto_mdo(int(lelementos[i][8][1]),int(lelementos[i][8][2]),lnodos)
 		lelementos[i].append(lista)
 
 def crear_indice(lelementos):
-	lelementos.append(len(lelementos))
+	
+	a=int(lelementos[0][0])+1
+	lelementos[0][0]=a
+	print lelementos[0][0]
+	lelementos.append([a])
 def crear_triangulo(v1, v2, v3,lelementos):
 	#Esta lista genera los tres vertices y el numero del triangulo si es refinable 1 y 0
 	lista=[None] * 3
 	#Genera 3 angulos
-	lista2=[None] * 3
 	#genera la distancia mas larga y los vertices asociados
 	lista3=[None] * 3
 	#Genera el punto medio de la arista mayor
@@ -107,36 +110,36 @@ def crear_triangulo(v1, v2, v3,lelementos):
 	lista[0]=v1
 	lista[1]=v2
 	lista[2]=v3
-	
-	
 	#se agregaran los 3 vertices en las casillas de la fila nueva -lista[0]-
-	lelementos[len(lelementos)].append(v1)
-	lelementos[lelementos[len(lelementos)]].append(lista[1])
-	lelementos[lelementos[len(lelementos)]].append(lista[2])
-	lista2=cal_ang(lnodos,lelementos,len(lelementos)-1)
-	#Se agregaran los 3 angulos
-	lelementos[len(lelementos)].append(lista2[0])
-	lelementos[len(lelementos)].append(lista2[1])
-	lelementos[len(lelementos)].append(lista2[2])
+	lelementos[lelementos[0][0]].append(lista[0])
+	lelementos[lelementos[0][0]].append(lista[1])
+	lelementos[lelementos[0][0]].append(lista[2])
+	cal_ang_solo(lnodos,lelementos,int(lelementos[0][0]))
+	"""#Se agregaran los 3 angulos
+	lelementos[lelementos[0][0]].append(lista2[0])
+	lelementos[lelementos[0][0]].append(lista2[1])
+	lelementos[lelementos[0][0]].append(lista2[2])"""
 	#No entra al criterio de refinamiento, pero si al de conformidad
-	lelementos[len(lelementos)].append(0)
-	lista3=arista_larga(lelementos,len(lelementos)-1)
+	lelementos[lelementos[0][0]].append(0)
+	lista3=arista_larga_solo(lelementos,int(lelementos[0][0]))
 	#se llena la casilla 8 con la distancia mayor y los dos vertices que contienen la arista mayor
-	lelementos[len(lelementos)].append(lista3)
 	#Se genera 
-	lista4=pto_mdo(lelementos[lista[0]][8][1],lelementos[lista[0]][8][2], lnodos)
-	lelementos[lista[0]].append(lista4)
+	lista4=pto_mdo(lelementos[int(lelementos[0][0])][8][1],lelementos[int(lelementos[0][0])][8][2], lnodos)
+	lelementos[lelementos[0][0]].append(lista4)
 
-	pto_opuesto_solo(lelementos, len(lelementos))
+	pto_opuesto_solo(lelementos, lelementos[0][0])
 
 
 
-"""def cuatro_t(lelementos):
+def cuatro_t(lelementos):
 	i=0
 	while lelementos[i][7] != 1:
 		i=i+1
-	pto_mdo(lelementos[i][8][1],lelementos[i][10],lnodos)
-"""
+	crear_triangulo(3,5,6,lelementos)
+	crear_triangulo(3,5,6,lelementos)
+	crear_triangulo(3,5,6,lelementos)
+	crear_triangulo(3,5,6,lelementos)
+
 
 def pto_opuesto_solo(lelementos, indice):
 	if (lelementos[indice][1] != lelementos[indice][8][1]) and (lelementos[indice][1] != lelementos[indice][8][2]):
@@ -148,21 +151,33 @@ def pto_opuesto_solo(lelementos, indice):
 #Calculamos punto opuesto a la arista mayor
 
 def pto_opuesto(lelementos):
-	for i in range(1,len(lelementos)):
+	for i in range(1,int(lelementos[0][0])+1):
 		if (lelementos[i][1] != lelementos[i][8][1]) and (lelementos[i][1] != lelementos[i][8][2]):
 			lelementos[i].append(lelementos[i][1])
 		elif (lelementos[i][2] != lelementos[i][8][1]) and (lelementos[i][2] != lelementos[i][8][2]):
 			lelementos[i].append(lelementos[i][2])
 		elif (lelementos[i][3] != lelementos[i][8][1]) and (lelementos[i][3] != lelementos[i][8][2]):
 			lelementos[i].append(lelementos[i][3])
-#Lee el fichero .node y lo asigna a la lista lnodos
-lineas = open("mesh.node").readlines()
-lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 
-#Lee el fichero .ele y lo asigna a la lista lelementos
-lineas = open("mesh.ele").readlines()
-lelementos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
+def leer_node():
+	#Lee el fichero .node y lo asigna a la lista lnodos
+	lineas = open("mesh.node").readlines()
+	lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
+	return lnodos	
 
+def leer_ele():	
+	#Lee el fichero .ele y lo asigna a la lista lelementos
+	lineas = open("mesh.ele").readlines()
+	lelementos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
+	return lelementos
+
+def anadir_linea_ele(lelementos):
+	fp=open('mesh.ele','a')
+	fp.write('\n1')
+	fp.close()
+
+lnodos=leer_node()
+lelementos=leer_ele()
 #lelementos[1].append(5)
 
 #ele(lelementos)
@@ -186,13 +201,9 @@ asig_pto_mdo(lelementos)
 
 pto_opuesto(lelementos)
 
+
 crear_indice(lelementos)
-crear_triangulo(3,5,6,lelementos)
 
-
-#print lelementos[1][8][2], lelementos[1][8][1]
-for elem in lelementos: # ciclo que imprime la lista de todos los triangulos
-	#print elem[0:4] #imprimer solo el indice de triangulo y sus 3 vertices
-	print elem # imprime el triangulo y todas sus variables asociadas
-##print lista
-#print (lelementos[14][2])*2
+##print lelementos
+for elem in lelementos:
+	print elem
