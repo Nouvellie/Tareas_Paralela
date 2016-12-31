@@ -147,6 +147,13 @@ def crear_triangulo(v1, v2, v3,lelementos):
 
 	pto_opuesto_solo(lelementos)
 
+#Recorremos la matriz de triangulos y preguntamos el primer elemento de cada fila, este nos comparara el num
+# de triangulo que buscamos, para luego borrarlo	
+def return_indice(lelementos, num_triangulo):
+	for i in range(1,int(lelementos[0][0])):
+		if int(lelementos[i][0]) == num_triangulo:
+			return i
+
 
 #REVISAR PUNTO MEDIO, el i es el indice al triangulo que se encontro a refinar -valor 1 a refinar-
 def cuatro_t(lelementos, i):
@@ -157,8 +164,8 @@ def cuatro_t(lelementos, i):
 	crear_triangulo(lelementos[i][9][2],lelementos[i][8][2],pto_mdo_dos[2],lelementos)
 	crear_triangulo(lelementos[i][9][2],lelementos[i][10],pto_mdo_uno[2],lelementos)
 	crear_triangulo(lelementos[i][9][2],lelementos[i][10],pto_mdo_dos[2],lelementos)
-	lelementos[0][0]=lelementos[0][0]-1
 	lelementos.pop(i)
+	lelementos[0][0]=lelementos[0][0]-1
 
 def pto_opuesto_solo(lelementos):
 	if (lelementos[-1][1] != lelementos[-1][8][1]) and (lelementos[-1][1] != lelementos[-1][8][2]):
@@ -222,9 +229,11 @@ asig_pto_mdo(lelementos)
 
 pto_opuesto(lelementos)
 
-cuatro_t(lelementos,1)
+cuatro_t(lelementos,return_indice(lelementos,1))
 
-#cuatro_t(lelementos,5)
+cuatro_t(lelementos,return_indice(lelementos,5))
+
+cuatro_t(lelementos,return_indice(lelementos,2))
 
 for node in lnodos:
 	print node
