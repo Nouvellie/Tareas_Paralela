@@ -80,6 +80,8 @@ def arista_larga_solo(lelementos, i):
 			lelementos[i].append(lista)
 #Calcula el punto medio			
 def pto_mdo(v1, v2, lnodos):
+	v1=int(v1)
+	v2=int(v2)
 	lista=[None] * 3
 	lista[0]=(float(lnodos[v1][1])+float(lnodos[v2][1]))/2
 	lista[1]=(float(lnodos[v1][2])+float(lnodos[v2][2]))/2
@@ -148,6 +150,7 @@ def crear_triangulo(v1, v2, v3,lelementos):
 def cuatro_t(lelementos, i):
 	pto_mdo_uno=pto_mdo(lelementos[i][10],lelementos[i][8][1],lnodos)
 	pto_mdo_dos=pto_mdo(lelementos[i][10],lelementos[i][8][2],lnodos)
+
 	crear_triangulo(lelementos[i][9][2],lelementos[i][8][1],pto_mdo_uno[2],lelementos)
 	crear_triangulo(lelementos[i][9][2],lelementos[i][8][2],pto_mdo_dos[2],lelementos)
 	crear_triangulo(lelementos[i][9][2],lelementos[i][10],pto_mdo_uno[2],lelementos)
@@ -213,13 +216,14 @@ arista_larga(lelementos)
 
 asig_pto_mdo(lelementos)
 
-pto_mdo(1,2,lnodos)
-
 pto_opuesto(lelementos)
 
+cuatro_t(lelementos,1)
 
+cuatro_t(lelementos,5)
 
-print lnodos
+for node in lnodos:
+	print node
 
 ##print lelementos
 for elem in lelementos:
