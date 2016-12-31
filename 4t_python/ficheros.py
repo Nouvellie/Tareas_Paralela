@@ -122,6 +122,8 @@ def crear_triangulo(v1, v2, v3,lelementos):
 	lista[0]=v1
 	lista[1]=v2
 	lista[2]=v3
+
+	crear_indice(lelementos)
 	#se agregaran los 3 vertices en las casillas de la fila nueva -lista[0]-
 	lelementos[lelementos[0][0]].append(lista[0])
 	lelementos[lelementos[0][0]].append(lista[1])
@@ -142,16 +144,14 @@ def crear_triangulo(v1, v2, v3,lelementos):
 	pto_opuesto_solo(lelementos, lelementos[0][0])
 
 
-#REVISAR PUNTO MEDIO
-def cuatro_t(lelementos):
-	i=0
-	while lelementos[i][7] != 1:
-		i=i+1	
-	crear_triangulo(lelementos[i][9],lelementos[i][8][1],pto_mdo(lelementos[i][8][1],lelementos[i][10]),lelementos)
-	crear_triangulo(lelementos[i][9],lelementos[i][8][2],pto_mdo(lelementos[i][8][2],lelementos[i][10]),lelementos)
-	crear_triangulo(pto_mdo(lelementos[i][8][1],lelementos[i][10]),lelementos[i][8][2],pto_mdo(lelementos[i][8][2],lelementos[i][10]),lelementos)
-	crear_triangulo(pto_mdo(lelementos[i][8][1],lelementos[i][10]),lelementos[i][8][2],pto_mdo(lelementos[i][8][2],lelementos[i][9]),lelementos)
-
+#REVISAR PUNTO MEDIO, el i es el indice al triangulo que se encontro a refinar -valor 1 a refinar-
+def cuatro_t(lelementos, i):
+	pto_mdo_uno=pto_mdo(lelementos[i][10],lelementos[i][8][1],lnodos)
+	pto_mdo_dos=pto_mdo(lelementos[i][10],lelementos[i][8][2],lnodos)
+	crear_triangulo(lelementos[i][9][2],lelementos[i][8][1],pto_mdo_uno[2],lelementos)
+	crear_triangulo(lelementos[i][9][2],lelementos[i][8][2],pto_mdo_dos[2],lelementos)
+	crear_triangulo(lelementos[i][9][2],lelementos[i][10],pto_mdo_uno[2],lelementos)
+	crear_triangulo(lelementos[i][9][2],lelementos[i][10],pto_mdo_dos[2],lelementos)
 
 def pto_opuesto_solo(lelementos, indice):
 	if (lelementos[indice][1] != lelementos[indice][8][1]) and (lelementos[indice][1] != lelementos[indice][8][2]):
@@ -213,10 +213,10 @@ arista_larga(lelementos)
 
 asig_pto_mdo(lelementos)
 
+pto_mdo(1,2,lnodos)
 
 pto_opuesto(lelementos)
 
-a=pto_mdo(1,2,lnodos)
 
 
 print lnodos
