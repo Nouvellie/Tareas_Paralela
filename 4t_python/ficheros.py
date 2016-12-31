@@ -80,7 +80,7 @@ def arista_larga_solo(lelementos, i):
 			lelementos[i].append(lista)
 #Calcula el punto medio			
 def pto_mdo(v1, v2, lnodos):
-	lista=[None] * 2
+	lista=[None] * 3
 	lista[0]=(float(lnodos[v1][1])+float(lnodos[v2][1]))/2
 	lista[1]=(float(lnodos[v1][2])+float(lnodos[v2][2]))/2
 
@@ -89,11 +89,12 @@ def pto_mdo(v1, v2, lnodos):
 	lnodos.append([a])
 	lnodos[a].append(lista[0])
 	lnodos[a].append(lista[1])
+	lista[2]=a
 	return lista
 
 #Se le sacara punto medio a todos los triangulos, pero se analizara despues si es necesario sacar punto medio a la arista mayor de todos los T
 def asig_pto_mdo(lelementos):
-	lista=[None] * 2
+	lista=[None] * 3
 	for i in range(1,int(lelementos[0][0])+1):
 		lista=pto_mdo(int(lelementos[i][8][1]),int(lelementos[i][8][2]),lnodos)
 		lelementos[i].append(lista)
@@ -200,20 +201,20 @@ lista=angulos(0.999668445,1.4186599311,1.0469407815)
 
 print lista
 """
-"""
+
 cal_ang(lnodos,lelementos)
 #print lelementos
 
 cant_r=crit_ref(lelementos,30)
 print cant_r
-"""
-
-#arista_larga(lelementos)
-
-#asig_pto_mdo(lelementos)
 
 
-#pto_opuesto(lelementos)
+arista_larga(lelementos)
+
+asig_pto_mdo(lelementos)
+
+
+pto_opuesto(lelementos)
 
 a=pto_mdo(1,2,lnodos)
 
