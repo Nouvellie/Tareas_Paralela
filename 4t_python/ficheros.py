@@ -78,25 +78,27 @@ def arista_larga_solo(lelementos):
 			lista[1]=lelementos[-1][2]
 			lista[2]=lelementos[-1][3]
 			lelementos[-1].append(lista)
+
+#Con esto limitamos que el punto medio se agregue a lnodos SI Y SOLO SI ESTE CONSTRUYA UN TRIANGULO NUEVO
+def agregar_vertice_lnodos(v1,v2,lnodos):
+	a=int(lnodos[0][0])+1
+	lnodos[0][0]=a
+	lnodos.append([a])
+	lnodos[a].append(v1)
+	lnodos[a].append(v2)
+
 #Calcula el punto medio			
 def pto_mdo(v1, v2, lnodos):
 	v1=int(v1)
 	v2=int(v2)
-	lista=[None] * 3
+	lista=[None] * 2
 	lista[0]=(float(lnodos[v1][1])+float(lnodos[v2][1]))/2
 	lista[1]=(float(lnodos[v1][2])+float(lnodos[v2][2]))/2
-
-	a=int(lnodos[0][0])+1
-	lnodos[0][0]=a
-	lnodos.append([a])
-	lnodos[a].append(lista[0])
-	lnodos[a].append(lista[1])
-	lista[2]=a
 	return lista
 
 #Se le sacara punto medio a todos los triangulos, pero se analizara despues si es necesario sacar punto medio a la arista mayor de todos los T
 def asig_pto_mdo(lelementos):
-	lista=[None] * 3
+	lista=[None] * 2
 	for i in range(1,int(lelementos[0][0])+1):
 		lista=pto_mdo(int(lelementos[i][8][1]),int(lelementos[i][8][2]),lnodos)
 		lelementos[i].append(lista)
@@ -127,11 +129,11 @@ def crear_triangulo(v1, v2, v3,lelementos):
 
 	crear_indice(lelementos)
 	#se agregaran los 3 vertices en las casillas de la fila nueva -lista[0]-
-	print lelementos[-1][0]
+
 	lelementos[-1].append(lista[0])
 	lelementos[-1].append(lista[1])
 	lelementos[-1].append(lista[2])
-	print lelementos[-1]
+
 	cal_ang_solo(lnodos,lelementos)
 	"""#Se agregaran los 3 angulos
 	lelementos[lelementos[0][0]].append(lista2[0])
@@ -149,7 +151,7 @@ def crear_triangulo(v1, v2, v3,lelementos):
 
 #Recorremos la matriz de triangulos y preguntamos el primer elemento de cada fila, este nos comparara el num
 # de triangulo que buscamos, para luego borrarlo	
-def return_indice(lelementos, num_triangulo):
+def return_indice_ele(lelementos, num_triangulo):
 	for i in range(1,int(lelementos[0][0])):
 		if int(lelementos[i][0]) == num_triangulo:
 			return i
@@ -157,13 +159,21 @@ def return_indice(lelementos, num_triangulo):
 
 #REVISAR PUNTO MEDIO, el i es el indice al triangulo que se encontro a refinar -valor 1 a refinar-
 def cuatro_t(lelementos, i):
+	agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
 	pto_mdo_uno=pto_mdo(lelementos[i][10],lelementos[i][8][1],lnodos)
 	pto_mdo_dos=pto_mdo(lelementos[i][10],lelementos[i][8][2],lnodos)
+	pto_mdo_mayor=int(lnodos[-1][0])
 
-	crear_triangulo(lelementos[i][9][2],lelementos[i][8][1],pto_mdo_uno[2],lelementos)
-	crear_triangulo(lelementos[i][9][2],lelementos[i][8][2],pto_mdo_dos[2],lelementos)
-	crear_triangulo(lelementos[i][9][2],lelementos[i][10],pto_mdo_uno[2],lelementos)
-	crear_triangulo(lelementos[i][9][2],lelementos[i][10],pto_mdo_dos[2],lelementos)
+	agregar_vertice_lnodos(pto_mdo_uno[0],pto_mdo_uno[1],lnodos)
+	vertice_pto_mdo_uno=int(lnodos[-1][0])
+	
+	agregar_vertice_lnodos(pto_mdo_dos[0],pto_mdo_dos[1],lnodos)
+	vertice_pto_mdo_dos=int(lnodos[-1][0])
+
+	crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],vertice_pto_mdo_uno,lelementos)
+	crear_triangulo(pto_mdo_mayor,lelementos[i][8][2],vertice_pto_mdo_dos,lelementos)
+	crear_triangulo(pto_mdo_mayor,lelementos[i][10],vertice_pto_mdo_uno,lelementos)
+	crear_triangulo(pto_mdo_mayor,lelementos[i][10],vertice_pto_mdo_dos,lelementos)
 	lelementos.pop(i)
 	lelementos[0][0]=lelementos[0][0]-1
 
@@ -202,6 +212,10 @@ def anadir_linea_ele(lelementos):
 	fp.write('\n1')
 	fp.close()
 
+def conformidad():
+	for i in range(1,lelementos[0][0]):
+		print lelementos[i][0]
+
 lnodos=leer_node()
 lelementos=leer_ele()
 #lelementos[1].append(5)
@@ -229,11 +243,11 @@ asig_pto_mdo(lelementos)
 
 pto_opuesto(lelementos)
 
-cuatro_t(lelementos,return_indice(lelementos,1))
+#cuatro_t(lelementos,return_indice_ele(lelementos,1))
 
-cuatro_t(lelementos,return_indice(lelementos,5))
+#cuatro_t(lelementos,return_indice_ele(lelementos,5))
 
-cuatro_t(lelementos,return_indice(lelementos,2))
+#cuatro_t(lelementos,return_indice_ele(lelementos,2))
 
 for node in lnodos:
 	print node
