@@ -214,6 +214,27 @@ def anadir_linea_ele(lelementos):
 	fp.write('\n1')
 	fp.close()
 
+def ele_a_pc(lelementos):
+	fp = open("mesh2.ele","w+")
+	#contenido = archivo.read()
+	indice = [lelementos[0][0]]
+	fp.writelines(str(indice))
+	for i in range(1,int(lelementos[0][0])+1):
+		lista = ["\n", lelementos[i][0]," ",lelementos[i][1], " ", lelementos[i][2], " ", lelementos[i][3]]
+		fp.writelines(str(lista))
+	fp.close()
+
+def node_a_pc(lnodos):
+	fp = open("mesh2.node","w+")
+	#contenido = archivo.read()
+	indice = [lnodos[0][0]]
+	fp.writelines(str(indice))
+	for i in range(1,int(lnodos[0][0])+1):
+		lista = ["\n", lnodos[i][0]," ",lnodos[i][1], " ", lnodos[i][2]]
+		fp.writelines(str(lista))
+	fp.close()
+
+
 def conformidad(lelementos,lnodos,vertices_iniciales):
 	i=1
 	while (i == lelementos[0][0]) and (cmop_pto_mdo(pto_mdo(int(lelementos[-1][1]),int(lelementos[-1][2])),pto_mdo(int(lelementos[-1][1]),int(lelementos[-1][3])),pto_mdo(int(lelementos[-1][2]),int(lelementos[-1][3])),lnodos,vertices_iniciales))==0:  
@@ -242,7 +263,7 @@ contador=0
 lnodos=leer_node()
 lelementos=leer_ele()
 cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,8)
+cant_r=crit_ref(lelementos,39)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
@@ -266,14 +287,16 @@ while i <= int(lelementos[0][0]):
 
 #cuatro_t(lelementos,return_indice_ele(lelementos,2))
 
-for node in lnodos:
-	print node
+for i in range(1,int(lnodos[0][0])+1):
+	print lnodos[i][0]," ",lnodos[i][1], " ", lnodos[i][2]
 
 
-for elem in lelementos:
-	print elem
+for i in range(1,int(lelementos[0][0])+1):
+	print lelementos[i][0]," ",lelementos[i][1], " ", lelementos[i][2], " ", lelementos[i][3], " ", lelementos[i][7]
 
 print ""
-print cant_r
+print "Se van a refinar: ",cant_r, " triangulos."
 print ""
-print contador	
+print "Se refinaron: ", contador, " triangulos."	
+ele_a_pc(lelementos)
+node_a_pc(lnodos)
