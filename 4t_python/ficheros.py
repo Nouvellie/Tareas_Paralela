@@ -1,5 +1,6 @@
 import numpy as np
 import math as mt
+import matplotlib.pyplot as plt
 
 #Calculamos distancia ingresando 2 vertices casteados en enteros y la lista lnodos
 def cal_dist(v1,v2,lnodos):
@@ -231,44 +232,42 @@ def comp_pto_mdo(pmdo_uno, pmdo_dos,pmdo_tres, lnodos,vertices_iniciales):
 	for i in range(vertices_iniciales,lnodos[0][0]):
 		if (pmdo_uno[0] == lnodos[i][1] and pmdo_uno[1] == lnodos[i][2]) or (pmdo_dos[0] == lnodos[i][1] and pmdo_dos[1] == lnodos[i][2]) or (pmdo_tres[0] == lnodos[i][1] and pmdo_tres[1] == lnodos[i][2]):
 			return 1
-	return 0		
+	return 0
 
+
+i=1
+#Recopilacion de datos
 lnodos=leer_node()
 lelementos=leer_ele()
-#lelementos[1].append(5)
-
-#ele(lelementos)
-
-"""print cal_dist(1,2,lnodos)
-lista=[]
-
-lista=angulos(0.999668445,1.4186599311,1.0469407815)
-
-print lista
-"""
-
 cal_ang(lnodos,lelementos)
-#print lelementos
-
-cant_r=crit_ref(lelementos,30)
-#print cant_r
-
-
+cant_r=crit_ref(lelementos,18)
 arista_larga(lelementos)
-
 asig_pto_mdo(lelementos)
-
 pto_opuesto(lelementos)
 
+while i < lelementos[0][0]:
+	if lelementos[i][7] == 1:
+		vertices_iniciales=[None] * 3
+		cuatro_t(lelementos , return_indice_ele(lelementos,int(lelementos[i][0])))
+		vertices_iniciales[0]=lelementos[i][1]
+		vertices_iniciales[1]=lelementos[i][2]
+		vertices_iniciales[2]=lelementos[i][3]
+		conformidad(lelementos,lnodos,vertices_iniciales)
+		i=1
+	else:
+		i=i+1
 #cuatro_t(lelementos,return_indice_ele(lelementos,1))
 
 #cuatro_t(lelementos,return_indice_ele(lelementos,5))
 
 #cuatro_t(lelementos,return_indice_ele(lelementos,2))
-"""
+
 for node in lnodos:
 	print node
-"""
-##print lelementos
+
+
 for elem in lelementos:
 	print elem
+
+print ""
+print cant_r	
