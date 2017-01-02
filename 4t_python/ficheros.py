@@ -9,9 +9,9 @@ def cal_dist(v1,v2,lnodos):
 #Calculamos los angulos con arcoseno ingresando 3 distancias
 def angulos(a,b, c):
 	lista= [None] * 3
-	lista[0]=(mt.acos((c*c-a*a-b*b)/(-2*a*b)))*180/3.1415
-	lista[1]=(mt.acos((a*a-b*b-c*c)/(-2*b*c)))*180/3.1415
-	lista[2]=(mt.acos((b*b-a*a-c*c)/(-2*a*c)))*180/3.1415
+	lista[0]=(mt.acos((c*c-a*a-b*b)/(-2*a*b)))*180/mt.pi
+	lista[1]=(mt.acos((a*a-b*b-c*c)/(-2*b*c)))*180/mt.pi
+	lista[2]=(mt.acos((b*b-a*a-c*c)/(-2*a*c)))*180/mt.pi
 	return lista
 
 #Genera los 3 angulos a todos los triangulos de toda la malla y se los agrega a la lista lelementos
@@ -153,9 +153,10 @@ def crear_triangulo(v1, v2, v3,lelementos):
 #Recorremos la matriz de triangulos y preguntamos el primer elemento de cada fila, este nos comparara el num
 # de triangulo que buscamos, para luego borrarlo	
 def return_indice_ele(lelementos, num_triangulo):
-	for i in range(1,int(lelementos[0][0])):
+	for i in range(1,int(lelementos[0][0])+1):
 		if int(lelementos[i][0]) == num_triangulo:
 			return i
+	return 0
 
 
 #REVISAR PUNTO MEDIO, el i es el indice al triangulo que se encontro a refinar -valor 1 a refinar-
@@ -237,25 +238,28 @@ def comp_pto_mdo(pmdo_uno, pmdo_dos,pmdo_tres, lnodos,vertices_iniciales):
 
 i=1
 #Recopilacion de datos
+contador=0
 lnodos=leer_node()
 lelementos=leer_ele()
 cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,18)
+cant_r=crit_ref(lelementos,8)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
 
-while i < lelementos[0][0]:
+while i <= int(lelementos[0][0]):
+	print i
 	if lelementos[i][7] == 1:
-		vertices_iniciales=[None] * 3
-		cuatro_t(lelementos , return_indice_ele(lelementos,int(lelementos[i][0])))
-		vertices_iniciales[0]=lelementos[i][1]
-		vertices_iniciales[1]=lelementos[i][2]
-		vertices_iniciales[2]=lelementos[i][3]
-		conformidad(lelementos,lnodos,vertices_iniciales)
+		cuatro_t(lelementos, return_indice_ele(lelementos,int(lelementos[i][0])))
+		vertices_iniciale=[None] * 3
+		vertices_iniciale[0]=lelementos[i][1]
+		vertices_iniciale[1]=lelementos[i][2]
+		vertices_iniciale[2]=lelementos[i][3]
+		conformidad(lelementos,lnodos,vertices_iniciale)
+		contador=contador+1
 		i=1
 	else:
-		i=i+1
+		i=i+1	
 #cuatro_t(lelementos,return_indice_ele(lelementos,1))
 
 #cuatro_t(lelementos,return_indice_ele(lelementos,5))
@@ -270,4 +274,6 @@ for elem in lelementos:
 	print elem
 
 print ""
-print cant_r	
+print cant_r
+print ""
+print contador	
