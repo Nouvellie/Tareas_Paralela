@@ -217,21 +217,45 @@ def anadir_linea_ele(lelementos):
 def ele_a_pc(lelementos):
 	fp = open("mesh2.ele","w+")
 	#contenido = archivo.read()
-	indice = [lelementos[0][0]]
-	fp.writelines(str(indice))
+	#indice = [lelementos[0][0]]
+
+	fp.write(str(lelementos[0][0]))
 	for i in range(1,int(lelementos[0][0])+1):
-		lista = ["\n", lelementos[i][0]," ",lelementos[i][1], " ", lelementos[i][2], " ", lelementos[i][3]]
-		fp.writelines(str(lista))
+		fp.write(str("\n"))
+		fp.write(str(lelementos[i][0]))
+		fp.write(" ")
+		fp.write(str(lelementos[i][1]))
+		fp.write(" ")
+		fp.write(str(lelementos[i][2]))
+		fp.write(" ")
+		fp.write(str(lelementos[i][3]))
 	fp.close()
 
 def node_a_pc(lnodos):
 	fp = open("mesh2.node","w+")
 	#contenido = archivo.read()
-	indice = [lnodos[0][0]]
-	fp.writelines(str(indice))
+#	indice = []
+	fp.write(str(lnodos[0][0]))
 	for i in range(1,int(lnodos[0][0])+1):
-		lista = ["\n", lnodos[i][0]," ",lnodos[i][1], " ", lnodos[i][2]]
-		fp.writelines(str(lista))
+		fp.write("\n")
+		fp.write(str(lnodos[i][0]))
+		fp.write(" ")
+		fp.write(str(lnodos[i][1]))
+		fp.write(" ")
+		fp.write(str(lnodos[i][2]))
+	fp.close()
+
+def part_a_pc(lelementos):
+	fp = open("partition.txt","w+")
+	#contenido = archivo.read()
+	fp.write(str(lelementos[0][0]))
+	fp.write(" ")
+	fp.write(str(1))
+	for i in range(1,int(lelementos[0][0])+1):
+		fp.write("\n")
+		fp.write(str(lelementos[i][0]))
+		fp.write(" ")
+		fp.write(str(1))
 	fp.close()
 
 
@@ -300,3 +324,4 @@ print ""
 print "Se refinaron: ", contador, " triangulos."	
 ele_a_pc(lelementos)
 node_a_pc(lnodos)
+part_a_pc(lelementos)
