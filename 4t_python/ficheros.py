@@ -215,7 +215,7 @@ def leer_ele():
 	return lelementos
 
 def anadir_linea_ele(lelementos):
-	fp=open('espiral.ele','a')
+	#fp=open('espiral.ele','a')
 	fp=open('africa.ele','a')
 	fp.write('\n1')
 	fp.close()
@@ -304,7 +304,7 @@ uif = ultimo_indice_fijo(lnodos)
 #print uif
 lelementos=leer_ele()
 cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,18)
+cant_r=crit_ref(lelementos,15)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
