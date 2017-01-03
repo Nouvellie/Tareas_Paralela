@@ -313,7 +313,7 @@ uif = ultimo_indice_fijo(lnodos)
 #print uif
 lelementos=leer_ele()
 cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,32)
+cant_r=crit_ref(lelementos,37)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
