@@ -1,6 +1,7 @@
 import numpy as np
 import math as mt
 import matplotlib.pyplot as plt
+from time import time
 
 #Calculamos distancia ingresando 2 vertices casteados en enteros y la lista lnodos
 def cal_dist(v1,v2,lnodos):
@@ -23,6 +24,7 @@ def cal_ang(lnodos,lelementos):
 			lelementos[i].append(lista[1])
 			lelementos[i].append(lista[2])
 
+#Calculamos el angulo de un triangulo unicamente, del generado por una biseccion
 def cal_ang_solo(lnodos, lelementos):
 	lista=[]
 	lista=angulos(cal_dist(int(lelementos[-1][1]),int(lelementos[-1][2]),lnodos),cal_dist(int(lelementos[-1][1]),int(lelementos[-1][3]),lnodos),cal_dist(int(lelementos[-1][2]),int(lelementos[-1][3]),lnodos))
@@ -61,7 +63,7 @@ def arista_larga(lelementos):
 			lista[2]=lelementos[i][3]
 			lelementos[i].append(lista)
 
-
+#Calculamos la arista larga para un unico elemento, el cual e genera unicamente en la biseccion
 def arista_larga_solo(lelementos):
 		lista=[None] * 3
 		if (cal_dist(int(lelementos[-1][1]),int(lelementos[-1][2]),lnodos) > cal_dist(int(lelementos[-1][1]),int(lelementos[-1][3]),lnodos)) and (cal_dist(int(lelementos[-1][1]),int(lelementos[-1][2]),lnodos) > cal_dist(int(lelementos[-1][2]),int(lelementos[-1][3]),lnodos)):
@@ -197,16 +199,20 @@ def pto_opuesto(lelementos):
 		elif (lelementos[i][3] != lelementos[i][8][1]) and (lelementos[i][3] != lelementos[i][8][2]):
 			lelementos[i].append(lelementos[i][3])
 
+#Leemos el fichero de inicio de los vertices
 def leer_node():
 	#Lee el fichero .node y lo asigna a la lista lnodos
 	#lineas = open("espiral.node").readlines()
 	lineas = open("africa.node").readlines()
 	lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
-	return lnodos	
+	return lnodos
+
+#Retornamos el ultimo indice de los vertices, para aplicar la optimizacion antes mencionada	
 def ultimo_indice_fijo(lnodes):
 	ult_indice = lnodes[-1][0]
 	return int(ult_indice)
 
+#Leemos el fichero de inicio de los triangulos
 def leer_ele():	
 	#Lee el fichero .ele y lo asigna a la lista lelementos
 	#lineas = open("espiral.ele").readlines()
@@ -220,6 +226,7 @@ def anadir_linea_ele(lelementos):
 	fp.write('\n1')
 	fp.close()
 
+#llenamos el fichero en el cual ingresamos los triangulos refinados
 def ele_a_pc(lelementos):
 	#fp = open("espiralrf.ele","w+")
 	fp = open("africarf.ele","w+")
@@ -240,6 +247,7 @@ def ele_a_pc(lelementos):
 		fp.write(str(lelementos[i][3]))
 	fp.close()
 
+#pasamos al fichero los datos del nodo, sus respectivos vertices
 def node_a_pc(lnodos):
 	#fp = open("espiralrf.node","w+")
 	fp = open("africarf.node","w+")
@@ -257,6 +265,7 @@ def node_a_pc(lnodos):
 		fp.write(str(lnodos[i][2]))
 	fp.close()
 
+#Particiones, en este caso particular asignamos unicamente una particion
 def part_a_pc(lelementos):
 	#fp = open("espiralrf.part","w+")
 	fp = open("africarf.part","w+")
@@ -271,7 +280,7 @@ def part_a_pc(lelementos):
 		fp.write(str(1))
 	fp.close()
 
-
+#Verificamos la conformidad analizando los puntos medios de las 3 aristas, si estas se encuentran como vertice al menos uno, este triangulo no es conforme
 def conformidad(lelementos,lnodos,vertices_iniciales, ultimo_indice):
 	i=1
 	while (i <= int(lelementos[0][0])):
@@ -304,13 +313,14 @@ uif = ultimo_indice_fijo(lnodos)
 #print uif
 lelementos=leer_ele()
 cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,15)
+cant_r=crit_ref(lelementos,32)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
 
 #for ele in lelementos:
 #	print
+tiempo_inicial=time()
 
 while i <= int(lelementos[0][0]):
 	#print i
@@ -324,7 +334,9 @@ while i <= int(lelementos[0][0]):
 		contador=contador+1
 		i=1
 	else:
-		i=i+1	
+		i=i+1
+tiempo_final=time()
+tiempo_ejecucion=tiempo_final-tiempo_inicial			
 #cuatro_t(lelementos,return_indice_ele(lelementos,1))
 
 #cuatro_t(lelementos,return_indice_ele(lelementos,5))
@@ -342,3 +354,4 @@ print "Se refinaron: ", contador, " triangulos."	"""
 ele_a_pc(lelementos)
 node_a_pc(lnodos)
 part_a_pc(lelementos)
+print "Tiempo de ejecucion del refinamiento: ", tiempo_ejecucion
