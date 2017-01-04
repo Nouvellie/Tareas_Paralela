@@ -203,7 +203,7 @@ def pto_opuesto(lelementos):
 def leer_node():
 	#Lee el fichero .node y lo asigna a la lista lnodos
 	#lineas = open("espiral.node").readlines()
-	lineas = open("africa.node").readlines()
+	lineas = open("africa473.node").readlines()
 	lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lnodos
 
@@ -216,20 +216,20 @@ def ultimo_indice_fijo(lnodes):
 def leer_ele():	
 	#Lee el fichero .ele y lo asigna a la lista lelementos
 	#lineas = open("espiral.ele").readlines()
-	lineas = open("africa.ele").readlines()
+	lineas = open("africa473.ele").readlines()
 	lelementos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lelementos
 
 def anadir_linea_ele(lelementos):
 	#fp=open('espiral.ele','a')
-	fp=open('africa.ele','a')
+	fp=open('africa473.ele','a')
 	fp.write('\n1')
 	fp.close()
 
 #llenamos el fichero en el cual ingresamos los triangulos refinados
 def ele_a_pc(lelementos):
 	#fp = open("espiralrf.ele","w+")
-	fp = open("africarf.ele","w+")
+	fp = open("africarf473.ele","w+")
 	#contenido = archivo.read()
 	#indice = [lelementos[0][0]]
 
@@ -250,7 +250,7 @@ def ele_a_pc(lelementos):
 #pasamos al fichero los datos del nodo, sus respectivos vertices
 def node_a_pc(lnodos):
 	#fp = open("espiralrf.node","w+")
-	fp = open("africarf.node","w+")
+	fp = open("africarf473.node","w+")
 	#contenido = archivo.read()
 #	indice = []
 	fp.write(str(lnodos[0][0]))
@@ -268,7 +268,7 @@ def node_a_pc(lnodos):
 #Particiones, en este caso particular asignamos unicamente una particion
 def part_a_pc(lelementos):
 	#fp = open("espiralrf.part","w+")
-	fp = open("africarf.part","w+")
+	fp = open("africarf473.part","w+")
 	#contenido = archivo.read()
 	fp.write(str(lelementos[0][0]))
 	fp.write(" ")
@@ -313,7 +313,7 @@ uif = ultimo_indice_fijo(lnodos)
 #print uif
 lelementos=leer_ele()
 cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,37)
+cant_r=crit_ref(lelementos,39)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
