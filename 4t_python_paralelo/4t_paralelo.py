@@ -317,6 +317,14 @@ def dividir_vector(lelementos,size):
 			a_refinar[contador].append(lelementos[i])
 	return a_refinar		
 
+def agregar_colaNodos(lista,posicion):
+	lista2=[None] * (len(lista)-posicion)
+	contador=0
+	for i in range(posicion,len(lista)):
+		lista2[contador]=lista[i]
+		contador=contador+1
+	return lista2
+
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
@@ -330,13 +338,15 @@ uif = ultimo_indice_fijo(lnodos)
 #print uif
 lelementos=leer_ele()
 cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,0)
+cant_r=crit_ref(lelementos,45)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
 
 lelementos.pop(0)
 lelementos=np.array(lelementos,dtype=object)
+
+posicion=int(lnodos[0][0])+1
 
 contador_ref = 0
 data=[]
@@ -377,7 +387,40 @@ while i < int(len(data2)):
 	else:
 		i=i+1
 
-print "tamanos ",data2[0][0]
+lnodos_xrank=comm.gather(lnodos,root=root)
+lelementos_xrank=comm.gather(data2,root=root)
+
+if rank == root:
+	for t in range(0,len(lnodos_xrank)):
+		if t != 0:
+			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
+			for j in range(0,len(lnodos_xrank[t])):
+				lnodos.append(lnodos_xrank[t][j])
+		else:
+			lnodos=lnodos_xrank[t]
+
+	lnodos[0][0]=len(lnodos)-1
+	for t in range(1,len(lnodos)):
+		lnodos[t][0]=t
+
+	for t in range(0,len(lelementos_xrank)):
+		if t!=0:
+			for j in range(1,len(lelementos_xrank[t])):
+				lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+len(lnodos_xrank[t])
+				lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+len(lnodos_xrank[t])
+				lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+len(lnodos_xrank[t])
+
+	lelementos=lelementos_xrank[0]
+	for t in range(1,len(lelementos_xrank)):
+		for j in range(1,len(lelementos_xrank[t])):
+			lelementos.append(lelementos_xrank[t][j])
+
+	lelementos[0][0]=len(lelementos)-1
+	for t in range(1,len(lelementos)):
+		lelementos[t][0]=t
+	for le in lelementos:
+		print le				
+
 ###### Proceso de aplicar el CR y verificar conformidad, debe aplicarse en paralelo #######
 """
 lelementos=comm.gather(a_refinar_dist, root=root)
