@@ -198,8 +198,8 @@ def pto_opuesto(lelementos):
 #Leemos el fichero de inicio de los vertices
 def leer_node():
 	#Lee el fichero .node y lo asigna a la lista lnodos
-	#lineas = open("espiral.node").readlines()
-	lineas = open("africa473.node").readlines()
+	lineas = open("espiral.node").readlines()
+	#lineas = open("africa473.node").readlines()
 	lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lnodos
 
@@ -211,21 +211,21 @@ def ultimo_indice_fijo(lnodes):
 #Leemos el fichero de inicio de los triangulos
 def leer_ele():	
 	#Lee el fichero .ele y lo asigna a la lista lelementos
-	#lineas = open("espiral.ele").readlines()
-	lineas = open("africa473.ele").readlines()
+	lineas = open("espiral.ele").readlines()
+	#lineas = open("africa473.ele").readlines()
 	lelementos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lelementos
 
 def anadir_linea_ele(lelementos):
-	#fp=open('espiral.ele','a')
-	fp=open('africa473.ele','a')
+	fp=open('espiral.ele','a')
+	#fp=open('africa473.ele','a')
 	fp.write('\n1')
 	fp.close()
 
 #llenamos el fichero en el cual ingresamos los triangulos refinados
 def ele_a_pc(lelementos):
-	#fp = open("espiralrf.ele","w+")
-	fp = open("africarf473_paralelo.ele","w+")
+	fp = open("espiralrf.ele","w+")
+	#fp = open("africarf473_paralelo.ele","w+")
 	#contenido = archivo.read()
 	#indice = [lelementos[0][0]]
 
@@ -245,8 +245,8 @@ def ele_a_pc(lelementos):
 
 #pasamos al fichero los datos del nodo, sus respectivos vertices
 def node_a_pc(lnodos):
-	#fp = open("espiralrf.node","w+")
-	fp = open("africarf473_paralelo.node","w+")
+	fp = open("espiralrf.node","w+")
+	#fp = open("africarf473_paralelo.node","w+")
 	#contenido = archivo.read()
 #	indice = []
 	fp.write(str(lnodos[0][0]))
@@ -263,8 +263,8 @@ def node_a_pc(lnodos):
 
 #Particiones, en este caso particular asignamos unicamente una particion
 def part_a_pc(lelementos):
-	#fp = open("espiralrf.part","w+")
-	fp = open("africarf473_paralelo.part","w+")
+	fp = open("espiralrf.part","w+")
+	#fp = open("africarf473_paralelo.part","w+")
 	#contenido = archivo.read()
 	fp.write(str(lelementos[0][0]))
 	fp.write(" ")
