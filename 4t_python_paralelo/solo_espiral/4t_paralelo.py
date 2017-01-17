@@ -325,6 +325,61 @@ def agregar_colaNodos(lista,posicion):
 		contador=contador+1
 	return lista2
 
+################################## Funcion en mpi para resolver conformidad ##################################################
+
+def conformidad_MPI(lelementos,lnodos,lelementos_xrank,lnodos_xrank):
+	comm = MPI.COMM_WORLD
+	size = comm.Get_size()
+	rank = comm.Get_rank()
+
+	root=0
+
+	data=[]
+	a_refinar=[]
+
+	lelementos.pop(0)
+	lelementos=np.array(lelementos,dtype=object)
+
+	if rank==root:
+		a_refinar=np.array_split(lelementos,size)
+
+
+	data = comm.scatter(a_refinar, root=root)
+	lnodos=comm.bcast(lnodos,root=root)
+
+	data2=[None] * (len(data)+1)
+	data2[0]=[len(data),3]
+	for i in range(1,len(data2)):
+		data2[i]=data[i-1]
+	#data=np.insert(data,0,1)
+
+	#print data2[-1]
+	print "Este es el rank",rank," ",size
+
+	i=1
+	while i < int(len(data2)):
+		#print i
+		if data2[i][7] == 1:
+			vertices_iniciale=[None] * 3
+			vertices_iniciale[0]=data2[i][1]
+			vertices_iniciale[1]=data2[i][2]
+			vertices_iniciale[2]=data2[i][3]
+			conformidad(data2,lnodos,vertices_iniciale, uif)	
+			#contador=contador+1
+			i=1
+		else:
+			i=i+1
+
+
+	lnodos_var=comm.gather(lnodos,root=root)
+	lelementos_var=comm.gather(data2,root=root)
+
+	if rank==root:
+		lelementos_xrank=lelementos_var
+		lnodos_xrank=lnodos_var
+#######################################################################################################
+
+
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
@@ -333,6 +388,7 @@ root=0
 #Cargamos los datos necesarios para aplicar los diferentes criterios. Esto es parte del preproceso
 #Recopilacion de datos
 contador=0
+
 lnodos=leer_node()
 uif = ultimo_indice_fijo(lnodos)
 #print uif
@@ -351,7 +407,12 @@ posicion=int(lnodos[0][0])+1
 contador_ref = 0
 data=[]
 a_refinar=[]
-			
+
+#Es importante este tamanho, ya que con esto verificaremos la conformidad de la interseccion de la malla
+tamanho_anterior=len(lelementos)
+tamanho_creado=0
+condicion_conformidad=0
+
 tiempo_inicial=time()
 #En el nodo maestro vamos a definir la lista a enviar por Scatter
 
@@ -391,82 +452,61 @@ lnodos_xrank=comm.gather(lnodos,root=root)
 lelementos_xrank=comm.gather(data2,root=root)
 
 if rank == root:
-	for t in range(0,len(lnodos_xrank)):
-		if t != 0:
-			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
-			for j in range(0,len(lnodos_xrank[t])):
-				lnodos.append(lnodos_xrank[t][j])
-		else:
-			lnodos=lnodos_xrank[t]
-			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
+	while condicion_conformidad==0:
+		tamanho_anterior=len(lelementos)-1
 
-	lnodos[0][0]=len(lnodos)-1
-	for t in range(1,len(lnodos)):
-		lnodos[t][0]=t
+		for t in range(0,len(lnodos_xrank)):
+			if t != 0:
+				lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
+				for j in range(0,len(lnodos_xrank[t])):
+					lnodos.append(lnodos_xrank[t][j])
+			else:
+				lnodos=lnodos_xrank[t]
+				lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
 
-	acumulado=len(lnodos_xrank[0])
-	for t in range(0,len(lelementos_xrank)):
-		if t!=0:
+		lnodos[0][0]=len(lnodos)-1
+		for t in range(1,len(lnodos)):
+			lnodos[t][0]=t
+
+		acumulado=len(lnodos_xrank[0])
+		for t in range(0,len(lelementos_xrank)):
+			if t!=0:
+				for j in range(1,len(lelementos_xrank[t])):
+					if int(lelementos_xrank[t][j][1]) > posicion-1:
+						lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+acumulado
+					if int(lelementos_xrank[t][j][2]) > posicion-1:
+						lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+acumulado
+					if int(lelementos_xrank[t][j][3]) > posicion-1:
+						lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+acumulado
+				acumulado=acumulado+len(lnodos_xrank[t])
+
+		lelementos=lelementos_xrank[0]
+		for t in range(1,len(lelementos_xrank)):
 			for j in range(1,len(lelementos_xrank[t])):
-				if int(lelementos_xrank[t][j][1]) > posicion-1:
-					lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+acumulado
-				if int(lelementos_xrank[t][j][2]) > posicion-1:
-					lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+acumulado
-				if int(lelementos_xrank[t][j][3]) > posicion-1:
-					lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+acumulado
-			acumulado=acumulado+len(lnodos_xrank[t])
+				lelementos.append(lelementos_xrank[t][j])
 
-	lelementos=lelementos_xrank[0]
-	for t in range(1,len(lelementos_xrank)):
-		for j in range(1,len(lelementos_xrank[t])):
-			lelementos.append(lelementos_xrank[t][j])
+		lelementos[0][0]=len(lelementos)-1
+		for t in range(1,len(lelementos)):
+			lelementos[t][0]=t
 
-	lelementos[0][0]=len(lelementos)-1
-	for t in range(1,len(lelementos)):
-		lelementos[t][0]=t
+		for le in lelementos:
+			print le
+		print "elementos totales refinados"
+		print ""
 
-	for le in lelementos:
-		print le
-	print "elementos totales refinados"
-	print ""
+		for ln in lnodos:
+			print ln
+		print "nodos generados"
+		print " "
 
-	for ln in lnodos:
-		print ln
-	print "nodos generados"
-	print " "	
-	tiempo_final=time()
-	tiempo_ejecucion=tiempo_final-tiempo_inicial
-
-	ele_a_pc(lelementos)
-	node_a_pc(lnodos)
-	part_a_pc(lelementos)
-
-###### Proceso de aplicar el CR y verificar conformidad, debe aplicarse en paralelo #######
-"""
-lelementos=comm.gather(a_refinar_dist, root=root)
-if rank == root:
-	print len(lelementos)
-tiempo_final=time()
-tiempo_ejecucion=tiempo_final-tiempo_inicial			
-#cuatro_t(lelementos,return_indice_ele(lelementos,1))
-
-#cuatro_t(lelementos,return_indice_ele(lelementos,5))
-
-#cuatro_t(lelementos,return_indice_ele(lelementos,2))
-
-for i in range(1,int(lnodos[0][0])+1):
-	print lnodos[i][0]," ",lnodos[i][1], " ", lnodos[i][2]
-for i in range(1,int(lelementos[0][0])+1):
-	print lelementos[i][0]," ",lelementos[i][1], " ", lelementos[i][2], " ", lelementos[i][3], " ", lelementos[i][7]
-print ""
-print "Se van a refinar: ",cant_r, " triangulos."
-print ""
-print "Se refinaron: ", contador, " triangulos."
-#ele_a_pc(lelementos)
-#node_a_pc(lnodos)
-#part_a_pc(lelementos)
-#print "Tiempo de ejecucion del refinamiento: ", tiempo_ejecucion
-#for ele in lelementos:
-#	print ele
-
-"""
+		tamanho_creado=len(lelementos)-1
+		if tamanho_anterior != tamanho_creado:
+			#Llamamos a la funcion conformidad
+			conformidad_MPI(lelementos,lnodos,lelementos_xrank,lnodos_xrank)
+		else:
+			condicion_conformidad=1
+			tiempo_final=time()
+			tiempo_ejecucion=tiempo_final-tiempo_inicial
+			ele_a_pc(lelementos)
+			node_a_pc(lnodos)
+			part_a_pc(lelementos)

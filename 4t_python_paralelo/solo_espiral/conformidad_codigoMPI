@@ -1,0 +1,96 @@
+while condicion_conformidad==0:
+	print "primer while"
+	if rank == root:
+		for t in range(0,len(lnodos_xrank)):
+			if t != 0:
+				lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
+				for j in range(0,len(lnodos_xrank[t])):
+					lnodos.append(lnodos_xrank[t][j])
+			else:
+				lnodos=lnodos_xrank[t]
+				lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
+
+		lnodos[0][0]=len(lnodos)-1
+		for t in range(1,len(lnodos)):
+			lnodos[t][0]=t
+
+		acumulado=len(lnodos_xrank[0])
+		for t in range(0,len(lelementos_xrank)):
+			if t!=0:
+				for j in range(1,len(lelementos_xrank[t])):
+					if int(lelementos_xrank[t][j][1]) > posicion-1:
+						lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+acumulado
+					if int(lelementos_xrank[t][j][2]) > posicion-1:
+						lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+acumulado
+					if int(lelementos_xrank[t][j][3]) > posicion-1:
+						lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+acumulado
+				acumulado=acumulado+len(lnodos_xrank[t])
+
+		lelementos=lelementos_xrank[0]
+		for t in range(1,len(lelementos_xrank)):
+			for j in range(1,len(lelementos_xrank[t])):
+				lelementos.append(lelementos_xrank[t][j])
+
+		lelementos[0][0]=len(lelementos)-1
+
+		for t in range(1,len(lelementos)):
+			lelementos[t][0]=t
+
+		for le in lelementos:
+			print le
+		print "elementos totales refinados"
+		print ""
+
+		for ln in lnodos:
+			print ln
+		print "nodos generados"
+		print " "
+
+		tiempo_final=time()
+		tiempo_ejecucion=tiempo_final-tiempo_inicial
+
+		tamanho_creado=len(lelementos)-1
+
+		#Preguntamos si el tamanho creado es mayor al tamanho de la malla anterior
+		#print tamanho_anterior
+		#print tamanho_creado
+
+		if tamanho_anterior < tamanho_creado:
+			condicion_conformidad=0
+			lelementos.pop(0)
+			lelementos=np.array(lelementos,dtype=object)
+			a_refinar=np.array_split(lelementos,size)
+			tamanho_anterior=tamanho_creado
+		else:
+			condicion_conformidad=1
+			ele_a_pc(lelementos)
+			node_a_pc(lnodos)
+			part_a_pc(lelementos)
+	if condicion_conformidad==0:
+		data = comm.scatter(a_refinar, root=root)
+		lnodos=comm.bcast(lnodos,root=root)
+		condicion_conformidad=comm.bcast(condicion_conformidad,root=root)
+
+		data2=[None] * (len(data)+1)
+		data2[0]=[len(data),3]
+		for i in range(1,len(data2)):
+			data2[i]=data[i-1]
+		#data=np.insert(data,0,1)
+
+		#print data2[-1]
+		i=1
+		while i < int(len(data2)):
+			print "segundo while"
+			if data2[i][7] == 1:
+				vertices_iniciale=[None] * 3
+				vertices_iniciale[0]=data2[i][1]
+				vertices_iniciale[1]=data2[i][2]
+				vertices_iniciale[2]=data2[i][3]
+				conformidad(data2,lnodos,vertices_iniciale, uif)	
+				contador=contador+1
+				i=1
+			else:
+				i=i+1
+
+		lnodos_xrank=comm.gather(lnodos,root=root)
+		lelementos_xrank=comm.gather(data2,root=root)
