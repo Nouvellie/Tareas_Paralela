@@ -356,10 +356,7 @@ tiempo_inicial=time()
 #En el nodo maestro vamos a definir la lista a enviar por Scatter
 
 if rank == root:
-	for f in lelementos:
-		print f
-	print " lelementos"	
-	print " "
+	
 	#Formas la lista de triangulos a enviar por scatter
 	a_refinar=np.array_split(lelementos,size)
 
@@ -371,10 +368,6 @@ data2[0]=[len(data),3]
 for i in range(1,len(data2)):
 	data2[i]=data[i-1]
 #data=np.insert(data,0,1)
-
-for f in data2:
-	print rank," ",f
-
 
 #print data2[-1]
 
@@ -393,12 +386,6 @@ while i < int(len(data2)):
 	else:
 		i=i+1
 
-"""
-for f in lnodos:
-	print f
-print rank, "lnodos en cada nodo"
-print " "
-"""
 
 lnodos_xrank=comm.gather(lnodos,root=root)
 lelementos_xrank=comm.gather(data2,root=root)
@@ -437,6 +424,7 @@ if rank == root:
 	lelementos[0][0]=len(lelementos)-1
 	for t in range(1,len(lelementos)):
 		lelementos[t][0]=t
+
 	for le in lelementos:
 		print le
 	print "elementos totales refinados"
