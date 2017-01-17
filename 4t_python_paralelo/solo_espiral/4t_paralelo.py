@@ -356,7 +356,10 @@ tiempo_inicial=time()
 #En el nodo maestro vamos a definir la lista a enviar por Scatter
 
 if rank == root:
-
+	for f in lelementos:
+		print f
+	print " lelementos"	
+	print " "
 	#Formas la lista de triangulos a enviar por scatter
 	a_refinar=np.array_split(lelementos,size)
 
@@ -365,7 +368,7 @@ lnodos=comm.bcast(lnodos,root=root)
 
 
 data2=[]
-data2.append([len(data),3])
+data2.append([len(data)-1,3])
 for i in range(1,len(data)):
 	data2.append(data[i])
 #data=np.insert(data,0,1)
@@ -387,6 +390,15 @@ while i < int(len(data2)):
 	else:
 		i=i+1
 
+for f in lnodos:
+	print f
+print rank, "lnodos en cada nodo"
+print " "
+
+for f in data2:
+	print f
+print rank," lelementos en cada nodo "	
+print " "
 lnodos_xrank=comm.gather(lnodos,root=root)
 lelementos_xrank=comm.gather(data2,root=root)
 
@@ -398,17 +410,23 @@ if rank == root:
 				lnodos.append(lnodos_xrank[t][j])
 		else:
 			lnodos=lnodos_xrank[t]
+			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
 
 	lnodos[0][0]=len(lnodos)-1
 	for t in range(1,len(lnodos)):
 		lnodos[t][0]=t
 
+	acumulado=len(lnodos_xrank[0])
 	for t in range(0,len(lelementos_xrank)):
 		if t!=0:
 			for j in range(1,len(lelementos_xrank[t])):
-				lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+len(lnodos_xrank[t])
-				lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+len(lnodos_xrank[t])
-				lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+len(lnodos_xrank[t])
+				if int(lelementos_xrank[t][j][1]) > posicion-1:
+					lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+acumulado
+				if int(lelementos_xrank[t][j][2]) > posicion-1:
+					lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+acumulado
+				if int(lelementos_xrank[t][j][3]) > posicion-1:
+					lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+acumulado
+			acumulado=acumulado+len(lnodos_xrank[t])
 
 	lelementos=lelementos_xrank[0]
 	for t in range(1,len(lelementos_xrank)):
@@ -420,7 +438,13 @@ if rank == root:
 		lelementos[t][0]=t
 	for le in lelementos:
 		print le
+	print "elementos totales refinados"
+	print ""
 
+	for ln in lnodos:
+		print ln
+	print "nodos generados"
+	print " "	
 	tiempo_final=time()
 	tiempo_ejecucion=tiempo_final-tiempo_inicial
 
