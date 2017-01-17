@@ -366,12 +366,15 @@ if rank == root:
 data = comm.scatter(a_refinar, root=root)
 lnodos=comm.bcast(lnodos,root=root)
 
-
-data2=[]
-data2.append([len(data)-1,3])
-for i in range(1,len(data)):
-	data2.append(data[i])
+data2=[None] * (len(data)+1)
+data2[0]=[len(data),3]
+for i in range(1,len(data2)):
+	data2[i]=data[i-1]
 #data=np.insert(data,0,1)
+
+for f in data2:
+	print rank," ",f
+
 
 #print data2[-1]
 
@@ -390,15 +393,13 @@ while i < int(len(data2)):
 	else:
 		i=i+1
 
+"""
 for f in lnodos:
 	print f
 print rank, "lnodos en cada nodo"
 print " "
+"""
 
-for f in data2:
-	print f
-print rank," lelementos en cada nodo "	
-print " "
 lnodos_xrank=comm.gather(lnodos,root=root)
 lelementos_xrank=comm.gather(data2,root=root)
 
