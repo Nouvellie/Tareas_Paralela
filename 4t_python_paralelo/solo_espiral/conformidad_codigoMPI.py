@@ -27,6 +27,7 @@ def cal_ang(lnodos,lelementos):
 #Calculamos el angulo de un triangulo unicamente, del generado por una biseccion
 def cal_ang_solo(lnodos, lelementos):
 	lista=[]
+	#print lelementos[-1][1]
 	lista=angulos(cal_dist(int(lelementos[-1][1]),int(lelementos[-1][2]),lnodos),cal_dist(int(lelementos[-1][1]),int(lelementos[-1][3]),lnodos),cal_dist(int(lelementos[-1][2]),int(lelementos[-1][3]),lnodos))
 	lelementos[-1].append(lista[0])
 	lelementos[-1].append(lista[1])
@@ -64,7 +65,7 @@ def arista_larga(lelementos):
 			lelementos[i].append(lista)
 
 #Calculamos la arista larga para un unico elemento, el cual e genera unicamente en la biseccion
-def arista_larga_solo(lelementos):
+def arista_larga_solo(lelementos,lnodos):
 		lista=[None] * 3
 		if (cal_dist(int(lelementos[-1][1]),int(lelementos[-1][2]),lnodos) > cal_dist(int(lelementos[-1][1]),int(lelementos[-1][3]),lnodos)) and (cal_dist(int(lelementos[-1][1]),int(lelementos[-1][2]),lnodos) > cal_dist(int(lelementos[-1][2]),int(lelementos[-1][3]),lnodos)):
 			lista[0]=cal_dist(int(lelementos[-1][1]),int(lelementos[-1][2]),lnodos)
@@ -91,7 +92,7 @@ def agregar_vertice_lnodos(v1,v2,lnodos):
 	lnodos[a].append(v2)
 
 #Calcula el punto medio			
-def pto_mdo(v1, v2):
+def pto_mdo(v1, v2,lnodos):
 	v1=int(v1)
 	v2=int(v2)
 	lista=[None] * 2
@@ -100,10 +101,10 @@ def pto_mdo(v1, v2):
 	return lista
 
 #Se le sacara punto medio a todos los triangulos, pero se analizara despues si es necesario sacar punto medio a la arista mayor de todos los T
-def asig_pto_mdo(lelementos):
+def asig_pto_mdo(lelementos,lnodos):
 	lista=[None] * 2
 	for i in range(1,int(lelementos[0][0])+1):
-		lista=pto_mdo(int(lelementos[i][8][1]),int(lelementos[i][8][2]))
+		lista=pto_mdo(int(lelementos[i][8][1]),int(lelementos[i][8][2]),lnodos)
 		lelementos[i].append(lista)
 
 def pto_mdoa_ele(lelements,indice,lnodes):
@@ -116,7 +117,7 @@ def crear_indice(lelementos):
 	ult_crea=int(lelementos[-1][0])+1
 	lelementos[0][0]=int(lelementos[0][0])+1
 	lelementos.append([ult_crea])
-def crear_triangulo(v1, v2, v3,lelementos):
+def crear_triangulo(v1, v2, v3,lelementos,lnodos):
 	#Esta lista genera los tres vertices y el numero del triangulo si es refinable 1 y 0
 	lista=[None] * 3
 	#Genera 3 angulos
@@ -140,10 +141,10 @@ def crear_triangulo(v1, v2, v3,lelementos):
 
 	#No entra al criterio de refinamiento, pero si al de conformidad
 	lelementos[-1].append(0)
-	lista3=arista_larga_solo(lelementos)
+	lista3=arista_larga_solo(lelementos,lnodos)
 	#se llena la casilla 8 con la distancia mayor y los dos vertices que contienen la arista mayor
 	#Se genera 
-	lista4=pto_mdo(lelementos[-1][8][1],lelementos[-1][8][2])
+	lista4=pto_mdo(lelementos[-1][8][1],lelementos[-1][8][2],lnodos)
 	lelementos[-1].append(lista4)
 
 	pto_opuesto_solo(lelementos)
@@ -155,27 +156,6 @@ def return_indice_ele(lelementos, num_triangulo):
 		if int(lelementos[i][0]) == num_triangulo:
 			return i
 	return 0
-
-
-#REVISAR PUNTO MEDIO, el i es el indice al triangulo que se encontro a refinar -valor 1 a refinar-
-def cuatro_t(lelementos, i):
-	agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
-	pto_mdo_uno=pto_mdo(lelementos[i][10],lelementos[i][8][1])
-	pto_mdo_dos=pto_mdo(lelementos[i][10],lelementos[i][8][2])
-	pto_mdo_mayor=int(lnodos[-1][0])
-
-	agregar_vertice_lnodos(pto_mdo_uno[0],pto_mdo_uno[1],lnodos)
-	vertice_pto_mdo_uno=int(lnodos[-1][0])
-	
-	agregar_vertice_lnodos(pto_mdo_dos[0],pto_mdo_dos[1],lnodos)
-	vertice_pto_mdo_dos=int(lnodos[-1][0])
-
-	crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],vertice_pto_mdo_uno,lelementos)
-	crear_triangulo(pto_mdo_mayor,lelementos[i][8][2],vertice_pto_mdo_dos,lelementos)
-	crear_triangulo(pto_mdo_mayor,lelementos[i][10],vertice_pto_mdo_uno,lelementos)
-	crear_triangulo(pto_mdo_mayor,lelementos[i][10],vertice_pto_mdo_dos,lelementos)
-	lelementos.pop(i)
-	lelementos[0][0]=lelementos[0][0]-1
 
 def pto_opuesto_solo(lelementos):
 	if (lelementos[-1][1] != lelementos[-1][8][1]) and (lelementos[-1][1] != lelementos[-1][8][2]):
@@ -198,7 +178,7 @@ def pto_opuesto(lelementos):
 #Leemos el fichero de inicio de los vertices
 def leer_node():
 	#Lee el fichero .node y lo asigna a la lista lnodos
-	lineas = open("espiral.node").readlines()
+	lineas = open("espiralrf.node").readlines()
 	#lineas = open("africa473.node").readlines()
 	lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lnodos
@@ -211,20 +191,20 @@ def ultimo_indice_fijo(lnodes):
 #Leemos el fichero de inicio de los triangulos
 def leer_ele():	
 	#Lee el fichero .ele y lo asigna a la lista lelementos
-	lineas = open("espiral.ele").readlines()
+	lineas = open("espiralrf.ele").readlines()
 	#lineas = open("africa473.ele").readlines()
 	lelementos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lelementos
 
 def anadir_linea_ele(lelementos):
-	fp=open('espiral.ele','a')
+	fp=open('espiralrf.ele','a')
 	#fp=open('africa473.ele','a')
-	fp.write('\n1')
+	fp.write('\n')
 	fp.close()
 
 #llenamos el fichero en el cual ingresamos los triangulos refinados
 def ele_a_pc(lelementos):
-	fp = open("espiralrf.ele","w+")
+	fp = open("espiralrf_conf.ele","w+")
 	#fp = open("africarf473_paralelo.ele","w+")
 	#contenido = archivo.read()
 	#indice = [lelementos[0][0]]
@@ -243,9 +223,30 @@ def ele_a_pc(lelementos):
 		fp.write(str(lelementos[i][3]))
 	fp.close()
 
+def ele_xarea(lelementos):
+	fp = open("espiralrf3.ele","w+")
+	#fp = open("africarf473_paralelo.ele","w+")
+	#contenido = archivo.read()
+	#indice = [lelementos[0][0]]
+
+	fp.write(str(lelementos[0][0]))
+	fp.write(" ")
+	fp.write(str(3))
+	for i in range(1,int(lelementos[0][0])+1):
+		fp.write(str("\n"))
+		fp.write(str(lelementos[i][0]))
+		fp.write(" ")
+		fp.write(str(lelementos[i][1]))
+		fp.write(" ")
+		fp.write(str(lelementos[i][2]))
+		fp.write(" ")
+		fp.write(str(lelementos[i][3]))
+	fp.close()
+
+
 #pasamos al fichero los datos del nodo, sus respectivos vertices
 def node_a_pc(lnodos):
-	fp = open("espiralrf.node","w+")
+	fp = open("espiralrf_conf.node","w+")
 	#fp = open("africarf473_paralelo.node","w+")
 	#contenido = archivo.read()
 #	indice = []
@@ -263,7 +264,7 @@ def node_a_pc(lnodos):
 
 #Particiones, en este caso particular asignamos unicamente una particion
 def part_a_pc(lelementos):
-	fp = open("espiralrf.part","w+")
+	fp = open("espiralrf_conf.part","w+")
 	#fp = open("africarf473_paralelo.part","w+")
 	#contenido = archivo.read()
 	fp.write(str(lelementos[0][0]))
@@ -284,27 +285,39 @@ def guardar_puntoCentral(lelementos, lnodos):
 		lelementos[i].append(punto_central)
 
 #Verificamos la conformidad analizando los puntos medios de las 3 aristas, si estas se encuentran como vertice al menos uno, este triangulo no es conforme
-def conformidad(lelementos,lnodos,vertices_iniciales, ultimo_indice):
+def conformidad_paralela(lelementos,lnodos, ultimo_indice,rank):
 	i=1
-	while (i < int(lelementos[0][0])):
-		#print i
-		if comp_pto_mdo(pto_mdo(int(lelementos[i][1]),int(lelementos[i][2])),pto_mdo(int(lelementos[i][1]),int(lelementos[i][3])),pto_mdo(int(lelementos[i][2]),int(lelementos[i][3])),lnodos,vertices_iniciales, ultimo_indice) == 1:
-			#print i
+
+	#print lelementos[0][0]
+	#print lelementos
+
+	while i < len(lelementos):
+		#if malo
+		if comp_pto_mdo(rank,i,pto_mdo(lelementos[i][1],lelementos[i][2],lnodos), pto_mdo(lelementos[i][1],lelementos[i][3],lnodos), pto_mdo(lelementos[i][2],lelementos[i][3],lnodos), lnodos, ultimo_indice) == 1:
 			#print lelementos[i][0] 
 			agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
 			pto_mdo_mayor=int(lnodos[-1][0])
-			crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],lelementos[i][10],lelementos)
-			crear_triangulo(pto_mdo_mayor,lelementos[i][8][2],lelementos[i][10],lelementos)
+			#print rank," ",lnodos[-1]
+			crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],lelementos[i][10],lelementos,lnodos)
+			crear_triangulo(pto_mdo_mayor,lelementos[i][8][2],lelementos[i][10],lelementos,lnodos)
+
 			lelementos.pop(i)
+
 			lelementos[0][0]=lelementos[0][0]-1
 			i=1 
-		else:	
+			#print lelementos[-1][0]
+		else:
 			i=i+1
-			
+	print "Estan todos conformes"
+	#print lelementos[-1]
 #Entran 3 listas las cuales vamos a comprar con los lnodos
-def comp_pto_mdo(pmdo_uno, pmdo_dos,pmdo_tres, lnodos,vertices_iniciales, ultimo_indice):
-	for i in range(ultimo_indice,int(lnodos[0][0])):
-		if (pmdo_uno[0] == lnodos[i][1] and pmdo_uno[1] == lnodos[i][2]) or (pmdo_dos[0] == lnodos[i][1] and pmdo_dos[1] == lnodos[i][2]) or (pmdo_tres[0] == lnodos[i][1] and pmdo_tres[1] == lnodos[i][2]):
+def comp_pto_mdo(rank, i,pmdo_uno, pmdo_dos,pmdo_tres, lnodos, ultimo_indice):
+	#print i," ",lnodos[3][1], " ",pmdo_uno[0]," ",pmdo_uno[1], " ", pmdo_dos[0], " ", pmdo_dos[1]
+	for i in range(1,len(lnodos)):
+		#print pmdo_uno," ",pmdo_dos," ",pmdo_tres
+		#if rank==3:
+		#print rank," ",i," ",pmdo_tres, " ",lnodos[i]
+		if (pmdo_uno[0] == float(lnodos[i][1]) and pmdo_uno[1] == float(lnodos[i][2])) or (pmdo_dos[0] == float(lnodos[i][1]) and pmdo_dos[1] == float(lnodos[i][2])) or (pmdo_tres[0] == float(lnodos[i][1]) and pmdo_tres[1] == float(lnodos[i][2])):
 			return 1
 	return 0
 
@@ -327,23 +340,20 @@ def agregar_colaNodos(lista,posicion):
 
 ################################## Funcion en mpi para resolver conformidad ##################################################
 
-def conformidad_MPI(lelementos,lnodos):
-	comm = MPI.COMM_WORLD
-	size = comm.Get_size()
-	rank = comm.Get_rank()
+def conformidad_MPI(lelementos, lnodos, uif,comm):
 
-	root=0
 
+	#global lelementos
+	#global lnodos
 	data=[]
 	a_refinar=[]
+	cf=0
 
 	lelementos.pop(0)
 	lelementos=np.array(lelementos,dtype=object)
 
 	if rank==root:
 		a_refinar=np.array_split(lelementos,size)
-
-
 	data = comm.scatter(a_refinar, root=root)
 	lnodos=comm.bcast(lnodos,root=root)
 
@@ -351,32 +361,19 @@ def conformidad_MPI(lelementos,lnodos):
 	data2[0]=[len(data),3]
 	for i in range(1,len(data2)):
 		data2[i]=data[i-1]
-	#data=np.insert(data,0,1)
 
-	#print data2[-1]
-	print "Este es el rank",rank," ",size
+	print rank
 
-	i=1
-	while i < int(len(data2)):
-		#print i
-		if data2[i][7] == 1:
-			vertices_iniciale=[None] * 3
-			vertices_iniciale[0]=data2[i][1]
-			vertices_iniciale[1]=data2[i][2]
-			vertices_iniciale[2]=data2[i][3]
-			conformidad(data2,lnodos,vertices_iniciale, uif)	
-			#contador=contador+1
-			i=1
-		else:
-			i=i+1
-
-
+	conformidad_paralela(data2,lnodos, uif,rank)	
+		
 	lnodos_xrank=comm.gather(lnodos,root=root)
 	lelementos_xrank=comm.gather(data2,root=root)
 
 	if rank==root:
+
+		#ele_a_pc(lnodos_xrank[0])
+
 		tamanho_anterior=len(lelementos)
-		
 		for t in range(0,len(lnodos_xrank)):
 			if t != 0:
 				lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
@@ -405,153 +402,60 @@ def conformidad_MPI(lelementos,lnodos):
 		lelementos=lelementos_xrank[0]
 		for t in range(1,len(lelementos_xrank)):
 			for j in range(1,len(lelementos_xrank[t])):
-				lelementos.append(lelementos_xrank[t][j])
-
+				lelementos.append(lelementos_xrank[t][j])		
 		lelementos[0][0]=len(lelementos)-1
 		for t in range(1,len(lelementos)):
 			lelementos[t][0]=t
-		for le in lelementos:
-			print le
-		print "elementos totales refinados"
-		print ""
 
-		for ln in lnodos:
-			print ln
-		print "nodos generados"
-		print " "
-	comm.Disconnect()
-	return tamanho_creado-tamanho_anterior
-#######################################################################################################
+		tamanho_creado=len(lelementos)-1
+		ele_a_pc(lelementos)
+		node_a_pc(lnodos)
+		part_a_pc(lelementos)
+		#print tamanho_creado
+		cf=tamanho_creado-tamanho_anterior
+	return cf
 
-
+#Cargamos los datos necesarios para aplicar los diferentes criterios. Esto es parte del preproceso
+#Recopilacion de datos
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
 rank = comm.Get_rank()
 
 root=0
-#Cargamos los datos necesarios para aplicar los diferentes criterios. Esto es parte del preproceso
-#Recopilacion de datos
 contador=0
 
 lnodos=leer_node()
 uif = ultimo_indice_fijo(lnodos)
 #print uif
 lelementos=leer_ele()
-cal_ang(lnodos,lelementos)
-cant_r=crit_ref(lelementos,45)
-arista_larga(lelementos)
-asig_pto_mdo(lelementos)
-pto_opuesto(lelementos)
 
-lelementos.pop(0)
-lelementos=np.array(lelementos,dtype=object)
+cal_ang(lnodos,lelementos)
+
+for i in range(1,len(lelementos)):
+	lelementos[i].append(0)
+
+arista_larga(lelementos)
+asig_pto_mdo(lelementos,lnodos)
+pto_opuesto(lelementos)
 
 posicion=int(lnodos[0][0])+1
 
-contador_ref = 0
-data=[]
-a_refinar=[]
-
 #Es importante este tamanho, ya que con esto verificaremos la conformidad de la interseccion de la malla
-tamanho_anterior=len(lelementos)
-tamanho_creado=0
-condicion_conformidad=0
+condicion_conformidad=1
 
-tiempo_inicial=time()
 #En el nodo maestro vamos a definir la lista a enviar por Scatter
 
+while condicion_conformidad!=0:
+	root=0
+	condicion_conformidad=conformidad_MPI(lelementos, lnodos, uif,comm)
+
+print "Condicion de conformidad"
 if rank == root:
-	
-	#Formas la lista de triangulos a enviar por scatter
-	a_refinar=np.array_split(lelementos,size)
-
-data = comm.scatter(a_refinar, root=root)
-lnodos=comm.bcast(lnodos,root=root)
-
-data2=[None] * (len(data)+1)
-data2[0]=[len(data),3]
-for i in range(1,len(data2)):
-	data2[i]=data[i-1]
-#data=np.insert(data,0,1)
-
-#print data2[-1]
-
-i=1
-while i < int(len(data2)):
-
-	if data2[i][7] == 1:
-		cuatro_t(data2, return_indice_ele(data2,int(data2[i][0])))
-		vertices_iniciale=[None] * 3
-		vertices_iniciale[0]=data2[i][1]
-		vertices_iniciale[1]=data2[i][2]
-		vertices_iniciale[2]=data2[i][3]
-		conformidad(data2,lnodos,vertices_iniciale, uif)	
-		contador=contador+1
-		i=1
-	else:
-		i=i+1
-
-
-lnodos_xrank=comm.gather(lnodos,root=root)
-lelementos_xrank=comm.gather(data2,root=root)
-
-if rank == root:
-
-	for t in range(0,len(lnodos_xrank)):
-		if t != 0:
-			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
-			for j in range(0,len(lnodos_xrank[t])):
-				lnodos.append(lnodos_xrank[t][j])
-		else:
-			lnodos=lnodos_xrank[t]
-			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
-	lnodos[0][0]=len(lnodos)-1
-	for t in range(1,len(lnodos)):
-		lnodos[t][0]=t
-
-	acumulado=len(lnodos_xrank[0])
-	for t in range(0,len(lelementos_xrank)):
-		if t!=0:
-			for j in range(1,len(lelementos_xrank[t])):
-				if int(lelementos_xrank[t][j][1]) > posicion-1:
-					lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+acumulado
-				if int(lelementos_xrank[t][j][2]) > posicion-1:
-					lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+acumulado
-				if int(lelementos_xrank[t][j][3]) > posicion-1:
-					lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+acumulado
-			acumulado=acumulado+len(lnodos_xrank[t])
-
-	lelementos=lelementos_xrank[0]
-	for t in range(1,len(lelementos_xrank)):
-		for j in range(1,len(lelementos_xrank[t])):
-			lelementos.append(lelementos_xrank[t][j])
-
-	lelementos[0][0]=len(lelementos)-1
-	for t in range(1,len(lelementos)):
-		lelementos[t][0]=t
-
-	for le in lelementos:
-		print le
-	print "elementos totales refinados"
-	print ""
-
-	for ln in lnodos:
-		print ln
-	print "nodos generados"
-	print " "
-	ele_a_pc(lelementos)
-	node_a_pc(lnodos)
-	part_a_pc(lelementos)
-"""
-comm.Disconnect()
-	#Llamamos a la funcion conformidad
-	#conformidad_MPI(lelementos,lnodos,lelementos_xrank,lnodos_xrank)
-while condicion_conformidad==0:
-	condicion_conformidad=conformidad_MPI(lelementos,lnodos)
+	print "Fin"
 
 	#tiempo_final=time()
 	#tiempo_ejecucion=tiempo_final-tiempo_inicial
 	#ele_a_pc(lelementos)
 	#node_a_pc(lnodos)
 	#part_a_pc(lelementos)
-"""
+
