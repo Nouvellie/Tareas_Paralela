@@ -336,9 +336,8 @@ def agregar_colaNodos(lista,posicion):
 
 ################################## Funcion en mpi para resolver conformidad ##################################################
 
-def conformidad_MPI(lelementos, lnodos, uif,comm):
-
-	tamanho_anterior=int(lelementos[-1][0])
+def conformidad_MPI(lelementos, lnodos, uif,comm,tamanho_anterior,tamanho_creado):
+	
 
 	#global lelementos
 	#global lnodos
@@ -405,7 +404,11 @@ def conformidad_MPI(lelementos, lnodos, uif,comm):
 
 		#for h in lelementos:
 		#	print h
+
 		tamanho_creado=int(lelementos[-1][0])
+
+		tamanho_anterior=tamanho_creado
+
 
 		#print tamanho_anterior
 		#print len(lelementos)
@@ -415,7 +418,8 @@ def conformidad_MPI(lelementos, lnodos, uif,comm):
 		part_a_pc(lelementos)
 
 		#print len(lnodos)
-		return tamanho_creado
+
+		return 0
 		#print tamanho_creado
 
 """		tamanho_creado=int(lelementos[-1][0])
@@ -452,6 +456,9 @@ arista_larga(lelementos)
 asig_pto_mdo(lelementos,lnodos)
 pto_opuesto(lelementos)
 
+anterior_mallado=int(lelementos[-1][0])
+tamanho_actual=0
+
 lelementos.pop(0)
 lelementos=np.array(lelementos,dtype=object)
 
@@ -463,7 +470,7 @@ contador=0
 #En el nodo maestro vamos a definir la lista a enviar por Scatter
 
 while contador !=100:
-	condicion_conformidad=conformidad_MPI(lelementos, lnodos, uif,comm)
+	lista=conformidad_MPI(lelementos, lnodos, uif,comm,anterior_mallado,tamanho_actual)
 	#print condicion_conformidad
 	contador=contador+1
 
