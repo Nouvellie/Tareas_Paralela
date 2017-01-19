@@ -308,15 +308,11 @@ def conformidad_paralela(lelementos,lnodos, ultimo_indice,rank):
 			#print lelementos[-1][0]
 		else:
 			i=i+1
-	print "Estan todos conformes"
 	#print lelementos[-1]
 #Entran 3 listas las cuales vamos a comprar con los lnodos
 def comp_pto_mdo(rank, i,pmdo_uno, pmdo_dos,pmdo_tres, lnodos, ultimo_indice):
 	#print i," ",lnodos[3][1], " ",pmdo_uno[0]," ",pmdo_uno[1], " ", pmdo_dos[0], " ", pmdo_dos[1]
 	for i in range(1,len(lnodos)):
-		#print pmdo_uno," ",pmdo_dos," ",pmdo_tres
-		#if rank==3:
-		#print rank," ",i," ",pmdo_tres, " ",lnodos[i]
 		if (pmdo_uno[0] == float(lnodos[i][1]) and pmdo_uno[1] == float(lnodos[i][2])) or (pmdo_dos[0] == float(lnodos[i][1]) and pmdo_dos[1] == float(lnodos[i][2])) or (pmdo_tres[0] == float(lnodos[i][1]) and pmdo_tres[1] == float(lnodos[i][2])):
 			return 1
 	return 0
@@ -342,15 +338,13 @@ def agregar_colaNodos(lista,posicion):
 
 def conformidad_MPI(lelementos, lnodos, uif,comm):
 
+	tamanho_anterior=int(lelementos[-1][0])
 
 	#global lelementos
 	#global lnodos
 	data=[]
 	a_refinar=[]
 	cf=0
-
-	lelementos.pop(0)
-	lelementos=np.array(lelementos,dtype=object)
 
 	if rank==root:
 		a_refinar=np.array_split(lelementos,size)
@@ -362,7 +356,6 @@ def conformidad_MPI(lelementos, lnodos, uif,comm):
 	for i in range(1,len(data2)):
 		data2[i]=data[i-1]
 
-	print rank
 
 	conformidad_paralela(data2,lnodos, uif,rank)	
 		
@@ -372,8 +365,6 @@ def conformidad_MPI(lelementos, lnodos, uif,comm):
 	if rank==root:
 
 		#ele_a_pc(lnodos_xrank[0])
-
-		tamanho_anterior=len(lelementos)
 		for t in range(0,len(lnodos_xrank)):
 			if t != 0:
 				lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
@@ -398,23 +389,46 @@ def conformidad_MPI(lelementos, lnodos, uif,comm):
 					if int(lelementos_xrank[t][j][3]) > posicion-1:
 						lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+acumulado
 				acumulado=acumulado+len(lnodos_xrank[t])
+		
+		############################## Aca comienza a escribir los datos de los lelementos ##############################
 
-		lelementos=lelementos_xrank[0]
-		for t in range(1,len(lelementos_xrank)):
-			for j in range(1,len(lelementos_xrank[t])):
-				lelementos.append(lelementos_xrank[t][j])		
+		for t in range(0,len(lelementos_xrank)):
+			if t != 0:
+				for j in range(1,len(lelementos_xrank[t])):
+					lelementos.append(lelementos_xrank[t][j])
+			else:
+				lelementos=lelementos_xrank[t]
+
 		lelementos[0][0]=len(lelementos)-1
 		for t in range(1,len(lelementos)):
 			lelementos[t][0]=t
 
-		tamanho_creado=len(lelementos)-1
+		#for h in lelementos:
+		#	print h
+		tamanho_creado=int(lelementos[-1][0])
+
+		#print tamanho_anterior
+		#print len(lelementos)
+
 		ele_a_pc(lelementos)
 		node_a_pc(lnodos)
 		part_a_pc(lelementos)
-		#print tamanho_creado
-		cf=tamanho_creado-tamanho_anterior
-	return cf
 
+		#print len(lnodos)
+		return tamanho_creado
+		#print tamanho_creado
+
+"""		tamanho_creado=int(lelementos[-1][0])
+
+		print tamanho_anterior
+		print tamanho_creado
+
+		cf=tamanho_creado-tamanho_anterior
+		if cf ==0:
+			return -1
+		else:
+			return cf
+"""
 #Cargamos los datos necesarios para aplicar los diferentes criterios. Esto es parte del preproceso
 #Recopilacion de datos
 comm = MPI.COMM_WORLD
@@ -438,20 +452,20 @@ arista_larga(lelementos)
 asig_pto_mdo(lelementos,lnodos)
 pto_opuesto(lelementos)
 
+lelementos.pop(0)
+lelementos=np.array(lelementos,dtype=object)
+
 posicion=int(lnodos[0][0])+1
 
 #Es importante este tamanho, ya que con esto verificaremos la conformidad de la interseccion de la malla
 condicion_conformidad=1
-
+contador=0
 #En el nodo maestro vamos a definir la lista a enviar por Scatter
 
-while condicion_conformidad!=0:
-	root=0
+while contador !=100:
 	condicion_conformidad=conformidad_MPI(lelementos, lnodos, uif,comm)
-
-print "Condicion de conformidad"
-if rank == root:
-	print "Fin"
+	#print condicion_conformidad
+	contador=contador+1
 
 	#tiempo_final=time()
 	#tiempo_ejecucion=tiempo_final-tiempo_inicial
