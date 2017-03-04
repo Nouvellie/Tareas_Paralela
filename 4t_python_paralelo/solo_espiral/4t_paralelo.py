@@ -539,6 +539,9 @@ if rank == root:
 		print ln
 	print "nodos generados"
 	print " "
+	tiempo_final=time()
+	tiempo_ejecucion=tiempo_final-tiempo_inicial
+	print tiempo_ejecucion
 	ele_a_pc(lelementos)
 	node_a_pc(lnodos)
 	part_a_pc(lelementos)

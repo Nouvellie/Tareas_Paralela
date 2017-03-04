@@ -225,7 +225,7 @@ def anadir_linea_ele(lelementos):
 #llenamos el fichero en el cual ingresamos los triangulos refinados
 def ele_a_pc(lelementos):
 	#fp = open("espiralrf.ele","w+")
-	fp = open("africa473_paralelo.ele","w+")
+	fp = open("africarf473_paralelo.ele","w+")
 	#contenido = archivo.read()
 	#indice = [lelementos[0][0]]
 
@@ -246,7 +246,7 @@ def ele_a_pc(lelementos):
 #pasamos al fichero los datos del nodo, sus respectivos vertices
 def node_a_pc(lnodos):
 	#fp = open("espiralrf.node","w+")
-	fp = open("africa473_paralelo.node","w+")
+	fp = open("africarf473_paralelo.node","w+")
 	#contenido = archivo.read()
 #	indice = []
 	fp.write(str(lnodos[0][0]))
@@ -264,7 +264,7 @@ def node_a_pc(lnodos):
 #Particiones, en este caso particular asignamos unicamente una particion
 def part_a_pc(lelementos):
 	#fp = open("espiralrf.part","w+")
-	fp = open("africa473_paralelo.part","w+")
+	fp = open("africarf473_paralelo.part","w+")
 	#contenido = archivo.read()
 	fp.write(str(lelementos[0][0]))
 	fp.write(" ")

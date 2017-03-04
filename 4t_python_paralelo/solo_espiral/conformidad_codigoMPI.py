@@ -469,10 +469,12 @@ condicion_conformidad=1
 contador=0
 #En el nodo maestro vamos a definir la lista a enviar por Scatter
 
-while contador !=100:
-	lista=conformidad_MPI(lelementos, lnodos, uif,comm,anterior_mallado,tamanho_actual)
+lista=conformidad_MPI(lelementos, lnodos, uif,comm,anterior_mallado,tamanho_actual)
+
+#while contador !=100:
+#	lista=conformidad_MPI(lelementos, lnodos, uif,comm,anterior_mallado,tamanho_actual)
 	#print condicion_conformidad
-	contador=contador+1
+#	contador=contador+1
 
 	#tiempo_final=time()
 	#tiempo_ejecucion=tiempo_final-tiempo_inicial

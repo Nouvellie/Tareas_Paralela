@@ -315,47 +315,51 @@ def comp_pto_mdos(pmdo_uno, pmdo_dos,pmdo_tres, lnodos, vi,ultimo_indice):
 
 
 #Verificamos la conformidad analizando los puntos medios de las 3 aristas, si estas se encuentran como vertice al menos uno, este triangulo no es conforme
-def conformidad_paralela(lelementos,lnodos, ultimo_indice,rank1):
+def conformidad_paralela(lelementos,lnodos, ultimo_indice,rank):
 	i=1
 	contador=0
 	#print lelementos[0][0]
 	#print lelementos
+	
+
 	while i < len(lelementos):
 		#if malo
-    #print rank1," ",i
-		print rank1," ",i," ",len(lelementos)
-
-		if comp_pto_mdo(rank1,i,pto_mdo(lelementos[i][1],lelementos[i][2],lnodos), pto_mdo(lelementos[i][1],lelementos[i][3],lnodos), pto_mdo(lelementos[i][2],lelementos[i][3],lnodos), lnodos, ultimo_indice) == 1:
-			
+    #print rank," ",i
+    
+		if comp_pto_mdo(rank,i,pto_mdo(lelementos[i][1],lelementos[i][2],lnodos), pto_mdo(lelementos[i][1],lelementos[i][3],lnodos), pto_mdo(lelementos[i][2],lelementos[i][3],lnodos), lnodos, ultimo_indice) == 1:
 			#print lelementos[i][1]
+
+			
 			contador=contador+1
-			#print lelementos[i][0]
+			#print lelementos[i][0] 
 			agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
 			pto_mdo_mayor=int(lnodos[-1][0])
-			#print rank1," ",lnodos[-1]
+			#print rank," ",lnodos[-1]
+			
 			crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],lelementos[i][10],lelementos,lnodos)
 			crear_triangulo(pto_mdo_mayor,lelementos[i][8][2],lelementos[i][10],lelementos,lnodos)
-
+            
 			lelementos.pop(i)
 
 			lelementos[0][0]=lelementos[0][0]-1
-
-			print rank1," ",len(lelementos)
-
-		#print lelementos[-1][0]
-			#i=1
+			i=1 
+			#print lelementos[-1][0]
 		else:
 			i=i+1
-		#print rank1," ",i," contador del while "		
+		#print rank," ",i," contador del while "		
 	#print lelementos[-1]
-	#print rank1, " ", contador
+	print contador ," ", rank
 #Entran 3 listas las cuales vamos a comprar con los lnodos
 def comp_pto_mdo(rank, i,pmdo_uno, pmdo_dos,pmdo_tres, lnodos, ultimo_indice):
 	#print i," ",lnodos[3][1], " ",pmdo_uno[0]," ",pmdo_uno[1], " ", pmdo_dos[0], " ", pmdo_dos[1]
 	for i in range(1,len(lnodos)):
-		if (pmdo_uno[0] == float(lnodos[i][1]) and pmdo_uno[1] == float(lnodos[i][2])) or (pmdo_dos[0] == float(lnodos[i][1]) and pmdo_dos[1] == float(lnodos[i][2])) or (pmdo_tres[0] == float(lnodos[i][1]) and pmdo_tres[1] == float(lnodos[i][2])):
-			return 1
-	return 0
+		if (pmdo_uno[0] == float(lnodos[i][1]) and pmdo_uno[1] == float(lnodos[i][2]))
+			return pmdo_uno
+		if (pmdo_dos[0] == float(lnodos[i][1]) and pmdo_dos[1] == float(lnodos[i][2])) 
+            return pmdo_dos
+		if (pmdo_tres[0] == float(lnodos[i][1]) and pmdo_tres[1] == float(lnodos[i][2])):
+			return pmdo_tres
+	return "si"
 
 def dividir_vector(lelementos,size):
 	a_refinar=[]
@@ -476,9 +480,9 @@ def conformidad_MPI(lelementos, lnodos, uif,tamanho_anterior,tamanho_creado):
 		part_a_pc(lelementos)
 
 		#print len(lnodos)
-		#print tamanho_creado
-		#return 0
 		print tamanho_creado
+		#return 0
+
 """		tamanho_creado=int(lelementos[-1][0])
 
 		print tamanho_anterior
