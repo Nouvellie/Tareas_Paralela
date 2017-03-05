@@ -201,7 +201,8 @@ def pto_opuesto(lelementos):
 #Leemos el fichero de inicio de los vertices
 def leer_node():
 	#Lee el fichero .node y lo asigna a la lista lnodos
-	lineas = open("probando.node").readlines()
+	lineas = open("africarf473_paralelo.node").readlines()
+	#lineas = open("africa_conformado.node").readlines()
 	#lineas = open("africa473.node").readlines()
 	lnodos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lnodos
@@ -214,13 +215,15 @@ def ultimo_indice_fijo(lnodes):
 #Leemos el fichero de inicio de los triangulos
 def leer_ele():	
 	#Lee el fichero .ele y lo asigna a la lista lelementos
-	lineas = open("probando.ele").readlines()
+	lineas = open("africarf473_paralelo.ele").readlines()
+	#lineas = open("africa_conformado.ele").readlines()
 	#lineas = open("africa473.ele").readlines()
 	lelementos = [[m.strip() for m in n] for n in [linea.split(" ") for linea in lineas]]
 	return lelementos
 
 def anadir_linea_ele(lelementos):
-	fp=open('probando.ele','a')
+	fp=open('africarf473_paralelo.ele','a')
+	#fp=open('africa_conformado.ele','a')
 	#fp=open('africa473.ele','a')
 	fp.write('\n1')
 	fp.close()
@@ -228,6 +231,7 @@ def anadir_linea_ele(lelementos):
 #llenamos el fichero en el cual ingresamos los triangulos refinados
 def ele_a_pc(lelementos):
 	fp = open("africa_conformado.ele","w+")
+	#fp = open("africa_conformado2.ele","w+")
 	#fp = open("africarf473_45.ele","w+")
 	#contenido = archivo.read()
 	#indice = [lelementos[0][0]]
@@ -249,6 +253,7 @@ def ele_a_pc(lelementos):
 #pasamos al fichero los datos del nodo, sus respectivos vertices
 def node_a_pc(lnodos):
 	fp = open("africa_conformado.node","w+")
+	#fp = open("africa_conformado2.node","w+")
 	#fp = open("africarf473_45.node","w+")
 	#contenido = archivo.read()
 #	indice = []
@@ -267,6 +272,7 @@ def node_a_pc(lnodos):
 #Particiones, en este caso particular asignamos unicamente una particion
 def part_a_pc(lelementos):
 	fp = open("africa_conformado.part","w+")
+	#fp = open("africa_conformado2.part","w+")
 	#fp = open("africarf473_45.part","w+")
 	#contenido = archivo.read()
 	fp.write(str(lelementos[0][0]))
@@ -283,7 +289,7 @@ def part_a_pc(lelementos):
 def conformidad(lelementos,lnodos, ultimo_indice):
 	i=1
 	while i <= int(lelementos[0][0]):
-		print i
+		#print i
 		if comp_pto_mdo(i,pto_mdo(int(lelementos[i][1]),int(lelementos[i][2])),pto_mdo(int(lelementos[i][1]),int(lelementos[i][3])),pto_mdo(int(lelementos[i][2]),int(lelementos[i][3])),lnodos, ultimo_indice) == 1:
 			print lelementos[i][0] 
 			agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
