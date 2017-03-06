@@ -421,8 +421,30 @@ def conformidad_MPI(lelementos,lnodos):
 		print " "
 	comm.Disconnect()
 	return tamanho_creado-tamanho_anterior
-#######################################################################################################
+#####################################################################################################################
 
+
+################################################ La conformidad despues del 4t ######################################
+
+#Verificamos la conformidad analizando los puntos medios de las 3 aristas, si estas se encuentran como vertice al menos uno, este triangulo no es conforme
+def conformidad_post4t(lelementos,lnodos, ultimo_indice):
+	i=1
+	while i <= int(lelementos[0][0]):
+		#print i
+		if comp_pto_mdo(i,pto_mdo(int(lelementos[i][1]),int(lelementos[i][2])),pto_mdo(int(lelementos[i][1]),int(lelementos[i][3])),pto_mdo(int(lelementos[i][2]),int(lelementos[i][3])),lnodos, ultimo_indice) == 1:
+			print lelementos[i][0] 
+			agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
+			pto_mdo_mayor=int(lnodos[-1][0])
+			crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],lelementos[i][10],lelementos)
+			crear_triangulo(pto_mdo_mayor,lelementos[i][8][2],lelementos[i][10],lelementos)
+			lelementos.pop(i)
+			lelementos[0][0]=lelementos[0][0]-1
+			i=1 
+		else:	
+			i=i+1
+	#print len(lelementos)
+
+#####################################################################################################################
 
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
@@ -554,4 +576,102 @@ while condicion_conformidad==0:
 	#ele_a_pc(lelementos)
 	#node_a_pc(lnodos)
 	#part_a_pc(lelementos)
+"""
+
+
+"""
+##################################################### Realizamos la conformidad despues del 4t ###########################################
+
+cal_ang(lnodos,lelementos)
+cant_r=crit_ref(lelementos,45)
+arista_larga(lelementos)
+asig_pto_mdo(lelementos)
+pto_opuesto(lelementos)
+
+lelementos.pop(0)
+lelementos=np.array(lelementos,dtype=object)
+
+posicion=int(lnodos[0][0])+1
+
+contador_ref = 0
+data=[]
+a_refinar=[]
+
+#Es importante este tamanho, ya que con esto verificaremos la conformidad de la interseccion de la malla
+tamanho_anterior=len(lelementos)
+tamanho_creado=0
+condicion_conformidad=0
+
+tiempo_inicial=time()
+#En el nodo maestro vamos a definir la lista a enviar por Scatter
+
+if rank == root:
+	
+	#Formas la lista de triangulos a enviar por scatter
+	a_refinar=np.array_split(lelementos,size)
+
+data = comm.scatter(a_refinar, root=root)
+lnodos=comm.bcast(lnodos,root=root)
+
+data2=[None] * (len(data)+1)
+data2[0]=[len(data),3]
+for i in range(1,len(data2)):
+	data2[i]=data[i-1]
+#data=np.insert(data,0,1)
+
+##################################### Aca va el conformidad ###################################
+
+#print data2[-1]
+conformidad_post4t(lelementos,lnodos, uif)
+
+lnodos_xrank=comm.gather(lnodos,root=root)
+lelementos_xrank=comm.gather(data2,root=root)
+
+if rank == root:
+
+	for t in range(0,len(lnodos_xrank)):
+		if t != 0:
+			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
+			for j in range(0,len(lnodos_xrank[t])):
+				lnodos.append(lnodos_xrank[t][j])
+		else:
+			lnodos=lnodos_xrank[t]
+			lnodos_xrank[t]=agregar_colaNodos(lnodos_xrank[t],posicion)
+	lnodos[0][0]=len(lnodos)-1
+	for t in range(1,len(lnodos)):
+		lnodos[t][0]=t
+
+	acumulado=len(lnodos_xrank[0])
+	for t in range(0,len(lelementos_xrank)):
+		if t!=0:
+			for j in range(1,len(lelementos_xrank[t])):
+				if int(lelementos_xrank[t][j][1]) > posicion-1:
+					lelementos_xrank[t][j][1]=int(lelementos_xrank[t][j][1])+acumulado
+				if int(lelementos_xrank[t][j][2]) > posicion-1:
+					lelementos_xrank[t][j][2]=int(lelementos_xrank[t][j][2])+acumulado
+				if int(lelementos_xrank[t][j][3]) > posicion-1:
+					lelementos_xrank[t][j][3]=int(lelementos_xrank[t][j][3])+acumulado
+			acumulado=acumulado+len(lnodos_xrank[t])
+
+	lelementos=lelementos_xrank[0]
+	for t in range(1,len(lelementos_xrank)):
+		for j in range(1,len(lelementos_xrank[t])):
+			lelementos.append(lelementos_xrank[t][j])
+
+	lelementos[0][0]=len(lelementos)-1
+	for t in range(1,len(lelementos)):
+		lelementos[t][0]=t
+
+	for le in lelementos:
+		print le
+	print "elementos totales refinados"
+	print ""
+
+	for ln in lnodos:
+		print ln
+	print "nodos generados"
+	print " "
+	ele_a_pc(lelementos)
+	node_a_pc(lnodos)
+	part_a_pc(lelementos)
 """
