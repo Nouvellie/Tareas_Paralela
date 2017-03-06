@@ -41,7 +41,9 @@ def crit_ref(lelementos, crit_ang):
 			lelementos[i].append(1)
 		else:
 			lelementos[i].append(0)
-	return cant_ref				
+	#print cant_ref		
+	return cant_ref	
+
 
 #En esta funcion determinamos las distancias mayores y asignaermos los vertices a esa distancia mayor
 def arista_larga(lelementos):
@@ -432,7 +434,7 @@ def conformidad_post4t(lelementos,lnodos, ultimo_indice):
 	while i <= int(lelementos[0][0]):
 		#print i
 		if comp_pto_mdo(i,pto_mdo(int(lelementos[i][1]),int(lelementos[i][2])),pto_mdo(int(lelementos[i][1]),int(lelementos[i][3])),pto_mdo(int(lelementos[i][2]),int(lelementos[i][3])),lnodos, ultimo_indice) == 1:
-			print lelementos[i][0] 
+			#print lelementos[i][0] 
 			agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
 			pto_mdo_mayor=int(lnodos[-1][0])
 			crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],lelementos[i][10],lelementos)
@@ -464,6 +466,7 @@ cant_r=crit_ref(lelementos,45)
 arista_larga(lelementos)
 asig_pto_mdo(lelementos)
 pto_opuesto(lelementos)
+num_triangulos_asignados=[None] * size
 
 lelementos.pop(0)
 lelementos=np.array(lelementos,dtype=object)
@@ -490,12 +493,15 @@ if rank == root:
 data = comm.scatter(a_refinar, root=root)
 lnodos=comm.bcast(lnodos,root=root)
 
+
 data2=[None] * (len(data)+1)
 data2[0]=[len(data),3]
 for i in range(1,len(data2)):
 	data2[i]=data[i-1]
 #data=np.insert(data,0,1)
 
+num_triangulos_asignados[rank]=len(data2)
+print "Procesador ",rank, "cantidad de triangulos asignados", len(data2)
 #print data2[-1]
 
 i=1
@@ -564,6 +570,8 @@ if rank == root:
 	ele_a_pc(lelementos)
 	node_a_pc(lnodos)
 	part_a_pc(lelementos)
+
+	#print "Cantidad triangulos por nodo ",num_triangulos_asignados
 """
 comm.Disconnect()
 	#Llamamos a la funcion conformidad

@@ -358,6 +358,7 @@ size = comm.Get_size()
 rank = comm.Get_rank()
 
 root=0
+
 #Cargamos los datos necesarios para aplicar los diferentes criterios. Esto es parte del preproceso
 #Recopilacion de datos
 contador=0
