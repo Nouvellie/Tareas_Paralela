@@ -295,12 +295,12 @@ def agregar_colaNodos(lista,posicion):
 	return lista2
 
 #Verificamos la conformidad analizando los puntos medios de las 3 aristas, si estas se encuentran como vertice al menos uno, este triangulo no es conforme
-def conformidad(lelementos,lnodos, ultimo_indice):
+def conformidad(lelementos,lnodos, ultimo_indice,rank):
 	i=1
 	while i <= int(lelementos[0][0]):
 		#print i
 		if comp_pto_mdo(i,pto_mdo(int(lelementos[i][1]),int(lelementos[i][2])),pto_mdo(int(lelementos[i][1]),int(lelementos[i][3])),pto_mdo(int(lelementos[i][2]),int(lelementos[i][3])),lnodos, ultimo_indice) == 1:
-			print lelementos[i][0] 
+			print "Trabajando procesador ",rank, " Triangulo ",lelementos[i][0] 
 			agregar_vertice_lnodos(lelementos[i][9][0],lelementos[i][9][1],lnodos)
 			pto_mdo_mayor=int(lnodos[-1][0])
 			crear_triangulo(pto_mdo_mayor,lelementos[i][8][1],lelementos[i][10],lelementos)
@@ -405,7 +405,7 @@ for i in range(1,len(data2)):
 
 tiempo_inicial=time()
 
-conformidad(data2,lnodos, uif)
+conformidad(data2,lnodos, uif,rank)
 
 lnodos_xrank=comm.gather(lnodos,root=root)
 lelementos_xrank=comm.gather(data2,root=root)
